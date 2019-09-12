@@ -57,7 +57,7 @@ def _csv_to_png(csv_path):
 
 class TestRMWPerformance(unittest.TestCase):
 
-    def test_perforamnce(self):
+    def test_performance(self):
         proc_output = ActiveIoHandler()
 
         node = _create_node()
@@ -82,7 +82,7 @@ class TestRMWPerformance(unittest.TestCase):
 
         print('\n'.join(text_lines[:line_start]))
 
-        csv_path = os.path.join(os.environ['PWD'], 'performance_text_results.csv')
+        csv_path = os.path.join(os.environ['PWD'], 'performance_test_results.csv')
 
         with open(csv_path, 'w') as f:
             for line in text_lines[line_start + 1:line_end]:
