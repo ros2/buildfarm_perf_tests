@@ -26,8 +26,7 @@ import matplotlib.pyplot as plt
 import numpy as np  # noqa: F401
 import pandas as pd
 
-
-matplotlib.use('Agg')
+plt.switch_backend('agg')
 
 
 def _create_node(comm='ROS2', topic='Array1k', max_runtime=10, log_file=None):
