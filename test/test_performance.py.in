@@ -16,10 +16,10 @@ import os
 import unittest
 
 from launch import LaunchDescription, LaunchService
-from launch.actions import RegisterEventHandler
-from launch.event_handlers import OnProcessIO
+from launch.actions import OpaqueFunction
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
-from launch_testing import ActiveIoHandler
+import launch_testing
 
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
@@ -29,12 +29,13 @@ import pandas as pd
 plt.switch_backend('agg')
 
 
-def _create_node(comm='ROS2', topic='Array1k', max_runtime=10, log_file=None):
+def _create_node(comm, topic, max_runtime, log_file=None):
     return Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
             '-c', comm, '-t', topic, '--max_runtime', str(max_runtime)
         ] + (['-l', log_file] if log_file else []),
+        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=max_runtime + 5)
     )
 
 
@@ -51,29 +52,32 @@ def _csv_to_png(csv_path):
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
 
+    plt.figtext(0.0, 1.0, '@COMM@ Performance Test', fontsize=10)
+
     png_path = os.path.splitext(csv_path)[0] + '.png'
     plt.savefig(png_path)
 
 
-class TestRMWPerformance(unittest.TestCase):
+def generate_test_description(ready_fn):
+    node_under_test = _create_node("@COMM@", "@TOPIC@", @MAX_RUNTIME@)
 
-    def test_performance(self):
-        proc_output = ActiveIoHandler()
+    return LaunchDescription([
+        node_under_test,
+        OpaqueFunction(function=lambda context: ready_fn()),
+    ]), locals()
 
-        node = _create_node()
-        ld = LaunchDescription([
-            node,
-            RegisterEventHandler(
-                OnProcessIO(
-                    on_stdout=proc_output.append,
-                ),
-            ),
-        ])
-        ls = LaunchService()
-        ls.include_launch_description(ld)
-        assert 0 == ls.run()
 
-        text_lines = [l for t in proc_output for l in t.text.decode().splitlines()]
+@launch_testing.post_shutdown_test()
+class PerformanceTestResults(unittest.TestCase):
+
+    def test_@COMM@(self, node_under_test):
+        launch_testing.asserts.assertExitCodes(
+            self.proc_info,
+            [launch_testing.asserts.EXIT_OK],
+            node_under_test,
+        )
+
+        text_lines = [l for t in self.proc_output for l in t.text.decode().splitlines()]
         line_start = text_lines.index('---EXPERIMENT-START---')
         line_end = text_lines.index('Maximum runtime reached. Exiting.')
         if line_end < 0:
@@ -82,7 +86,7 @@ class TestRMWPerformance(unittest.TestCase):
 
         print('\n'.join(text_lines[:line_start]))
 
-        csv_path = os.path.join(os.environ['PWD'], 'performance_test_results.csv')
+        csv_path = os.path.join(os.environ['PWD'], 'performance_test_results_@COMM@.csv')
 
         with open(csv_path, 'w') as f:
             for line in text_lines[line_start + 1:line_end]:
