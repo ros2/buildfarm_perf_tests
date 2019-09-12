@@ -7,11 +7,19 @@
   <maintainer email="scott@openrobotics.org">Scott K Logan</maintainer>
   <license>Apache License 2.0</license>
 
+  <!-- Actually, this is a missing performance_test dep -->
+  <build_depend>java</build_depend>
+
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_xmllint</test_depend>
   <test_depend>launch_ros</test_depend>
   <test_depend>performance_test</test_depend>
+
+  <!-- For graph generation -->
+  <test_depend>python3-matplotlib</test_depend>
+  <test_depend>python3-numpy</test_depend>
+  <test_depend>python3-pandas</test_depend>
 
   <export>
     <architecture_independent/>
