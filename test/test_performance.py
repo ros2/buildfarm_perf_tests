@@ -27,6 +27,9 @@ import numpy as np  # noqa: F401
 import pandas as pd
 
 
+matplotlib.use('Agg')
+
+
 def _create_node(comm='ROS2', topic='Array1k', max_runtime=10, log_file=None):
     return Node(
         package='performance_test', node_executable='perf_test', output='log',
