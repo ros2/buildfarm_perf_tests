@@ -52,7 +52,7 @@ def _csv_to_png(csv_path):
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
 
-    plt.figtext(0.0, 1.0, '@COMM@ Performance Test', fontsize=10)
+    plt.title('@COMM@ Performance Test')
 
     png_path = os.path.splitext(csv_path)[0] + '.png'
     plt.savefig(png_path)
