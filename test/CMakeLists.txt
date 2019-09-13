@@ -3,7 +3,6 @@ find_package(rmw_implementation_cmake REQUIRED)
 
 set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
 set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
-set(COMM_TYPE_rmw_connext_cpp "ConnextDDSMicro")
 
 function(add_performance_test COMM)
   set(MAX_RUNTIME 30)
