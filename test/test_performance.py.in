@@ -35,7 +35,7 @@ def _create_node(comm, topic, max_runtime, log_file=None):
         arguments=[
             '-c', comm, '-t', topic, '--max_runtime', str(max_runtime)
         ] + (['-l', log_file] if log_file else []),
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=max_runtime + 5)
+        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=max_runtime * 2)
     )
 
 
