@@ -7,6 +7,11 @@ set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
 function(add_performance_test COMM)
   set(MAX_RUNTIME 30)
   set(TOPIC "Array1k")
+  get_filename_component(
+    PERFORMANCE_REPORT_FILE
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${COMM}.png"
+    ABSOLUTE
+  )
   configure_file(
     test_performance.py.in
     ${CMAKE_CURRENT_BINARY_DIR}/test_performance_${COMM}.py.configure
@@ -19,6 +24,7 @@ function(add_performance_test COMM)
   add_launch_test(
     "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${COMM}.py"
     TARGET test_performance_${COMM}
+    ENV "PERFORMANCE_REPORT_FILE=${PERFORMANCE_REPORT_FILE}"
   )
 endfunction()
 

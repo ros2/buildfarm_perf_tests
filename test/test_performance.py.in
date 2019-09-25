@@ -1,21 +1,12 @@
-# Copyright 2018 Open Source Robotics Foundation, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# generated from buildfarm_perf_tests/test/test_performance.py.in
+# generated code does not contain a copyright notice
 
+from glob import glob
 import os
+import tempfile
 import unittest
 
-from launch import LaunchDescription, LaunchService
+from launch import LaunchDescription
 from launch.actions import OpaqueFunction
 from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
@@ -29,6 +20,11 @@ import pandas as pd
 plt.switch_backend('agg')
 
 
+def _cleanUpLogs(performance_log_prefix):
+    for log in glob(performance_log_prefix + '*'):
+        os.remove(log)
+
+
 def _create_node(comm, topic, max_runtime, log_file=None):
     return Node(
         package='performance_test', node_executable='perf_test', output='log',
@@ -39,8 +35,8 @@ def _create_node(comm, topic, max_runtime, log_file=None):
     )
 
 
-def _csv_to_png(csv_path):
-    dataframe = pd.read_csv(csv_path, sep='[ \t]*,[ \t]*', engine='python')
+def _csv_to_png(csv_data, png_path):
+    dataframe = pd.read_csv(csv_data, skiprows=18, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
@@ -54,12 +50,12 @@ def _csv_to_png(csv_path):
 
     plt.title('@COMM@ Performance Test')
 
-    png_path = os.path.splitext(csv_path)[0] + '.png'
     plt.savefig(png_path)
 
 
 def generate_test_description(ready_fn):
-    node_under_test = _create_node("@COMM@", "@TOPIC@", @MAX_RUNTIME@)
+    performance_log_prefix = tempfile.mkstemp(prefix='performance_test_@COMM@_', text=True)[1]
+    node_under_test = _create_node('@COMM@', '@TOPIC@', @MAX_RUNTIME@, performance_log_prefix)
 
     return LaunchDescription([
         node_under_test,
@@ -70,27 +66,22 @@ def generate_test_description(ready_fn):
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_@COMM@(self, node_under_test):
+    def test_@COMM@(self, performance_log_prefix, node_under_test):
+        self.addCleanup(_cleanUpLogs, performance_log_prefix)
+
         launch_testing.asserts.assertExitCodes(
             self.proc_info,
             [launch_testing.asserts.EXIT_OK],
             node_under_test,
         )
 
-        text_lines = [l for t in self.proc_output for l in t.text.decode().splitlines()]
-        line_start = text_lines.index('---EXPERIMENT-START---')
-        line_end = text_lines.index('Maximum runtime reached. Exiting.')
-        if line_end < 0:
-            line_end = len(text_lines)
-        assert line_start >= 0
+        performance_logs = glob(performance_log_prefix + '_*')
+        if performance_logs:
+            performance_report_file = os.environ.get('PERFORMANCE_REPORT_FILE')
+            if performance_report_file:
+                _csv_to_png(performance_logs[0], performance_report_file)
+            else:
+                print('No report written - set PERFORMANCE_REPORT_FILE to write a report')
+        else:
+            print('No report written - no performance log was produced')
 
-        print('\n'.join(text_lines[:line_start]))
-
-        csv_path = os.path.join(os.environ['PWD'], 'performance_test_results_@COMM@.csv')
-
-        with open(csv_path, 'w') as f:
-            for line in text_lines[line_start + 1:line_end]:
-                f.write(line)
-                f.write('\n')
-
-        _csv_to_png(csv_path)
