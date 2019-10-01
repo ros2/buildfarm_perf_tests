@@ -36,7 +36,7 @@ def _create_node(comm, topic, max_runtime, log_file=None):
 
 
 def _csv_to_png(csv_data, png_path):
-    dataframe = pd.read_csv(csv_data, skiprows=18, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe = pd.read_csv(csv_data, skiprows=20, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
