@@ -48,13 +48,13 @@ def _csv_to_png(csv_data, png_path):
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
 
-    plt.title('@COMM@ Performance Test')
+    plt.title('@TEST_NAME@ Performance Test')
 
     plt.savefig(png_path)
 
 
 def generate_test_description(ready_fn):
-    performance_log_prefix = tempfile.mkstemp(prefix='performance_test_@COMM@_', text=True)[1]
+    performance_log_prefix = tempfile.mkstemp(prefix='performance_test_@TEST_NAME@_', text=True)[1]
     node_under_test = _create_node('@COMM@', '@TOPIC@', @MAX_RUNTIME@, performance_log_prefix)
 
     return LaunchDescription([
@@ -66,7 +66,7 @@ def generate_test_description(ready_fn):
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_@COMM@(self, performance_log_prefix, node_under_test):
+    def test_@TEST_NAME@(self, performance_log_prefix, node_under_test):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
         launch_testing.asserts.assertExitCodes(
