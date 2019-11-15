@@ -14,7 +14,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
   )
   get_filename_component(
     PERFORMANCE_REPORT_XML
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.perf.xml"
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.perfxml"
     ABSOLUTE
   )
   configure_file(
