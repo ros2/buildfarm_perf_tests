@@ -5,6 +5,7 @@ from glob import glob
 import os
 import tempfile
 import unittest
+import xml.etree.cElementTree as ET
 
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
@@ -53,6 +54,40 @@ def _csv_to_png(csv_data, png_path):
     plt.savefig(png_path)
 
 
+def _csv_to_xml(csv_data, xml_path):
+    dataframe = pd.read_csv(csv_data, skiprows=20, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe_agg = dataframe.agg(['mean', 'std'])
+
+    report = ET.Element('report')
+    report.set('name', '@TEST_NAME@ Performance Test')
+    report.set('categ', 'Performance Tests')
+
+    test = ET.SubElement(report, 'test')
+    test.set('name', '@TEST_NAME@ Performance Test')
+    test.set('executd', 'yes')
+
+    result = ET.SubElement(test, 'result')
+
+    #success = ET.SubElement(result, 'success')
+    #success.set('passed', 'yes')
+    #success.set('state', '100')
+    #success.set('hasTimedOut', 'false')
+
+    metrics = ET.SubElement(result, 'metrics')
+
+    latency_mean = ET.SubElement(metrics, 'latency_mean')
+    latency_mean.set('unit', 'ms')
+    latency_mean.set('measure', str(dataframe_agg.loc['mean', 'latency_mean (ms)']))
+    latency_mean.set('isRelevant', 'true')
+
+    latency_variance = ET.SubElement(metrics, 'latency_variance')
+    latency_variance.set('unit', 'ms')
+    latency_variance.set('measure', str(dataframe_agg.loc['mean', 'latency_variance (ms)']))
+    latency_variance.set('isRelevant', 'true')
+
+    tree = ET.ElementTree(report)
+    tree.write(xml_path)
+
 def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(prefix='performance_test_@TEST_NAME@_', text=True)[1]
     node_under_test = _create_node('@COMM@', '@TOPIC@', @MAX_RUNTIME@, performance_log_prefix)
@@ -77,11 +112,16 @@ class PerformanceTestResults(unittest.TestCase):
 
         performance_logs = glob(performance_log_prefix + '_*')
         if performance_logs:
-            performance_report_file = os.environ.get('PERFORMANCE_REPORT_FILE')
-            if performance_report_file:
-                _csv_to_png(performance_logs[0], performance_report_file)
+            performance_report_png = os.environ.get('PERFORMANCE_REPORT_PNG')
+            if performance_report_png:
+                _csv_to_png(performance_logs[0], performance_report_png)
             else:
-                print('No report written - set PERFORMANCE_REPORT_FILE to write a report')
+                print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report')
+            performance_report_xml = os.environ.get('PERFORMANCE_REPORT_XML')
+            if performance_report_xml:
+                _csv_to_xml(performance_logs[0], performance_report_xml)
+            else:
+                print('No XML report written - set PERFORMANCE_REPORT_XML to write a report')
         else:
             print('No report written - no performance log was produced')
 

@@ -8,8 +8,13 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
   set(MAX_RUNTIME 30)
   set(TOPIC "Array1k")
   get_filename_component(
-    PERFORMANCE_REPORT_FILE
+    PERFORMANCE_REPORT_PNG
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.png"
+    ABSOLUTE
+  )
+  get_filename_component(
+    PERFORMANCE_REPORT_XML
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.perf.xml"
     ABSOLUTE
   )
   configure_file(
@@ -25,7 +30,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
     TARGET test_performance_${TEST_NAME}
     ENV
-    "PERFORMANCE_REPORT_FILE=${PERFORMANCE_REPORT_FILE}"
+    "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
+    "PERFORMANCE_REPORT_XML=${PERFORMANCE_REPORT_XML}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
 endfunction()
