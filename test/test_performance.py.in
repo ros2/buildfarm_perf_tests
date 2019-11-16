@@ -68,10 +68,10 @@ def _csv_to_xml(csv_data, xml_path):
 
     result = ET.SubElement(test, 'result')
 
-    #success = ET.SubElement(result, 'success')
-    #success.set('passed', 'yes')
-    #success.set('state', '100')
-    #success.set('hasTimedOut', 'false')
+    success = ET.SubElement(result, 'success')
+    success.set('passed', 'yes')
+    success.set('state', '100')
+    success.set('hasTimedOut', 'false')
 
     metrics = ET.SubElement(result, 'metrics')
 
