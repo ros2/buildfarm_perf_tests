@@ -64,7 +64,7 @@ def _csv_to_xml(csv_data, xml_path):
 
     test = ET.SubElement(report, 'test')
     test.set('name', '@TEST_NAME@ Performance Test')
-    test.set('executd', 'yes')
+    test.set('executed', 'yes')
 
     result = ET.SubElement(test, 'result')
 
