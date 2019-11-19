@@ -88,6 +88,19 @@ def _csv_to_xml(csv_data, xml_path):
     tree = ET.ElementTree(report)
     tree.write(xml_path)
 
+def _csv_to_csv(csv_data, csv_path):
+    dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe_agg = dataframe.agg(['max', 'mean'])
+
+    values = [
+        str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
+        str(dataframe_agg.loc['max', 'ru_maxrss']),
+        ]
+
+    with open(csv_path, 'w') as csv:
+        csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
+        csv.write(','.join(values) + '\n')
+
 def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(prefix='performance_test_@TEST_NAME@_', text=True)[1]
     node_under_test = _create_node('@COMM@', '@TOPIC@', @MAX_RUNTIME@, performance_log_prefix)
@@ -122,6 +135,11 @@ class PerformanceTestResults(unittest.TestCase):
                 _csv_to_xml(performance_logs[0], performance_report_xml)
             else:
                 print('No XML report written - set PERFORMANCE_REPORT_XML to write a report')
+            performance_report_csv = os.environ.get('PERFORMANCE_REPORT_CSV')
+            if performance_report_csv:
+                _csv_to_csv(performance_logs[0], performance_report_csv)
+            else:
+                print('No CSV report written - set PERFORMANCE_REPORT_CSV to write a report')
         else:
             print('No report written - no performance log was produced')
 
