@@ -1,11 +1,11 @@
 # generated from buildfarm_perf_tests/test/test_performance.py.in
 # generated code does not contain a copyright notice
 
-#from glob import glob
-#import os
-#import sys
+from glob import glob
+import os
+import sys
 import tempfile
-#import unittest
+import unittest
 
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
@@ -13,12 +13,12 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import launch_testing
 
-#import matplotlib  # noqa: F401
-#import matplotlib.pyplot as plt
-#import numpy as np  # noqa: F401
-#import pandas as pd
+import matplotlib  # noqa: F401
+import matplotlib.pyplot as plt
+import numpy as np  # noqa: F401
+import pandas as pd
 
-#plt.switch_backend('agg')
+plt.switch_backend('agg')
 
 
 def _cleanUpLogs(performance_log_prefix):
@@ -55,6 +55,16 @@ def _raw_to_png(csv_data, png_path):
 
 
 def _raw_to_csv(csv_data, csv_path):
+    """
+    Convert from the raw csv format to the csv for the Jenkins plot plugin
+
+    Do not change the order of the columns. The plot plugin indexes into the
+    csv using the column number instead of the column name, because we're
+    using the columns to identify which test produced the data.
+
+    Changing the column names here will change the name of the line that
+    appears on the plot.
+    """
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['max', 'mean'])
 
@@ -80,10 +90,10 @@ def generate_test_description():
     ]), locals()
 
 
-#@launch_testing.post_shutdown_test()
-class PerformanceTestResults():
+@launch_testing.post_shutdown_test()
+class PerformanceTestResults(unittest.TestCase):
 
-    def asdf_test_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
+    def test_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
         launch_testing.asserts.assertExitCodes(
