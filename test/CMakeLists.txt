@@ -1,3 +1,8 @@
+set(PERF_TEST_MAX_RUNTIME 30
+  CACHE STRING "Duration for each performance test run")
+set(PERF_TEST_TOPIC "Array1k"
+  CACHE STRING "Performance test topic")
+
 find_package(launch_testing_ament_cmake REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
 
@@ -5,16 +10,9 @@ set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
 set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
 
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
-  set(MAX_RUNTIME 30)
-  set(TOPIC "Array1k")
   get_filename_component(
     PERFORMANCE_REPORT_PNG
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.png"
-    ABSOLUTE
-  )
-  get_filename_component(
-    PERFORMANCE_REPORT_XML
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.perfxml"
     ABSOLUTE
   )
   get_filename_component(
@@ -36,7 +34,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     TARGET test_performance_${TEST_NAME}
     ENV
     "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
-    "PERFORMANCE_REPORT_XML=${PERFORMANCE_REPORT_XML}"
     "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )

@@ -7,9 +7,6 @@
   <maintainer email="scott@openrobotics.org">Scott K Logan</maintainer>
   <license>Apache License 2.0</license>
 
-  <!-- Actually, this is a missing performance_test dep -->
-  <build_depend>java</build_depend>
-
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
@@ -20,7 +17,7 @@
   <test_depend>performance_test</test_depend>
   <test_depend>rmw_implementation_cmake</test_depend>
 
-  <!-- For graph generation -->
+  <!-- For plot generation -->
   <test_depend>python3-matplotlib</test_depend>
   <test_depend>python3-numpy</test_depend>
   <test_depend>python3-pandas</test_depend>

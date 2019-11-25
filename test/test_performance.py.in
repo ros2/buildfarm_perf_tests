@@ -1,11 +1,11 @@
 # generated from buildfarm_perf_tests/test/test_performance.py.in
 # generated code does not contain a copyright notice
 
-from glob import glob
-import os
+#from glob import glob
+#import os
+#import sys
 import tempfile
-import unittest
-import xml.etree.cElementTree as ET
+#import unittest
 
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
@@ -13,12 +13,12 @@ from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import launch_testing
 
-import matplotlib  # noqa: F401
-import matplotlib.pyplot as plt
-import numpy as np  # noqa: F401
-import pandas as pd
+#import matplotlib  # noqa: F401
+#import matplotlib.pyplot as plt
+#import numpy as np  # noqa: F401
+#import pandas as pd
 
-plt.switch_backend('agg')
+#plt.switch_backend('agg')
 
 
 def _cleanUpLogs(performance_log_prefix):
@@ -36,7 +36,7 @@ def _create_node(comm, topic, max_runtime, log_file=None):
     )
 
 
-def _csv_to_png(csv_data, png_path):
+def _raw_to_png(csv_data, png_path):
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
@@ -54,41 +54,7 @@ def _csv_to_png(csv_data, png_path):
     plt.savefig(png_path)
 
 
-def _csv_to_xml(csv_data, xml_path):
-    dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
-    dataframe_agg = dataframe.agg(['mean', 'std'])
-
-    report = ET.Element('report')
-    report.set('name', '@TEST_NAME@ Performance Test')
-    report.set('categ', 'Performance Tests')
-
-    test = ET.SubElement(report, 'test')
-    test.set('name', '@TEST_NAME@ Performance Test')
-    test.set('executed', 'yes')
-
-    result = ET.SubElement(test, 'result')
-
-    success = ET.SubElement(result, 'success')
-    success.set('passed', 'yes')
-    success.set('state', '100')
-    success.set('hasTimedOut', 'false')
-
-    metrics = ET.SubElement(result, 'metrics')
-
-    latency_mean = ET.SubElement(metrics, 'latency_mean')
-    latency_mean.set('unit', 'ms')
-    latency_mean.set('measure', str(dataframe_agg.loc['mean', 'latency_mean (ms)']))
-    latency_mean.set('isRelevant', 'true')
-
-    latency_variance = ET.SubElement(metrics, 'latency_variance')
-    latency_variance.set('unit', 'ms')
-    latency_variance.set('measure', str(dataframe_agg.loc['mean', 'latency_variance (ms)']))
-    latency_variance.set('isRelevant', 'true')
-
-    tree = ET.ElementTree(report)
-    tree.write(xml_path)
-
-def _csv_to_csv(csv_data, csv_path):
+def _raw_to_csv(csv_data, csv_path):
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['max', 'mean'])
 
@@ -101,24 +67,27 @@ def _csv_to_csv(csv_data, csv_path):
         csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
         csv.write(','.join(values) + '\n')
 
-def generate_test_description(ready_fn):
-    performance_log_prefix = tempfile.mkstemp(prefix='performance_test_@TEST_NAME@_', text=True)[1]
-    node_under_test = _create_node('@COMM@', '@TOPIC@', @MAX_RUNTIME@, performance_log_prefix)
+
+def generate_test_description():
+    performance_log_prefix = tempfile.mkstemp(
+        prefix='performance_test_@TEST_NAME@_', text=True)[1]
+    node_under_test = _create_node(
+        '@COMM@', '@PERF_TEST_TOPIC@', @PERF_TEST_MAX_RUNTIME@, performance_log_prefix)
 
     return LaunchDescription([
         node_under_test,
-        OpaqueFunction(function=lambda context: ready_fn()),
+        launch_testing.actions.ReadyToTest(),
     ]), locals()
 
 
-@launch_testing.post_shutdown_test()
-class PerformanceTestResults(unittest.TestCase):
+#@launch_testing.post_shutdown_test()
+class PerformanceTestResults():
 
-    def test_@TEST_NAME@(self, performance_log_prefix, node_under_test):
+    def asdf_test_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
         launch_testing.asserts.assertExitCodes(
-            self.proc_info,
+            proc_info,
             [launch_testing.asserts.EXIT_OK],
             node_under_test,
         )
@@ -127,19 +96,15 @@ class PerformanceTestResults(unittest.TestCase):
         if performance_logs:
             performance_report_png = os.environ.get('PERFORMANCE_REPORT_PNG')
             if performance_report_png:
-                _csv_to_png(performance_logs[0], performance_report_png)
+                _raw_to_png(performance_logs[0], performance_report_png)
             else:
-                print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report')
-            performance_report_xml = os.environ.get('PERFORMANCE_REPORT_XML')
-            if performance_report_xml:
-                _csv_to_xml(performance_logs[0], performance_report_xml)
-            else:
-                print('No XML report written - set PERFORMANCE_REPORT_XML to write a report')
+                print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report',
+                    file=sys.stderr)
             performance_report_csv = os.environ.get('PERFORMANCE_REPORT_CSV')
             if performance_report_csv:
-                _csv_to_csv(performance_logs[0], performance_report_csv)
+                _raw_to_csv(performance_logs[0], performance_report_csv)
             else:
-                print('No CSV report written - set PERFORMANCE_REPORT_CSV to write a report')
+                print('No CSV report written - set PERFORMANCE_REPORT_CSV to write a report',
+                    file=sys.stderr)
         else:
-            print('No report written - no performance log was produced')
-
+            print('No report written - no performance log was produced', file=sys.stderr)
