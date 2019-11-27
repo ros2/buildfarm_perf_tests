@@ -90,6 +90,13 @@ def generate_test_description():
     ]), locals()
 
 
+class TestTerminatingProcessStops(unittest.TestCase):
+
+    def test_proc_terminates(self, proc_output, proc_info, node_under_test, performance_log_prefix):
+        proc_output.assertWaitFor("Maximum runtime reached. Exiting.",
+                                   process=node_under_test, timeout=60)
+
+
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
