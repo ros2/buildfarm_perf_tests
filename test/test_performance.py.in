@@ -8,8 +8,6 @@ import tempfile
 import unittest
 
 from launch import LaunchDescription
-from launch.actions import OpaqueFunction
-from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 import launch_testing
 
@@ -26,37 +24,9 @@ def _cleanUpLogs(performance_log_prefix):
         os.remove(log)
 
 
-def _create_node(comm, topic, max_runtime, log_file=None):
-    return Node(
-        package='performance_test', node_executable='perf_test', output='log',
-        arguments=[
-            '-c', comm, '-t', topic, '--max_runtime', str(max_runtime)
-        ] + (['-l', log_file] if log_file else []),
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=max_runtime * 2)
-    )
-
-
-def _raw_to_png(csv_data, png_path):
-    dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
-    pd.options.display.float_format = '{:.4f}'.format
-    dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
-    dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
-    dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
-    dataframe[['T_experiment',
-               'latency_min (ms)',
-               'latency_max (ms)',
-               'latency_mean (ms)',
-               'latency_variance (ms) * 100',
-               'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
-
-    plt.title('@TEST_NAME@ Performance Test')
-
-    plt.savefig(png_path)
-
-
 def _raw_to_csv(csv_data, csv_path):
     """
-    Convert from the raw csv format to the csv for the Jenkins plot plugin
+    Convert from the raw csv format to the csv for the Jenkins plot plugin.
 
     Do not change the order of the columns. The plot plugin indexes into the
     csv using the column number instead of the column name, because we're
@@ -78,22 +48,54 @@ def _raw_to_csv(csv_data, csv_path):
         csv.write(','.join(values) + '\n')
 
 
+def _raw_to_png(csv_data, png_path):
+    dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    pd.options.display.float_format = '{:.4f}'.format
+    dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
+    dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
+    dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
+    dataframe[['T_experiment',
+               'latency_min (ms)',
+               'latency_max (ms)',
+               'latency_mean (ms)',
+               'latency_variance (ms) * 100',
+               'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
+
+    plt.title('@TEST_NAME@ Performance Test')
+
+    plt.savefig(png_path)
+
+
 def generate_test_description():
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
-    node_under_test = _create_node(
-        '@COMM@', '@PERF_TEST_TOPIC@', @PERF_TEST_MAX_RUNTIME@, performance_log_prefix)
+    node_under_test = Node(
+        package='performance_test', node_executable='perf_test', output='log',
+        arguments=[
+            '-c', '@COMM@',
+            '-t', '@PERF_TEST_TOPIC@',
+            '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
+            '-l', performance_log_prefix,
+        ]
+    )
 
     return LaunchDescription([
         node_under_test,
+        launch_testing.util.KeepAliveProc(),
         launch_testing.actions.ReadyToTest(),
     ]), locals()
+
+
+class PerformanceTestTermination(unittest.TestCase):
+
+    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
+        proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PERF_TEST_MAX_RUNTIME@ * 2))
 
 
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
+    def test_results_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
         launch_testing.asserts.assertExitCodes(
@@ -104,17 +106,18 @@ class PerformanceTestResults(unittest.TestCase):
 
         performance_logs = glob(performance_log_prefix + '_*')
         if performance_logs:
-            performance_report_png = os.environ.get('PERFORMANCE_REPORT_PNG')
-            if performance_report_png:
-                _raw_to_png(performance_logs[0], performance_report_png)
-            else:
-                print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report',
-                    file=sys.stderr)
             performance_report_csv = os.environ.get('PERFORMANCE_REPORT_CSV')
             if performance_report_csv:
                 _raw_to_csv(performance_logs[0], performance_report_csv)
             else:
                 print('No CSV report written - set PERFORMANCE_REPORT_CSV to write a report',
-                    file=sys.stderr)
+                      file=sys.stderr)
+
+            performance_report_png = os.environ.get('PERFORMANCE_REPORT_PNG')
+            if performance_report_png:
+                _raw_to_png(performance_logs[0], performance_report_png)
+            else:
+                print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report',
+                      file=sys.stderr)
         else:
             print('No report written - no performance log was produced', file=sys.stderr)
