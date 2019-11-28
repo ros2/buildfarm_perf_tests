@@ -42,7 +42,7 @@ Add at the end the flags `--event-handlers console_direct+` if you want to visua
 
 * Each test runs for **30** seconds with a **1k payload**, but this can be changed using CMake variables.
  - `PERF_TEST_MAX_RUNTIME`: Maximum number of seconds to run before  exiting. Zero runs forever.
- - `PERF_TEST_TOPIC`: Topic to use
+ - `PERF_TEST_TOPIC`: Topic to use. These are all available topics: `Array1k`, `Array4k`, `Array16k`, `Array32k`, `Array60k`, `Array1m`, `Array2m`, `Struct16`, `Struct256`, `Struct4k`, `Struct32k`, `PointCloud512k`, `PointCloud1m`, `PointCloud2m`, `PointCloud4m`, `Range`, `NavSatFix`, `RadarDetection` and `RadarTrack`.
 
 For example, If we want to run the test during `30` seconds using the topic `Array1k`:
 
