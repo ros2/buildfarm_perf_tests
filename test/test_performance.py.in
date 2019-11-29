@@ -47,6 +47,14 @@ def _raw_to_csv(csv_data, csv_path):
         csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
         csv.write(','.join(values) + '\n')
 
+    values = [
+        '@PERF_TEST_TOPIC@',
+        str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
+        ]
+
+    dir_test_results = os.path.dirname(os.path.abspath(csv_path))
+    with open(dir_test_results+"/@COMM@_@RMW_IMPLEMENTATION@_all.csv", 'a') as csv:
+        csv.write(','.join(values) + '\n')
 
 def _raw_to_png(csv_data, png_path):
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
