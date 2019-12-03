@@ -79,14 +79,20 @@ def _raw_to_png(csv_data, png_path):
 
     dir_test_results = os.path.dirname(os.path.abspath(png_path))
     figure = None
+    legend = []
     for file in os.listdir(dir_test_results):
         if file.endswith("all.csv"):
+            legend.append(file.replace("_all.csv", ""))
             filename = os.path.join(dir_test_results, file)
             dataframe = pd.read_csv(filename, sep='[ \t]*,[ \t]*', engine='python')
             pd.options.display.float_format = '{:.4f}'.format
             figure = dataframe[['Size',
-                       'ms',]].plot(x='Size', secondary_y=['ms'], ax=figure)
-            # print(os.path.join(dir_test_results, file))
+                       'ms',]].plot(x='Size', ax=figure)
+            figure.yaxis.set_label_position("left")
+            figure.yaxis.tick_left()
+            plt.xticks(np.arange(len(dataframe[['Size']].values)), dataframe[['Size']].values)
+
+    plt.legend(legend, loc='upper left')
     plt.savefig(dir_test_results + "/performance_test_results_compared_sizes.png")
 
 
