@@ -1,0 +1,9 @@
+repositories:
+  buildfarm_perf_tests:
+    type: git
+    url: https://github.com/cottsay/buildfarm_perf_tests.git
+    version: master
+  performance_test:
+    type: git
+    url: https://gitlab.com/cottsay/performance_test.git
+    version: run_on_buildfarm
