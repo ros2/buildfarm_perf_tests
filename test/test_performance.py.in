@@ -41,6 +41,9 @@ def _raw_to_csv(csv_data, csv_path):
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
         str(dataframe_agg.loc['max', 'ru_maxrss']),
+        str(dataframe_agg.loc['mean', 'received']),
+        str(dataframe_agg.loc['mean', 'sent']),
+        str(dataframe_agg.loc['mean', 'lost']),
         ]
 
     with open(csv_path, 'w') as csv:
@@ -65,6 +68,11 @@ def _raw_to_png(csv_data, png_path):
 
     plt.savefig(png_path)
 
+    dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
+
+    plt.title('Received/Sent/Lost packages')
+
+    plt.savefig(png_path[:-4] + "_histogram.png")
 
 def generate_test_description():
     performance_log_prefix = tempfile.mkstemp(
