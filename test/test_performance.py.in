@@ -44,6 +44,7 @@ def _raw_to_csv(csv_data, csv_path):
         str(dataframe_agg.loc['sum', 'received']),
         str(dataframe_agg.loc['sum', 'sent']),
         str(dataframe_agg.loc['sum', 'lost']),
+        str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
         ]
 
     with open(csv_path, 'w') as csv:
@@ -68,9 +69,15 @@ def _raw_to_png(csv_data, png_path):
 
     plt.savefig(png_path)
 
+    dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
+
+    plt.title('@TEST_NAME@ CPU usage (%) Test')
+
+    plt.savefig(png_path[:-4] + "_cpu_usage.png")
+
     dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
 
-    plt.title('Received/Sent/Lost packages')
+    plt.title('@TEST_NAME@  Received/Sent/Lost packages')
 
     plt.savefig(png_path[:-4] + "_histogram.png")
 
