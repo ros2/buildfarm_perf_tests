@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 
+import launch
 from launch import LaunchDescription
 from launch_ros.actions import Node
 import launch_testing
@@ -81,7 +82,7 @@ def _raw_to_png(csv_data, png_path):
 
     plt.savefig(png_path[:-4] + "_histogram.png")
 
-def generate_test_description():
+def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
     node_under_test = Node(
@@ -96,8 +97,7 @@ def generate_test_description():
 
     return LaunchDescription([
         node_under_test,
-        launch_testing.util.KeepAliveProc(),
-        launch_testing.actions.ReadyToTest(),
+        launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 
