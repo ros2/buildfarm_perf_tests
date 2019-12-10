@@ -77,7 +77,7 @@ def _raw_to_png(csv_data, png_path):
 
     dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
 
-    plt.title('@TEST_NAME@  Received/Sent/Lost packages')
+    plt.title('@TEST_NAME@  Received/Sent/Lost packets')
 
     plt.savefig(png_path[:-4] + "_histogram.png")
 
