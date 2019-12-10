@@ -115,11 +115,11 @@ class PerformanceTestResults(unittest.TestCase):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
         # TODO(ahcorde): double free or corruption (fasttop) when FastRTPS finish
-        # launch_testing.asserts.assertExitCodes(
-        #     proc_info,
-        #     [launch_testing.asserts.EXIT_OK],
-        #     node_under_test,
-        # )
+        launch_testing.asserts.assertExitCodes(
+            proc_info,
+            [launch_testing.asserts.EXIT_OK],
+            node_under_test,
+        )
 
         performance_logs = glob(performance_log_prefix + '_*')
         if performance_logs:
