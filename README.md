@@ -18,7 +18,7 @@ This package defines some tests which invoke `perf_test` from Apex.AI's [perform
 
 1.  Install ROS 2 (https://index.ros.org/doc/ros2/Installation/).
 1.  Source the ROS 2 installation (either `/opt/ros/<rosdistro>/setup.bash` if installing from binaries, or `ros2_ws/install/setup.bash` if building from source):
-    1.  `source /opt/ros/eloquent/setup.bash`
+    1.  `source /opt/ros/<rosdistro>/setup.bash`
 1.  Make a new workspace and clone this repository into it:
     1.  `mkdir -p performance_ws/src`
     1.  `cd performance_ws/src`
