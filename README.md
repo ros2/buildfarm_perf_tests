@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This packages defined some tests which invokes `perf_test` from Apex's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This test allows you to test performance and latency.
+This package defines some tests which invoke `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations.
 
 * There is a test for each RMW:
 
