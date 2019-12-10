@@ -8,7 +8,7 @@ This package defines some tests which invoke `perf_test` from Apex.AI's [perform
 
   - CycloneDDS (standalone test)
   - FastRTPS (standalone test)
-  - rmw_connext_cpp.pn
+  - rmw_connext_cpp
   - rmw_cyclonedds_cpp
   - rmw_fastrtps_cpp
   - rmw_fastrtps_dynamic_cpp
@@ -18,13 +18,12 @@ This package defines some tests which invoke `perf_test` from Apex.AI's [perform
 
 1.  Install ROS 2 (https://index.ros.org/doc/ros2/Installation/).
 1.  Source the ROS 2 installation (either `/opt/ros/<rosdistro>/setup.bash` if installing from binaries, or `ros2_ws/install/setup.bash` if building from source):
-    1.  `source /opt/ros/<rosdistro>/setup.bash`
+    1.  `source /opt/ros/eloquent/setup.bash`
 1.  Make a new workspace and clone this repository into it:
-    1.  `mkdir -p performance_ws/src`
-    1.  `cd performance_ws/src`
-    1.  `git clone https://gitlab.com/ApexAI/performance_test`
-    1.  `git clone https://github.com/cottsay/buildfarm_perf_tests/`
-    1.  `cd ..`
+    1.  `mkdir -p ~/performance_ws/src`
+    1.  `cd ~/performance_ws`
+    1.  `wget https://github.com/ros2/buildfarm_perf_tests/raw/master/tools/ros2_dependencies.repos`
+    1.  `vcs import src < ros2_dependencies.repos`
 1.  Build the local workspace:
     1.  `colcon build`
 1.  Source the local workspace:
