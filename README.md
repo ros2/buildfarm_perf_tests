@@ -26,7 +26,7 @@ This package defines some tests which invoke `perf_test` from Apex.AI's [perform
     1.  `git clone https://github.com/cottsay/buildfarm_perf_tests/`
     1.  `cd ..`
 1.  Build the local workspace:
-    1.  `colcon build --cmake-args -DBUILD_TESTING=True`
+    1.  `colcon build`
 1.  Source the local workspace:
     1.  `source install/local_setup.bash`
 
