@@ -17,8 +17,8 @@ This package defines some tests which invoke `perf_test` from Apex.AI's [perform
 ##  Build
 
 1.  Install ROS 2 (https://index.ros.org/doc/ros2/Installation/).
-1.  Source the ROS 2 installation (either `/opt/ros/<rosdistro>/setup.bash` if installing from binaries, or `ros2_ws/install/setup.bash` if building from source):
-    1.  `source /opt/ros/eloquent/setup.bash`
+1.  Source the ROS 2 installation (either `/opt/ros/<rosdistro>/setup.bash` if installing from binaries, or `~/ros2_ws/install/setup.bash` if building from source):
+    1.  `source /opt/ros/<rosdistro>/setup.bash` or `source ~/ros2_ws/install/setup.bash`
 1.  Make a new workspace and clone this repository into it:
     1.  `mkdir -p ~/performance_ws/src`
     1.  `cd ~/performance_ws`
@@ -51,11 +51,15 @@ colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_MAX
 
 * Each test produces a PNG plot of [various measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/) across time, displayed in Jenkins using the image gallery plugin.
   - These plots are displayed on the build's summary page, and are part of the output artifacts for the build.
-![](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/lastSuccessfulBuild/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_FastRTPS.png)
+![](img/latency.png)
 
 * Each test also produces a couple of [aggregated measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/) in a small csv file, used to plot build-over-build using the Jenkins plot plugin.
 
    - To see these plots, click the "Plots" link on the left side of the JOB summary (not a build summary)
    - You should be able to click one of those points to jump to the aforementioned PNG plot that produced that aggregated point.
-![](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/getPlot?index=0&width=750&height=450)
-![](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/getPlot?index=1&width=750&height=450)
+![](img/agregate_latency.png)
+![](img/size.png)
+![](img/cpu.png)
+![](img/lost_packets.png)
+![](img/received_packets.png)
+![](img/sent_packets.png)
