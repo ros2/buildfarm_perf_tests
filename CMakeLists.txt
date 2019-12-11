@@ -13,6 +13,8 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rcpputils REQUIRED)
+find_package(rcutils REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(system_metrics_collector REQUIRED)
 find_package(metrics_statistics_msgs REQUIRED)
@@ -36,6 +38,8 @@ ament_target_dependencies(system_metric_collector
   metrics_statistics_msgs
   Boost
   rclcpp
+  rcpputils
+  rcutils
 )
 
 install(TARGETS

@@ -10,6 +10,8 @@
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclcpp</depend>
+  <depend>rcpputils</depend>
+  <depend>rcutils</depend>
   <depend>std_msgs</depend>
   <depend>system_metrics_collector</depend>
 
