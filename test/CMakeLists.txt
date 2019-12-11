@@ -20,6 +20,17 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.csv"
     ABSOLUTE
   )
+  get_filename_component(
+    PERFORMANCE_OVERHEAD_CSV
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME}.csv"
+    ABSOLUTE
+  )
+  get_filename_component(
+    PERFORMANCE_OVERHEAD_PNG
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME}.png"
+    ABSOLUTE
+  )
+
   configure_file(
     test_performance.py.in
     ${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME}.py.configure
@@ -37,6 +48,28 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
+
+  set(PUBSUB_TIMEOUT "60")
+
+  configure_file(
+    test_pub_sub.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME}.py.configure
+    @ONLY
+  )
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME}.py"
+    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME}.py.configure"
+  )
+
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME}.py"
+    TARGET test_pub_sub_${TEST_NAME}
+    ENV
+    "PERFORMANCE_OVERHEAD_CSV=${PERFORMANCE_OVERHEAD_CSV}"
+    "PERFORMANCE_OVERHEAD_PNG=${PERFORMANCE_OVERHEAD_PNG}"
+    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+  )
+
 endfunction()
 
 macro(try_add_performance_test)

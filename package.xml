@@ -16,6 +16,8 @@
   <test_depend>launch_testing_ament_cmake</test_depend>
   <test_depend>performance_test</test_depend>
   <test_depend>rmw_implementation_cmake</test_depend>
+  <test_depend>rclcpp</test_depend>
+  <test_depend>std_msgs</test_depend>
 
   <!-- For plot generation -->
   <test_depend>python3-matplotlib</test_depend>
