@@ -47,7 +47,7 @@ def _raw_to_csv(csv_data, csv_path):
         ]
 
     with open(csv_path, 'w') as csv:
-        csv.write(','.join(["virtual memory (%)", "cpu_usage  (%)", "disk usage (Kb)", "free_disk (Kb)"]) + '\n')
+        csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
         csv.write(','.join(values) + '\n')
 
 
