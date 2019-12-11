@@ -35,6 +35,7 @@ ament_target_dependencies(system_metric_collector
   system_metrics_collector
   metrics_statistics_msgs
   Boost
+  rclcpp
 )
 
 install(TARGETS
