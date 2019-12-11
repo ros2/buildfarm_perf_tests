@@ -76,6 +76,10 @@ def _raw_to_png(csv_data, png_path):
 def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
         prefix='overhead_test_results_@TEST_NAME@_', text=True)[1]
+    performance_log_prefix_pub = tempfile.mkstemp(
+        prefix='overhead_pub_test_results_@TEST_NAME@_', text=True)[1]
+    performance_log_prefix_sub = tempfile.mkstemp(
+        prefix='overhead_sub_test_results_@TEST_NAME@_', text=True)[1]
 
     node_under_test = launch.actions.ExecuteProcess(
       cmd=[
@@ -89,26 +93,41 @@ def generate_test_description(ready_fn):
           "--log", performance_log_prefix
       ],);
 
-    node_talker_test = Node(
-        package='buildfarm_perf_tests', node_executable='hello_world_publisher', output='log',
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default= @PUBSUB_TIMEOUT@ + 2)
+    node_publisher_test = Node(
+        package='performance_test', node_executable='perf_test', output='log',
+        arguments=[
+            '-c', '@COMM@',
+            '-t', '@PERF_TEST_TOPIC@',
+            '--max_runtime', '@PUBSUB_TIMEOUT@',
+            '-l', performance_log_prefix_pub,
+            '--rate', '5',
+            '--roundtrip_mode', 'Main',
+        ]
     )
-    node_listener_test = Node(
-        package='buildfarm_perf_tests', node_executable='hello_world_subscriber', output='log',
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default= @PUBSUB_TIMEOUT@ + 2)
+
+    node_relay_test = Node(
+        package='performance_test', node_executable='perf_test', output='log',
+        arguments=[
+            '-c', '@COMM@',
+            '-t', '@PERF_TEST_TOPIC@',
+            '--max_runtime', '@PUBSUB_TIMEOUT@',
+            '-l', performance_log_prefix_sub,
+            '--rate', '5',
+            '--roundtrip_mode', 'Relay',
+        ]
     )
 
     return LaunchDescription([
         node_under_test,
-        node_talker_test,
-        node_listener_test,
-        # launch_testing.util.KeepAliveProc(),
+        node_publisher_test,
+        node_relay_test,
+        launch_testing.util.KeepAliveProc(),
         launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 class PerformanceTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, node_under_test, node_talker_test, node_listener_test, proc_info):
+    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
       proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
 
 @launch_testing.post_shutdown_test()
