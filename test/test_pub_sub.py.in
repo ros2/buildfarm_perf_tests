@@ -56,20 +56,20 @@ def _raw_to_png(csv_data, png_path):
     pd.options.display.float_format = '{:.4f}'.format
     dataframe[['T_experiment', 'virtual memory (%)']].plot(x='T_experiment')
 
-    plt.title('Simple Pub/Sub Virtual memory usage')
+    plt.title('Simple Pub/Sub @TEST_NAME@  Virtual memory usage')
 
     plt.savefig(png_path[:-4] + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub CPU usage')
+    plt.title('Simple Pub/Sub @TEST_NAME@  CPU usage')
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
     dataframe[['T_experiment', 'disk usage (Kb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub Disk usage')
+    plt.title('Simple Pub/Sub @TEST_NAME@  Disk usage')
     plt.savefig(png_path[:-4] + "_disk_usage.png")
 
     dataframe[['T_experiment', 'free disk (Kb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub free disk')
+    plt.title('Simple Pub/Sub @TEST_NAME@  free disk')
     plt.savefig(png_path[:-4] + "_free_disk.png")
 
 
