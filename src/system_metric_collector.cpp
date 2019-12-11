@@ -1,29 +1,44 @@
+// Copyright 2019 Open Source Robotics Foundation, Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #include <unistd.h>
-#include <chrono>
 #include <sys/statvfs.h>
+#include <boost/program_options.hpp>
+#include <cstdint>
+#include <chrono>
+#include <string>
 
 #include "system_metrics_collector/linux_cpu_measurement_node.hpp"
 #include "system_metrics_collector/utilities.hpp"
 
-#include <boost/program_options.hpp>
-using namespace boost::program_options;
 
 constexpr const char PROC_STAT_FILE_CPU[] = "/proc/stat";
 constexpr const char PROC_STAT_FILE_MEM[] = "/proc/meminfo";
 
 char * get_capacity(char * dev_path)
 {
-  unsigned long long result = 0;
+  uint64_t result = 0;
   int n;
   char s_cap[50];
   char * ss_cap = "N/A";
   struct statvfs sfs;
   if (statvfs(dev_path, &sfs) != -1) {
-    result = (unsigned long long)sfs.f_bsize * sfs.f_blocks;
+    result = (uint64_t)sfs.f_bsize * sfs.f_blocks;
   }
   if (result > 0) {
-    double f_cap = (double)result / (1024);
-    n = sprintf(s_cap, "%.2f", f_cap);
+    double f_cap = static_cast<double>(result / (1024));
+    n = snprintf(s_cap, sizeof(s_cap), "%.2f", f_cap);
     ss_cap = strdup(s_cap);
   }
   return ss_cap;
@@ -31,18 +46,18 @@ char * get_capacity(char * dev_path)
 
 char * get_free_space(char * dev_path)
 {
-  unsigned long long result = 0;
+  uint64_t result = 0;
   int n;
   char s_cap[50];
   char * ss_cap = "N/A";
   struct statvfs sfs;
 
   if (statvfs(dev_path, &sfs) != -1) {
-    result = (unsigned long long)sfs.f_bsize * sfs.f_bfree;
+    result = (uint64_t)sfs.f_bsize * sfs.f_bfree;
   }
   if (result > 0) {
-    double f_cap = (double)result / (1024);
-    n = sprintf(s_cap, "%.2f", f_cap);
+    double f_cap = static_cast<double>(result / (1024));
+    n = snprintf(s_cap, sizeof(s_cap), "%.2f", f_cap);
     ss_cap = strdup(s_cap);
   }
   return ss_cap;
@@ -50,18 +65,18 @@ char * get_free_space(char * dev_path)
 
 int main(int argc, char ** argv)
 {
-
   float timeout = 60;
   std::ofstream m_os;
 
   try {
-    options_description desc{"Options"};
-    desc.add_options()
-      ("help,h", "Help screen")
-      ("timeout", value<float>()->default_value(30), "Test duration")
-      ("log", value<std::string>()->default_value("out.csv"), "Log filename");
+    boost::program_options::options_description desc{"Options"};
 
-    variables_map vm;
+    desc.add_options()("help,h", "Help screen")("timeout",
+      boost::program_options::value<float>()->default_value(30),
+      "Test duration")("log",
+      boost::program_options::value<std::string>()->default_value("out.csv"), "Log filename");
+
+    boost::program_options::variables_map vm;
     store(parse_command_line(argc, argv, desc), vm);
     notify(vm);
 
@@ -82,7 +97,7 @@ int main(int argc, char ** argv)
           ",disk usage (Kb)" << ",free disk (Kb)" << std::endl;
       }
     }
-  } catch (const error & ex) {
+  } catch (const boost::program_options::error & ex) {
     std::cerr << ex.what() << '\n';
   }
 

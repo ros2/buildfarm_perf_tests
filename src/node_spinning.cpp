@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <memory>
+
 #include "rclcpp/rclcpp.hpp"
 
 /* This example creates a subclass of Node and uses a fancy C++11 lambda
