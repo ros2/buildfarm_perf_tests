@@ -56,26 +56,26 @@ def _raw_to_png(csv_data, png_path):
     pd.options.display.float_format = '{:.4f}'.format
     dataframe[['T_experiment', 'virtual memory (%)']].plot(x='T_experiment')
 
-    plt.title('Simple Pub/Sub Virtual memory usage')
+    plt.title('Spinning node Virtual memory usage')
 
     plt.savefig(png_path[:-4] + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub CPU usage')
+    plt.title('Spinning node CPU usage')
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
     dataframe[['T_experiment', 'disk usage (Kb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub Disk usage')
+    plt.title('Spinning node Disk usage')
     plt.savefig(png_path[:-4] + "_disk_usage.png")
 
     dataframe[['T_experiment', 'free disk (Kb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub free disk')
+    plt.title('Spinning node free disk')
     plt.savefig(png_path[:-4] + "_free_disk.png")
 
 
 def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
-        prefix='overhead_test_results_@TEST_NAME@_', text=True)[1]
+        prefix='overhead_node_test_results_@TEST_NAME@_', text=True)[1]
 
     node_under_test = launch.actions.ExecuteProcess(
       cmd=[
@@ -89,26 +89,20 @@ def generate_test_description(ready_fn):
           "--log", performance_log_prefix
       ],);
 
-    node_talker_test = Node(
-        package='buildfarm_perf_tests', node_executable='hello_world_publisher', output='log',
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default= @PUBSUB_TIMEOUT@ + 2)
-    )
-    node_listener_test = Node(
-        package='buildfarm_perf_tests', node_executable='hello_world_subscriber', output='log',
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default= @PUBSUB_TIMEOUT@ + 2)
+    node_spinning_test = Node(
+        package='buildfarm_perf_tests', node_executable='node_spinning', output='log',
+        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=@PUBSUB_TIMEOUT@+2)
     )
 
     return LaunchDescription([
         node_under_test,
-        node_talker_test,
-        node_listener_test,
-        # launch_testing.util.KeepAliveProc(),
+        node_spinning_test,
         launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 class PerformanceTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, node_under_test, node_talker_test, node_listener_test, proc_info):
+    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
       proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
 
 @launch_testing.post_shutdown_test()
@@ -126,18 +120,18 @@ class PerformanceTestResults(unittest.TestCase):
         performance_logs = glob(performance_log_prefix + '*')
 
         if performance_logs:
-            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
+            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_NODE_CSV')
             if performance_report_csv:
                 _raw_to_csv(performance_logs[0], performance_report_csv)
             else:
-                print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
+                print('No CSV report written - set PERFORMANCE_OVERHEAD_NODE_CSV to write a report',
                       file=sys.stderr)
 
-            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
+            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_NODE_PNG')
             if performance_report_png:
                 _raw_to_png(performance_logs[0], performance_report_png)
             else:
-                print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
+                print('No PNG report written - set PERFORMANCE_OVERHEAD_NODE_PNG to write a report',
                       file=sys.stderr)
         else:
             print('No report written - no performance log was produced', file=sys.stderr)

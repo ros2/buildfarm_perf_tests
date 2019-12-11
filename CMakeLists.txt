@@ -32,6 +32,11 @@ ament_target_dependencies(hello_world_subscriber
   std_msgs
 )
 
+add_executable(node_spinning src/node_spinning.cpp)
+ament_target_dependencies(node_spinning
+  rclcpp
+)
+
 add_executable(system_metric_collector src/system_metric_collector.cpp)
 ament_target_dependencies(system_metric_collector
   system_metrics_collector
@@ -46,6 +51,7 @@ install(TARGETS
   system_metric_collector
   hello_world_subscriber
   hello_world_publisher
+  node_spinning
   DESTINATION
   lib/${PROJECT_NAME}
 )
