@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 
+import launch
 from launch import LaunchDescription
 from launch_ros.actions import Node
 import launch_testing
@@ -36,11 +37,15 @@ def _raw_to_csv(csv_data, csv_path):
     appears on the plot.
     """
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
-    dataframe_agg = dataframe.agg(['max', 'mean'])
+    dataframe_agg = dataframe.agg(['max', 'mean', 'sum'])
 
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
         str(dataframe_agg.loc['max', 'ru_maxrss']),
+        str(dataframe_agg.loc['sum', 'received']),
+        str(dataframe_agg.loc['sum', 'sent']),
+        str(dataframe_agg.loc['sum', 'lost']),
+        str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
         ]
 
     with open(csv_path, 'w') as csv:
@@ -65,8 +70,19 @@ def _raw_to_png(csv_data, png_path):
 
     plt.savefig(png_path)
 
+    dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
 
-def generate_test_description():
+    plt.title('@TEST_NAME@ CPU usage (%) Test')
+
+    plt.savefig(png_path[:-4] + "_cpu_usage.png")
+
+    dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
+
+    plt.title('@TEST_NAME@  Received/Sent/Lost packets')
+
+    plt.savefig(png_path[:-4] + "_histogram.png")
+
+def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
     node_under_test = Node(
@@ -82,7 +98,7 @@ def generate_test_description():
     return LaunchDescription([
         node_under_test,
         launch_testing.util.KeepAliveProc(),
-        launch_testing.actions.ReadyToTest(),
+        launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 
