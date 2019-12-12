@@ -42,8 +42,8 @@ def _raw_to_csv(csv_data, csv_path):
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
         str(dataframe_agg.loc['max', 'ru_maxrss']),
-        str(dataframe_agg.loc['sum', 'received']),
-        str(dataframe_agg.loc['sum', 'sent']),
+        str(dataframe_agg.loc['mean', 'received']),
+        str(dataframe_agg.loc['mean', 'sent']),
         str(dataframe_agg.loc['sum', 'lost']),
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
         ]
@@ -78,7 +78,7 @@ def _raw_to_png(csv_data, png_path):
 
     dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
 
-    plt.title('@TEST_NAME@  Received/Sent/Lost packets')
+    plt.title('@TEST_NAME@  Received/Sent packets per second and Lost packets')
 
     plt.savefig(png_path[:-4] + "_histogram.png")
 
