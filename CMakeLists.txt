@@ -15,22 +15,9 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcpputils REQUIRED)
 find_package(rcutils REQUIRED)
-find_package(std_msgs REQUIRED)
 find_package(system_metrics_collector REQUIRED)
 find_package(metrics_statistics_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
-
-add_executable(hello_world_publisher src/hello_world_publisher.cpp)
-ament_target_dependencies(hello_world_publisher
-  rclcpp
-  std_msgs
-)
-
-add_executable(hello_world_subscriber src/hello_world_subscriber.cpp)
-ament_target_dependencies(hello_world_subscriber
-  rclcpp
-  std_msgs
-)
 
 add_executable(node_spinning src/node_spinning.cpp)
 ament_target_dependencies(node_spinning
@@ -49,8 +36,6 @@ ament_target_dependencies(system_metric_collector
 
 install(TARGETS
   system_metric_collector
-  hello_world_subscriber
-  hello_world_publisher
   node_spinning
   DESTINATION
   lib/${PROJECT_NAME}
