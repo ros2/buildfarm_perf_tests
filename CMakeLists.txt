@@ -24,14 +24,30 @@ ament_target_dependencies(node_spinning
   rclcpp
 )
 
-add_executable(system_metric_collector src/system_metric_collector.cpp)
+# add_executable(system_metric_collector src/system_metric_collector.cpp)
+# ament_target_dependencies(system_metric_collector
+#   system_metrics_collector
+#   metrics_statistics_msgs
+#   Boost
+#   rclcpp
+#   rcpputils
+#   rcutils
+# )
+
+include_directories(include)
+
+add_executable(system_metric_collector
+  src/main_measurements.cpp
+  src/linux_cpu_measurement.cpp
+  src/linux_memory_measurement.cpp
+  src/utilities/utilities.cpp
+)
 ament_target_dependencies(system_metric_collector
-  system_metrics_collector
-  metrics_statistics_msgs
   Boost
-  rclcpp
-  rcpputils
-  rcutils
+)
+
+target_link_libraries(system_metric_collector
+  -lstdc++fs
 )
 
 install(TARGETS
