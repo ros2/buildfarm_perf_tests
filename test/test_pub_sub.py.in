@@ -40,10 +40,10 @@ def _raw_to_csv(csv_data, csv_path):
     dataframe_agg = dataframe.agg(['max', 'mean', 'sum'])
 
     values = [
-        str(dataframe_agg.loc['mean', 'virtual memory (%)']),
+        str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
-        str(dataframe_agg.loc['mean', 'disk usage (Kb)']),
-        str(dataframe_agg.loc['mean', 'free disk (Kb)']),
+        str(dataframe_agg.loc['mean', 'physical memory (Mb)']),
+        str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
         ]
 
     with open(csv_path, 'w') as csv:
@@ -51,31 +51,33 @@ def _raw_to_csv(csv_data, csv_path):
         csv.write(','.join(values) + '\n')
 
 
-def _raw_to_png(csv_data, png_path):
+def _raw_to_png(csv_data, png_path, type):
     dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
-    dataframe[['T_experiment', 'virtual memory (%)']].plot(x='T_experiment')
+    dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
 
-    plt.title('Simple Pub/Sub @TEST_NAME@  Virtual memory usage')
+    plt.title('Simple ' + type + ' @TEST_NAME@  Virtual memory usage')
 
-    plt.savefig(png_path[:-4] + "_virtual_memory.png")
+    plt.savefig(png_path + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub @TEST_NAME@  CPU usage')
-    plt.savefig(png_path[:-4] + "_cpu_usage.png")
+    plt.title('Simple ' + type + ' @TEST_NAME@  CPU usage')
+    plt.savefig(png_path + "_cpu_usage.png")
 
-    dataframe[['T_experiment', 'disk usage (Kb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub @TEST_NAME@  Disk usage')
-    plt.savefig(png_path[:-4] + "_disk_usage.png")
+    dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
+    plt.title('Simple ' + type + ' @TEST_NAME@ physical memory usage')
+    plt.savefig(png_path + "_physical_memory.png")
 
-    dataframe[['T_experiment', 'free disk (Kb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub @TEST_NAME@  free disk')
-    plt.savefig(png_path[:-4] + "_free_disk.png")
+    dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
+    plt.title('Simple ' + type + ' @TEST_NAME@  resident anonymous memory')
+    plt.savefig(png_path + "_resident_anonymous_memory.png")
 
 
 def generate_test_description(ready_fn):
-    performance_log_prefix = tempfile.mkstemp(
-        prefix='overhead_test_results_@TEST_NAME@_', text=True)[1]
+    performance_log_prefix_cpumem_pub = tempfile.mkstemp(
+        prefix='overhead_cpumem_pub_test_results_@TEST_NAME@_', text=True)[1]
+    performance_log_prefix_cpumem_sub = tempfile.mkstemp(
+        prefix='overhead_cpumem_sub_test_results_@TEST_NAME@_', text=True)[1]
     performance_log_prefix_pub = tempfile.mkstemp(
         prefix='overhead_pub_test_results_@TEST_NAME@_', text=True)[1]
     performance_log_prefix_sub = tempfile.mkstemp(
@@ -90,7 +92,23 @@ def generate_test_description(ready_fn):
           ),
           # Arguments
           "--timeout", "@PUBSUB_TIMEOUT@",
-          "--log", performance_log_prefix
+          "--log", performance_log_prefix_cpumem_pub,
+          "--process_name", "perf_test",
+          "--process_arguments", "Main"
+      ],);
+
+    system_metric_collector_sub = launch.actions.ExecuteProcess(
+      cmd=[
+          os.path.join(
+              ament_index_python.get_package_prefix('buildfarm_perf_tests'),
+              'lib/buildfarm_perf_tests',
+              'system_metric_collector',
+          ),
+          # Arguments
+          "--timeout", "@PUBSUB_TIMEOUT@",
+          "--log", performance_log_prefix_cpumem_sub,
+          "--process_name", "perf_test",
+          "--process_arguments", "Relay"
       ],);
 
     node_publisher_test = Node(
@@ -100,7 +118,6 @@ def generate_test_description(ready_fn):
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_pub,
-            '--rate', '5',
             '--roundtrip_mode', 'Main',
         ]
     )
@@ -112,13 +129,13 @@ def generate_test_description(ready_fn):
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_sub,
-            '--rate', '5',
             '--roundtrip_mode', 'Relay',
         ]
     )
 
     return LaunchDescription([
         node_under_test,
+        system_metric_collector_sub,
         node_publisher_test,
         node_relay_test,
         launch_testing.util.KeepAliveProc(),
@@ -127,14 +144,14 @@ def generate_test_description(ready_fn):
 
 class PerformanceTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
-      proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
+    def test_termination_@TEST_NAME@(self, system_metric_collector_sub, proc_info):
+      proc_info.assertWaitForShutdown(process=system_metric_collector_sub, timeout=(@PUBSUB_TIMEOUT@ * 2))
 
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_results_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
-        self.addCleanup(_cleanUpLogs, performance_log_prefix)
+    def test_results_@TEST_NAME@(self, performance_log_prefix_cpumem_pub, performance_log_prefix_cpumem_sub, proc_info):
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
 
         # launch_testing.asserts.assertExitCodes(
         #     proc_info,
@@ -142,19 +159,40 @@ class PerformanceTestResults(unittest.TestCase):
         #     node_under_test,
         # )
 
-        performance_logs = glob(performance_log_prefix + '*')
+        performance_logs = glob(performance_log_prefix_cpumem_pub + '*')
 
         if performance_logs:
-            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
+            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV') + "_pub"
             if performance_report_csv:
                 _raw_to_csv(performance_logs[0], performance_report_csv)
             else:
                 print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
                       file=sys.stderr)
 
-            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
+            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG') + "_pub"
             if performance_report_png:
-                _raw_to_png(performance_logs[0], performance_report_png)
+                _raw_to_png(performance_logs[0], performance_report_png, "pub")
+            else:
+                print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
+                      file=sys.stderr)
+        else:
+            print('No report written - no performance log was produced', file=sys.stderr)
+
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
+
+        performance_logs = glob(performance_log_prefix_cpumem_sub + '*')
+
+        if performance_logs:
+            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV') + "_sub"
+            if performance_report_csv:
+                _raw_to_csv(performance_logs[0], performance_report_csv)
+            else:
+                print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
+                      file=sys.stderr)
+
+            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG') + "_sub"
+            if performance_report_png:
+                _raw_to_png(performance_logs[0], performance_report_png, "sub")
             else:
                 print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
                       file=sys.stderr)

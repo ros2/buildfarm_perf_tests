@@ -40,11 +40,12 @@ def _raw_to_csv(csv_data, csv_path):
     dataframe_agg = dataframe.agg(['max', 'mean', 'sum'])
 
     values = [
-        str(dataframe_agg.loc['mean', 'virtual memory (%)']),
+        str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
-        str(dataframe_agg.loc['mean', 'disk usage (Kb)']),
-        str(dataframe_agg.loc['mean', 'free disk (Kb)']),
+        str(dataframe_agg.loc['mean', 'physical memory (Mb)']),
+        str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
         ]
+
 
     with open(csv_path, 'w') as csv:
         csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
@@ -54,23 +55,23 @@ def _raw_to_csv(csv_data, csv_path):
 def _raw_to_png(csv_data, png_path):
     dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
-    dataframe[['T_experiment', 'virtual memory (%)']].plot(x='T_experiment')
+    dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
 
-    plt.title('Spinning node @TEST_NAME@ Virtual memory usage')
+    plt.title('Node spinning @TEST_NAME@  Virtual memory usage')
 
     plt.savefig(png_path[:-4] + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Spinning node @TEST_NAME@ CPU usage')
+    plt.title('Node spinning @TEST_NAME@  CPU usage')
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
-    dataframe[['T_experiment', 'disk usage (Kb)']].plot(x='T_experiment')
-    plt.title('Spinning node @TEST_NAME@ Disk usage')
-    plt.savefig(png_path[:-4] + "_disk_usage.png")
+    dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
+    plt.title('Node spinning @TEST_NAME@ physical memory usage')
+    plt.savefig(png_path[:-4] + "_physical_memory.png")
 
-    dataframe[['T_experiment', 'free disk (Kb)']].plot(x='T_experiment')
-    plt.title('Spinning node @TEST_NAME@ free disk')
-    plt.savefig(png_path[:-4] + "_free_disk.png")
+    dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
+    plt.title('Node spinning @TEST_NAME@  resident anonymous memory')
+    plt.savefig(png_path[:-4] + "_resident_anonymous_memory.png")
 
 
 def generate_test_description(ready_fn):
@@ -86,7 +87,8 @@ def generate_test_description(ready_fn):
           ),
           # Arguments
           "--timeout", "@PUBSUB_TIMEOUT@",
-          "--log", performance_log_prefix
+          "--log", performance_log_prefix,
+          "--process_name", "node_spinning"
       ],);
 
     node_spinning_test = Node(
