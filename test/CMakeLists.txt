@@ -27,7 +27,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
   )
   get_filename_component(
     PERFORMANCE_OVERHEAD_PNG
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME}.png"
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME}"
     ABSOLUTE
   )
   get_filename_component(
