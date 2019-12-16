@@ -29,34 +29,20 @@ LinuxMemoryMeasurement::LinuxMemoryMeasurement(std::string pid)
 
 int LinuxMemoryMeasurement::getVirtualMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
-  std::string line;
-  std::ifstream myfile(std::string("/proc/") + this->pid_.c_str() + std::string("/status"));
-  if (myfile.is_open()) {
-    while (std::getline(myfile, line) ) {
-      if (line.find("VmSize:") != std::string::npos) {
-        std::vector<std::string> tokens = split(line, ' ');
-        myfile.close();
-        return atoi(tokens[1].c_str());
-      }
-    }
-  }
-  return -1;
+  std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/statm"));
+  int process_memory_used;
+  int process_memory_used_resident;
+  inputFile >> process_memory_used >> process_memory_used_resident;
+  return process_memory_used;
 }
 
 int LinuxMemoryMeasurement::getResidentAnonymousMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
-  std::string line;
-  std::ifstream myfile(std::string("/proc/") + this->pid_.c_str() + std::string("/status"));
-  if (myfile.is_open()) {
-    while (std::getline(myfile, line) ) {
-      if (line.find("RssAnon:") != std::string::npos) {
-        std::vector<std::string> tokens = split(line, ' ');
-        myfile.close();
-        return atoi(tokens[1].c_str());
-      }
-    }
-  }
-  return -1;
+  std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/statm"));
+  int process_memory_used;
+  int process_memory_used_resident;
+  inputFile >> process_memory_used >> process_memory_used_resident;
+  return process_memory_used_resident;
 }
 
 int LinuxMemoryMeasurement::getPhysicalMemoryCurrentlyUsedByCurrentProcess()
