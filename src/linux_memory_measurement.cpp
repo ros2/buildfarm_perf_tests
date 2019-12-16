@@ -31,7 +31,7 @@ int LinuxMemoryMeasurement::getResidentAnonymousMemoryCurrentlyUsedByCurrentProc
   std::ifstream myfile (std::string("/proc/") + this->pid_.c_str() + std::string("/status"));
   if (myfile.is_open()) {
     while ( std::getline (myfile,line) ) {
-      std::cerr << line << std::endl;
+      // std::cerr << line << std::endl;
       if (line.find("RssAnon:") != std::string::npos) {
         std::vector<std::string> tokens = split(line, ' ');
         myfile.close();
