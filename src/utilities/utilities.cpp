@@ -8,7 +8,7 @@ std::vector<std::string> split(const std::string& s, char delimiter)
    while (std::getline(tokenStream, token, delimiter))
    {
      if(!token.empty()) {
-       std::cerr << token << std::endl;
+       // std::cerr << token << std::endl;
        tokens.push_back(token);
      }
    }
