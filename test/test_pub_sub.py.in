@@ -38,8 +38,6 @@ def _raw_to_csv(csv_data, csv_path, type):
     """
     dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['median', 'mean'])
-    # percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
-    # str(percentils_cpu_usage.iloc[5]),
 
     values = [
         str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),

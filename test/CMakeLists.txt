@@ -59,7 +59,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
 
-  set(PUBSUB_TIMEOUT "60")
+  set(PUBSUB_TIMEOUT "30")
 
   configure_file(
     test_pub_sub.py.in
@@ -80,6 +80,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
     TIMEOUT 120
   )
+
+  set(PUBSUB_TIMEOUT "60")
 
   configure_file(
     test_spinning.py.in

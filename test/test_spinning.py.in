@@ -37,13 +37,21 @@ def _raw_to_csv(csv_data, csv_path):
     appears on the plot.
     """
     dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
-    dataframe_agg = dataframe.agg(['max', 'mean', 'sum'])
+    dataframe_agg = dataframe.agg(['median', 'mean'])
 
     values = [
         str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
+        str(dataframe_agg.loc['median', 'virtual memory (Mb)']),
+        str(dataframe['virtual memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
+        str(dataframe_agg.loc['median', 'cpu_usage (%)']),
+        str(dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5]),
         str(dataframe_agg.loc['mean', 'physical memory (Mb)']),
+        str(dataframe_agg.loc['median', 'physical memory (Mb)']),
+        str(dataframe['physical memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
         str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
+        str(dataframe_agg.loc['median', 'resident anonymous memory (Mb)']),
+        str(dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
         ]
 
 
