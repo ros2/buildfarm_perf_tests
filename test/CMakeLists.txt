@@ -53,7 +53,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
 
   get_available_rmw_implementations(_rmw_implementations)
 
-  foreach (rmw_impl ${_rmw_implementations})
+  foreach(rmw_impl ${_rmw_implementations})
 
     set(COMM_PUB ${COMM})
     set(COMM_SUB ${rmw_impl})

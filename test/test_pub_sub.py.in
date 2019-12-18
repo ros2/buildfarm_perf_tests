@@ -25,7 +25,7 @@ def _cleanUpLogs(performance_log_prefix):
     for log in glob(performance_log_prefix):
         os.remove(log)
 
-def _raw_to_csv(csv_data, csv_path, type):
+def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
     """
     Convert from the raw csv format to the csv for the Jenkins plot plugin.
 
@@ -38,6 +38,11 @@ def _raw_to_csv(csv_data, csv_path, type):
     """
     dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['median', 'mean'])
+
+    dataframe_perf = pd.read_csv(csv_perf_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe_agg_perf = dataframe_perf.agg(['max', 'mean', 'sum', 'median'])
+
+    percentils_latency = dataframe_agg_perf['latency_mean (ms)'].describe(percentiles=[0.95])
 
     values = [
         str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
@@ -52,6 +57,13 @@ def _raw_to_csv(csv_data, csv_path, type):
         str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
         str(dataframe_agg.loc['median', 'resident anonymous memory (Mb)']),
         str(dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
+        str(dataframe_agg_perf.loc['mean', 'latency_mean (ms)']),
+        str(dataframe_agg_perf.loc['median', 'latency_mean (ms)']),
+        str(percentils_latency.iloc[5]),
+        str(dataframe_agg_perf.loc['max', 'ru_maxrss']),
+        str(dataframe_agg_perf.loc['mean', 'received']),
+        str(dataframe_agg_perf.loc['mean', 'sent']),
+        str(dataframe_agg_perf.loc['sum', 'lost']),
         ]
 
     with open(csv_path[:-4] + "_" + type + ".csv", 'w') as csv:
@@ -85,6 +97,19 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type):
     dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
     plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@ Received/Sent/Lost packets')
     plt.savefig(png_path + "_" + type + "_histogram.png")
+
+    dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
+    dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
+    dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
+    dataframe[['T_experiment',
+               'latency_min (ms)',
+               'latency_max (ms)',
+               'latency_mean (ms)',
+               'latency_variance (ms) * 100',
+               'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
+    plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@ latency')
+    plt.savefig(png_path + "_" + type + "_latency.png")
+
 
 def generate_test_description(ready_fn):
     performance_log_prefix_cpumem_pub = tempfile.mkstemp(
@@ -171,8 +196,8 @@ class PerformanceTestResults(unittest.TestCase):
     def test_results_@TEST_NAME_PUB_SUB@(self, performance_log_prefix_cpumem_pub, performance_log_prefix_cpumem_sub, performance_log_prefix_pub, performance_log_prefix_sub, proc_info):
         # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
         # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
+        # self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
+        # self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
 
         # launch_testing.asserts.assertExitCodes(
         #     proc_info,
@@ -186,7 +211,7 @@ class PerformanceTestResults(unittest.TestCase):
         if performance_logs and performance_logs_perf_test:
             performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
             if performance_report_csv:
-                _raw_to_csv(performance_logs[0], performance_report_csv, "pub")
+                _raw_to_csv(performance_logs[0], performance_logs_perf_test[0], performance_report_csv, "pub")
             else:
                 print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
                       file=sys.stderr)
@@ -206,7 +231,7 @@ class PerformanceTestResults(unittest.TestCase):
         if performance_logs and performance_logs_perf_test:
             performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
             if performance_report_csv:
-                _raw_to_csv(performance_logs[0], performance_report_csv, "sub")
+                _raw_to_csv(performance_logs[0], performance_logs_perf_test[0], performance_report_csv, "sub")
             else:
                 print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
                       file=sys.stderr)
