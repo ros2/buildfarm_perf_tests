@@ -196,8 +196,8 @@ class PerformanceTestResults(unittest.TestCase):
     def test_results_@TEST_NAME_PUB_SUB@(self, performance_log_prefix_cpumem_pub, performance_log_prefix_cpumem_sub, performance_log_prefix_pub, performance_log_prefix_sub, proc_info):
         # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
         # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
-        # self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
-        # self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
 
         # launch_testing.asserts.assertExitCodes(
         #     proc_info,
