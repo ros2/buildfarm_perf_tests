@@ -88,7 +88,7 @@ int main(int argc, char * argv[])
     }
 
     if (pid_sub.empty() || atoi(pid_sub.c_str()) < 1024) {
-      std::cerr << "No process found" << std::endl;
+      // std::cerr << "No process found" << std::endl;
       continue;
     } else {
       break;
