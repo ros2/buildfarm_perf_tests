@@ -15,7 +15,6 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rcpputils REQUIRED)
 find_package(rcutils REQUIRED)
-find_package(system_metrics_collector REQUIRED)
 find_package(metrics_statistics_msgs REQUIRED)
 find_package(Boost REQUIRED COMPONENTS program_options)
 
