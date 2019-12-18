@@ -55,7 +55,7 @@ def _raw_to_csv(csv_data, csv_path, type):
         ]
 
     with open(csv_path[:-4] + "_" + type + ".csv", 'w') as csv:
-        csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
+        csv.write(','.join(['@TEST_NAME_PUB_SUB@'] * len(values)) + '\n')
         csv.write(','.join(values) + '\n')
 
 
@@ -64,37 +64,37 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type):
     pd.options.display.float_format = '{:.4f}'.format
     dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
 
-    plt.title('Simple ' + type + ' @TEST_NAME@  Virtual memory usage')
+    plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@  Virtual memory usage')
 
     plt.savefig(png_path + "_" + type + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Simple ' + type + ' @TEST_NAME@  CPU usage')
+    plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@  CPU usage')
     plt.savefig(png_path + "_" + type +  "_cpu_usage.png")
 
     dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
-    plt.title('Simple ' + type + ' @TEST_NAME@ physical memory usage')
+    plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@ physical memory usage')
     plt.savefig(png_path + "_" + type +  "_physical_memory.png")
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
-    plt.title('Simple ' + type + ' @TEST_NAME@  resident anonymous memory')
+    plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@  resident anonymous memory')
     plt.savefig(png_path + "_" + type +  "_resident_anonymous_memory.png")
 
     dataframe = pd.read_csv(csv_perf_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
     dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
-    plt.title('Simple ' + type + ' @TEST_NAME@ Received/Sent/Lost packets')
+    plt.title('Simple ' + type + ' @TEST_NAME_PUB_SUB@ Received/Sent/Lost packets')
     plt.savefig(png_path + "_" + type + "_histogram.png")
 
 def generate_test_description(ready_fn):
     performance_log_prefix_cpumem_pub = tempfile.mkstemp(
-        prefix='overhead_cpumem_pub_test_results_@TEST_NAME@_', text=True)[1]
+        prefix='overhead_cpumem_pub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
     performance_log_prefix_cpumem_sub = tempfile.mkstemp(
-        prefix='overhead_cpumem_sub_test_results_@TEST_NAME@_', text=True)[1]
+        prefix='overhead_cpumem_sub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
     performance_log_prefix_pub = tempfile.mkstemp(
-        prefix='overhead_pub_test_results_@TEST_NAME@_', text=True)[1]
+        prefix='overhead_pub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
     performance_log_prefix_sub = tempfile.mkstemp(
-        prefix='overhead_sub_test_results_@TEST_NAME@_', text=True)[1]
+        prefix='overhead_sub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
 
     node_under_test = launch.actions.ExecuteProcess(
       cmd=[
@@ -127,7 +127,7 @@ def generate_test_description(ready_fn):
     node_publisher_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
-            '-c', '@COMM@',
+            '-c', '@COMM_PUB@',
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_pub,
@@ -139,7 +139,7 @@ def generate_test_description(ready_fn):
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
-            '-c', '@COMM@',
+            '-c', '@COMM_SUB@',
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_sub,
@@ -159,7 +159,7 @@ def generate_test_description(ready_fn):
 
 class PerformanceTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, system_metric_collector_sub, node_under_test, node_publisher_test, node_relay_test, proc_info):
+    def test_termination_@TEST_NAME_PUB_SUB@(self, system_metric_collector_sub, node_under_test, node_publisher_test, node_relay_test, proc_info):
       proc_info.assertWaitForShutdown(process=system_metric_collector_sub, timeout=(@PUBSUB_TIMEOUT@ * 2))
       proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
       proc_info.assertWaitForShutdown(process=node_publisher_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
@@ -168,7 +168,7 @@ class PerformanceTestTermination(unittest.TestCase):
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_results_@TEST_NAME@(self, performance_log_prefix_cpumem_pub, performance_log_prefix_cpumem_sub, performance_log_prefix_pub, performance_log_prefix_sub, proc_info):
+    def test_results_@TEST_NAME_PUB_SUB@(self, performance_log_prefix_cpumem_pub, performance_log_prefix_cpumem_sub, performance_log_prefix_pub, performance_log_prefix_sub, proc_info):
         # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
         # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
         self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)

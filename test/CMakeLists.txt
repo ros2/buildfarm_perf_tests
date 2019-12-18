@@ -6,8 +6,8 @@ set(PERF_TEST_TOPIC "Array1k"
 find_package(launch_testing_ament_cmake REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
 
-set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
-set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
+# set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
+# set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
 
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
   get_filename_component(
@@ -18,16 +18,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
   get_filename_component(
     PERFORMANCE_REPORT_CSV
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.csv"
-    ABSOLUTE
-  )
-  get_filename_component(
-    PERFORMANCE_OVERHEAD_CSV
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME}.csv"
-    ABSOLUTE
-  )
-  get_filename_component(
-    PERFORMANCE_OVERHEAD_PNG
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME}"
     ABSOLUTE
   )
   get_filename_component(
@@ -50,64 +40,86 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
     INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME}.py.configure"
   )
-  add_launch_test(
-    "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
-    TARGET test_performance_${TEST_NAME}
-    ENV
-    "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
-    "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
-    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
-  )
+  # add_launch_test(
+  #   "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
+  #   TARGET test_performance_${TEST_NAME}
+  #   ENV
+  #   "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
+  #   "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
+  #   "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+  # )
 
   set(PUBSUB_TIMEOUT "30")
 
-  configure_file(
-    test_pub_sub.py.in
-    ${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME}.py.configure
-    @ONLY
-  )
-  file(GENERATE
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME}.py"
-    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME}.py.configure"
-  )
+  get_available_rmw_implementations(_rmw_implementations)
 
-  add_launch_test(
-    "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME}.py"
-    TARGET test_pub_sub_${TEST_NAME}
-    ENV
-    "PERFORMANCE_OVERHEAD_CSV=${PERFORMANCE_OVERHEAD_CSV}"
-    "PERFORMANCE_OVERHEAD_PNG=${PERFORMANCE_OVERHEAD_PNG}"
-    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
-    TIMEOUT 120
-  )
+  foreach (rmw_impl ${_rmw_implementations})
 
-  set(PUBSUB_TIMEOUT "60")
+    set(COMM_PUB ${COMM})
+    set(COMM_SUB ${rmw_impl})
+    set(TEST_NAME_PUB_SUB ${COMM}_${rmw_impl})
 
-  configure_file(
-    test_spinning.py.in
-    ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure
-    @ONLY
-  )
-  file(GENERATE
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
-    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure"
-  )
+    message("TEST_NAME_PUB_SUB " ${TEST_NAME_PUB_SUB})
 
-  add_launch_test(
-    "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
-    TARGET test_spinning_${TEST_NAME}
-    ENV
-    "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
-    "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
-    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
-    TIMEOUT 120
-  )
+    get_filename_component(
+      PERFORMANCE_OVERHEAD_CSV
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}.csv"
+      ABSOLUTE
+    )
+    get_filename_component(
+      PERFORMANCE_OVERHEAD_PNG
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}"
+      ABSOLUTE
+    )
+
+    configure_file(
+      test_pub_sub.py.in
+      ${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME_PUB_SUB}.py.configure
+      @ONLY
+    )
+    file(GENERATE
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME_PUB_SUB}.py"
+      INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME_PUB_SUB}.py.configure"
+    )
+
+    add_launch_test(
+      "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME_PUB_SUB}.py"
+      TARGET test_pub_sub_${TEST_NAME_PUB_SUB}
+      ENV
+      "PERFORMANCE_OVERHEAD_CSV=${PERFORMANCE_OVERHEAD_CSV}"
+      "PERFORMANCE_OVERHEAD_PNG=${PERFORMANCE_OVERHEAD_PNG}"
+      "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+      TIMEOUT 120
+    )
+  endforeach()
+
+  # set(PUBSUB_TIMEOUT "60")
+  #
+  # configure_file(
+  #   test_spinning.py.in
+  #   ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure
+  #   @ONLY
+  # )
+  # file(GENERATE
+  #   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
+  #   INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure"
+  # )
+  #
+  # add_launch_test(
+  #   "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
+  #   TARGET test_spinning_${TEST_NAME}
+  #   ENV
+  #   "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
+  #   "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
+  #   "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+  #   TIMEOUT 120
+  # )
 endfunction()
 
 macro(try_add_performance_test)
   add_performance_test(
     ${rmw_implementation}
-    "ROS2"
+    ${rmw_implementation}
     ${rmw_implementation}
   )
   if(COMM_TYPE_${rmw_implementation})
