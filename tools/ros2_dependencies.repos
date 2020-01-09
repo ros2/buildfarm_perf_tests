@@ -5,5 +5,5 @@ repositories:
     version: ahcorde/simple_pub_sub_multidds
   performance_test:
     type: git
-    url: https://github.com/ros2/performance_test
+    url: https://github.com/ros2/performance_test.git
     version: run_on_buildfarm
