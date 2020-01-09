@@ -40,16 +40,16 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
     INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME}.py.configure"
   )
-  # add_launch_test(
-  #   "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
-  #   TARGET test_performance_${TEST_NAME}
-  #   ENV
-  #   "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
-  #   "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
-  #   "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
-  # )
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME}.py"
+    TARGET test_performance_${TEST_NAME}
+    ENV
+    "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
+    "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
+    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+  )
 
-  set(PUBSUB_TIMEOUT "30")
+  set(PUBSUB_TIMEOUT "5")
 
   get_available_rmw_implementations(_rmw_implementations)
 
@@ -93,27 +93,27 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     )
   endforeach()
 
-  # set(PUBSUB_TIMEOUT "60")
-  #
-  # configure_file(
-  #   test_spinning.py.in
-  #   ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure
-  #   @ONLY
-  # )
-  # file(GENERATE
-  #   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
-  #   INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure"
-  # )
-  #
-  # add_launch_test(
-  #   "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
-  #   TARGET test_spinning_${TEST_NAME}
-  #   ENV
-  #   "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
-  #   "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
-  #   "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
-  #   TIMEOUT 120
-  # )
+  set(PUBSUB_TIMEOUT "60")
+
+  configure_file(
+    test_spinning.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure
+    @ONLY
+  )
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
+    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure"
+  )
+
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
+    TARGET test_spinning_${TEST_NAME}
+    ENV
+    "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
+    "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
+    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+    TIMEOUT 120
+  )
 endfunction()
 
 macro(try_add_performance_test)

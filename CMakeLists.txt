@@ -22,16 +22,6 @@ ament_target_dependencies(node_spinning
   rclcpp
 )
 
-# add_executable(system_metric_collector src/system_metric_collector.cpp)
-# ament_target_dependencies(system_metric_collector
-#   system_metrics_collector
-#   metrics_statistics_msgs
-#   Boost
-#   rclcpp
-#   rcpputils
-#   rcutils
-# )
-
 include_directories(include)
 
 add_executable(system_metric_collector
