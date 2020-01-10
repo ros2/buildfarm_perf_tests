@@ -28,6 +28,8 @@ add_executable(system_metric_collector
   src/main_measurements.cpp
   src/linux_cpu_process_measurement.cpp
   src/linux_memory_process_measurement.cpp
+  src/linux_cpu_system_measurement.cpp
+  src/linux_memory_system_measurement.cpp
   src/utilities/utilities.cpp
 )
 ament_target_dependencies(system_metric_collector

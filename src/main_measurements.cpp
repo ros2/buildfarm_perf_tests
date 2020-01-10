@@ -18,7 +18,8 @@
 #include <thread>
 #include "linux_memory_process_measurement.hpp"
 #include "linux_cpu_process_measurement.hpp"
-
+#include "linux_memory_system_measurement.hpp"
+#include "linux_cpu_system_measurement.hpp"
 
 int main(int argc, char * argv[])
 {
@@ -98,6 +99,8 @@ int main(int argc, char * argv[])
   LinuxMemoryProcessMeasurement linux_memory_process_measurement(pid_sub);
   LinuxCPUProcessMeasurement linux_cpu_process_measurement(pid_sub);
 
+  LinuxCPUSystemMeasurement linux_cpu_system_measurement;
+  LinuxMemorySystemMeasurement linux_memory_system_measurement;
 
   while (true) {
     linux_memory_process_measurement.makeReading();
@@ -106,12 +109,17 @@ int main(int argc, char * argv[])
     double virtual_mem_process_usage = linux_memory_process_measurement.getVirtualMemUsedProcess();
     double phy_mem_process_usage = linux_memory_process_measurement.getPhysMemUsedProcess();
     double resident_anonymousMemory_process_usage = linux_memory_process_measurement.getResidentAnonymousMemory();
+    double cpu_system_percentage = linux_cpu_system_measurement.getCPUSystemCurrentlyUsed();
+    double phy_mem_system_usage = linux_memory_system_measurement.getTotalMemorySystem() -
+      linux_memory_system_measurement.getAvailableMemorySystem();
 
     std::cout << "virtualMemUsed Process: " << virtual_mem_process_usage << " Mb" << std::endl;
     std::cout << "ResidentAnonymousMemory Process: " << resident_anonymousMemory_process_usage << " Mb" <<
       std::endl;
     std::cout << "PhysMemUsedProcess: " << phy_mem_process_usage << " Mb" << std::endl;
     std::cout << "CPU Usage Process: " << cpu_process_percentage << " (%)" << std::endl;
+    std::cout << "CPU Usage system: " << cpu_system_percentage << " (%)" << std::endl;
+    std::cout << "PhysMemUsedsystem: " << phy_mem_system_usage << " (Mb)" << std::endl;
 
     std::this_thread::sleep_for(std::chrono::seconds(1));
     auto finish = std::chrono::high_resolution_clock::now();
@@ -126,7 +134,8 @@ int main(int argc, char * argv[])
     if (m_os.is_open()) {
       m_os << seconds_running << ", " << cpu_process_percentage << ", " <<
         virtual_mem_process_usage << ", " << phy_mem_process_usage << ", " <<
-        resident_anonymousMemory_process_usage << std::endl;
+        resident_anonymousMemory_process_usage << ", " << cpu_system_percentage <<
+        ", " << phy_mem_system_usage << std::endl;
     }
   }
 }
