@@ -59,7 +59,7 @@ int main(int argc, char * argv[])
       if (m_os.is_open()) {
         m_os << "T_experiment" << ",cpu_usage (%)" << ",virtual memory (Mb)" <<
           ",physical memory (Mb)" << ",resident anonymous memory (Mb)" <<
-          ",system_cpu_usage (%) " << ",system virtual memory (Mb)" << std::endl;
+          ",system_cpu_usage (%)" << ",system virtual memory (Mb)" << std::endl;
       }
     }
 
