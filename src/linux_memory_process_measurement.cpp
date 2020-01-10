@@ -11,12 +11,12 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "linux_memory_measurement.hpp"
+#include "linux_memory_process_measurement.hpp"
 
 #include <string>
 #include <vector>
 
-LinuxMemoryMeasurement::LinuxMemoryMeasurement(std::string pid)
+LinuxMemoryProcessMeasurement::LinuxMemoryProcessMeasurement(std::string pid)
 : totalVirtualMem_(0),
   virtualMemUsed_(0),
   virtualMemUsedProcess_(0),
@@ -27,7 +27,7 @@ LinuxMemoryMeasurement::LinuxMemoryMeasurement(std::string pid)
 {
 }
 
-int LinuxMemoryMeasurement::getVirtualMemoryCurrentlyUsedByCurrentProcess()
+int LinuxMemoryProcessMeasurement::getVirtualMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
   std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/statm"));
   int process_memory_used;
@@ -36,7 +36,7 @@ int LinuxMemoryMeasurement::getVirtualMemoryCurrentlyUsedByCurrentProcess()
   return process_memory_used;
 }
 
-int LinuxMemoryMeasurement::getResidentAnonymousMemoryCurrentlyUsedByCurrentProcess()
+int LinuxMemoryProcessMeasurement::getResidentAnonymousMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
   std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/statm"));
   int process_memory_used;
@@ -45,7 +45,7 @@ int LinuxMemoryMeasurement::getResidentAnonymousMemoryCurrentlyUsedByCurrentProc
   return process_memory_used_resident;
 }
 
-int LinuxMemoryMeasurement::getPhysicalMemoryCurrentlyUsedByCurrentProcess()
+int LinuxMemoryProcessMeasurement::getPhysicalMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
   std::string line;
   std::ifstream myfile(std::string("/proc/") + this->pid_.c_str() + std::string("/status"));
@@ -61,7 +61,7 @@ int LinuxMemoryMeasurement::getPhysicalMemoryCurrentlyUsedByCurrentProcess()
   return -1;
 }
 
-void LinuxMemoryMeasurement::makeReading()
+void LinuxMemoryProcessMeasurement::makeReading()
 {
   struct sysinfo memInfo;
   sysinfo(&memInfo);

@@ -25,10 +25,10 @@
 #include <iostream>
 #include "utilities/utilities.hpp"
 
-class LinuxMemoryMeasurement
+class LinuxMemoryProcessMeasurement
 {
 public:
-  explicit LinuxMemoryMeasurement(std::string pid);
+  explicit LinuxMemoryProcessMeasurement(std::string pid);
   void makeReading();
 
   inline double getTotalVirtualMem() {return this->totalVirtualMem_;}

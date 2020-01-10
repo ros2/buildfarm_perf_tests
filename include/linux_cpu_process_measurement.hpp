@@ -25,10 +25,10 @@
 #include <iostream>
 #include "utilities/utilities.hpp"
 
-class LinuxCPUMeasurement
+class LinuxCPUProcessMeasurement
 {
 public:
-  explicit LinuxCPUMeasurement(std::string pid);
+  explicit LinuxCPUProcessMeasurement(std::string pid);
   double getCPUCurrentlyUsedByCurrentProcess();
   int gettimesinceboot();
   double getUptime();

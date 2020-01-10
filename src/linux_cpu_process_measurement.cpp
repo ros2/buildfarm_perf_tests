@@ -11,11 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#include "linux_cpu_measurement.hpp"
+#include "linux_cpu_process_measurement.hpp"
 #include <string>
 #include <vector>
 
-LinuxCPUMeasurement::LinuxCPUMeasurement(std::string pid)
+LinuxCPUProcessMeasurement::LinuxCPUProcessMeasurement(std::string pid)
 : pid_(pid),
   tickspersec_(sysconf(_SC_CLK_TCK)),
   numProcessors_(0)
@@ -23,7 +23,7 @@ LinuxCPUMeasurement::LinuxCPUMeasurement(std::string pid)
   initCPUProcess();
 }
 
-void LinuxCPUMeasurement::initCPUProcess()
+void LinuxCPUProcessMeasurement::initCPUProcess()
 {
   std::string line;
   std::ifstream myfile(std::string("/proc/cpuinfo"));
@@ -37,7 +37,7 @@ void LinuxCPUMeasurement::initCPUProcess()
   myfile.close();
 }
 
-int LinuxCPUMeasurement::gettimesinceboot()
+int LinuxCPUProcessMeasurement::gettimesinceboot()
 {
   double result = 0;
   std::string line;
@@ -52,7 +52,7 @@ int LinuxCPUMeasurement::gettimesinceboot()
   return result;
 }
 
-double LinuxCPUMeasurement::getUptime()
+double LinuxCPUProcessMeasurement::getUptime()
 {
   double uptime = 0;
   std::string line;
@@ -67,7 +67,7 @@ double LinuxCPUMeasurement::getUptime()
   return uptime;
 }
 
-double LinuxCPUMeasurement::getCPUCurrentlyUsedByCurrentProcess()
+double LinuxCPUProcessMeasurement::getCPUCurrentlyUsedByCurrentProcess()
 {
   int64_t pid;
   std::string tcomm_string;
