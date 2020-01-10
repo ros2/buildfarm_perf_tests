@@ -64,6 +64,8 @@ def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
         str(dataframe_agg_perf.loc['mean', 'received']),
         str(dataframe_agg_perf.loc['mean', 'sent']),
         str(dataframe_agg_perf.loc['sum', 'lost']),
+        str(dataframe_agg.loc['mean', 'system_cpu_usage (%)']),
+        str(dataframe_agg.loc['mean', 'system virtual memory (Mb)']),
         ]
 
     with open(csv_path[:-4] + "_" + type + ".csv", 'w') as csv:
