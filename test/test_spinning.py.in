@@ -65,20 +65,23 @@ def _raw_to_png(csv_data, png_path):
     pd.options.display.float_format = '{:.4f}'.format
     dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
 
-    plt.title('Node spinning @TEST_NAME@  Virtual memory usage')
-
+    plt.title('Node spinning virtual memory usage\n@TEST_NAME@')
+    plt.ylim(0, 1024)
     plt.savefig(png_path[:-4] + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Node spinning @TEST_NAME@  CPU usage')
+    plt.title('Node spinning CPU usage\n@TEST_NAME@')
+    plt.ylim(0, 100)
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
     dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
-    plt.title('Node spinning @TEST_NAME@ physical memory usage')
+    plt.ylim(0, 100)
+    plt.title('Node spinning physical memory usage\n@TEST_NAME@')
     plt.savefig(png_path[:-4] + "_physical_memory.png")
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
-    plt.title('Node spinning @TEST_NAME@  resident anonymous memory')
+    plt.title('Node spinning resident anonymous memory\n@TEST_NAME@')
+    plt.ylim(0, 10)
     plt.savefig(png_path[:-4] + "_resident_anonymous_memory.png")
 
 
