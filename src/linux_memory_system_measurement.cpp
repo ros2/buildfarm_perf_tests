@@ -12,62 +12,65 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #include "linux_memory_system_measurement.hpp"
+#include <string>
+#include <vector>
+#include <limits>
 
-LinuxMemorySystemMeasurement::LinuxMemorySystemMeasurement()
+LinuxMemorySystemMeasurement::LinuxMemorySystemMeasurement() {}
+
+double LinuxMemorySystemMeasurement::getTotalMemorySystem()
 {
-
-}
-
-double LinuxMemorySystemMeasurement::getTotalMemorySystem() {
   std::string token;
   std::ifstream file("/proc/meminfo");
-  while(file >> token) {
-      if(token == "MemTotal:") {
-          unsigned long mem;
-          if(file >> mem) {
-              return mem / 1024.0; // Mb
-          } else {
-              return 0;
-          }
+  while (file >> token) {
+    if (token == "MemTotal:") {
+      uint64_t mem;
+      if (file >> mem) {
+        return mem / 1024.0;       // Mb
+      } else {
+        return 0;
       }
-      // ignore rest of the line
-      file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    // ignore rest of the line
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   }
   return 0;
 }
 
-double LinuxMemorySystemMeasurement::getFreeMemorySystem() {
+double LinuxMemorySystemMeasurement::getFreeMemorySystem()
+{
   std::string token;
   std::ifstream file("/proc/meminfo");
-  while(file >> token) {
-      if(token == "MemFree:") {
-          unsigned long mem;
-          if(file >> mem) {
-              return mem / 1024.0; // Mb
-          } else {
-              return 0;
-          }
+  while (file >> token) {
+    if (token == "MemFree:") {
+      uint64_t mem;
+      if (file >> mem) {
+        return mem / 1024.0;       // Mb
+      } else {
+        return 0;
       }
-      // ignore rest of the line
-      file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    // ignore rest of the line
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   }
   return 0;
 }
 
-double LinuxMemorySystemMeasurement::getAvailableMemorySystem() {
+double LinuxMemorySystemMeasurement::getAvailableMemorySystem()
+{
   std::string token;
   std::ifstream file("/proc/meminfo");
-  while(file >> token) {
-      if(token == "MemAvailable:") {
-          unsigned long mem;
-          if(file >> mem) {
-              return mem / 1024.0; // Mb
-          } else {
-              return 0;
-          }
+  while (file >> token) {
+    if (token == "MemAvailable:") {
+      uint64_t mem;
+      if (file >> mem) {
+        return mem / 1024.0;       // Mb
+      } else {
+        return 0;
       }
-      // ignore rest of the line
-      file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
+    // ignore rest of the line
+    file.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   }
   return 0;
 }

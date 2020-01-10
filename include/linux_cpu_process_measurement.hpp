@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef LINUX_CPU_MEASUREMENT_HPP_
-#define LINUX_CPU_MEASUREMENT_HPP_
+#ifndef LINUX_CPU_PROCESS_MEASUREMENT_HPP_
+#define LINUX_CPU_PROCESS_MEASUREMENT_HPP_
 
 #include <unistd.h>
 #include <time.h>
@@ -43,4 +43,4 @@ private:
   double cpu_usage_;
 };
 
-#endif  // LINUX_CPU_MEASUREMENT_HPP_
+#endif  // LINUX_CPU_PROCESS_MEASUREMENT_HPP_

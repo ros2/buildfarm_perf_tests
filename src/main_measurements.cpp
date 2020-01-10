@@ -58,7 +58,8 @@ int main(int argc, char * argv[])
       std::cout << "file_name " << vm["log"].as<std::string>() << std::endl;
       if (m_os.is_open()) {
         m_os << "T_experiment" << ",cpu_usage (%)" << ",virtual memory (Mb)" <<
-          ",physical memory (Mb)" << ",resident anonymous memory (Mb)" << std::endl;
+          ",physical memory (Mb)" << ",resident anonymous memory (Mb)" <<
+          ",system_cpu_usage (%) " << ",system virtual memory (Mb)" << std::endl;
       }
     }
 
@@ -105,16 +106,19 @@ int main(int argc, char * argv[])
   while (true) {
     linux_memory_process_measurement.makeReading();
 
-    double cpu_process_percentage = linux_cpu_process_measurement.getCPUCurrentlyUsedByCurrentProcess();
+    double cpu_process_percentage =
+      linux_cpu_process_measurement.getCPUCurrentlyUsedByCurrentProcess();
     double virtual_mem_process_usage = linux_memory_process_measurement.getVirtualMemUsedProcess();
     double phy_mem_process_usage = linux_memory_process_measurement.getPhysMemUsedProcess();
-    double resident_anonymousMemory_process_usage = linux_memory_process_measurement.getResidentAnonymousMemory();
+    double resident_anonymousMemory_process_usage =
+      linux_memory_process_measurement.getResidentAnonymousMemory();
     double cpu_system_percentage = linux_cpu_system_measurement.getCPUSystemCurrentlyUsed();
     double phy_mem_system_usage = linux_memory_system_measurement.getTotalMemorySystem() -
       linux_memory_system_measurement.getAvailableMemorySystem();
 
     std::cout << "virtualMemUsed Process: " << virtual_mem_process_usage << " Mb" << std::endl;
-    std::cout << "ResidentAnonymousMemory Process: " << resident_anonymousMemory_process_usage << " Mb" <<
+    std::cout << "ResidentAnonymousMemory Process: " << resident_anonymousMemory_process_usage <<
+      " Mb" <<
       std::endl;
     std::cout << "PhysMemUsedProcess: " << phy_mem_process_usage << " Mb" << std::endl;
     std::cout << "CPU Usage Process: " << cpu_process_percentage << " (%)" << std::endl;

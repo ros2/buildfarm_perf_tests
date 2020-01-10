@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#ifndef LINUX_MEMORY_SYSTEM_MEASUREMENT_HPP
-#define LINUX_MEMORY_SYSTEM_MEASUREMENT_HPP
+#ifndef LINUX_MEMORY_SYSTEM_MEASUREMENT_HPP_
+#define LINUX_MEMORY_SYSTEM_MEASUREMENT_HPP_
 
 #include <unistd.h>
 #include <string>
@@ -24,10 +24,10 @@
 class LinuxMemorySystemMeasurement
 {
 public:
-    LinuxMemorySystemMeasurement();
-    double getTotalMemorySystem();
-    double getFreeMemorySystem();
-    double getAvailableMemorySystem();
+  LinuxMemorySystemMeasurement();
+  double getTotalMemorySystem();
+  double getFreeMemorySystem();
+  double getAvailableMemorySystem();
 };
 
-#endif // LINUX_MEMORY_SYSTEM_MEASUREMENT_HPP
+#endif  // LINUX_MEMORY_SYSTEM_MEASUREMENT_HPP_
