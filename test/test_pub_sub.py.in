@@ -94,7 +94,7 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub resident anonymous memory\n' + type + ': ' + rmw_impl)
-    plt.ylim(0, 10)
+    plt.ylim(0, 100)
     plt.savefig(png_path + "_" + type +  "_resident_anonymous_memory.png")
 
     if type == 'subscriber':

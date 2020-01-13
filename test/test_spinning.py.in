@@ -81,7 +81,7 @@ def _raw_to_png(csv_data, png_path):
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
     plt.title('Node spinning resident anonymous memory\n@TEST_NAME@')
-    plt.ylim(0, 10)
+    plt.ylim(0, 100)
     plt.savefig(png_path[:-4] + "_resident_anonymous_memory.png")
 
 
