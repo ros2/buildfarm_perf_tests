@@ -6,6 +6,9 @@ set(PERF_TEST_TOPIC "Array1k"
 find_package(launch_testing_ament_cmake REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
 
+set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
+set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
+
 function(add_performance_test TEST_NAME COMM)
   get_filename_component(
     PERFORMANCE_REPORT_PNG
