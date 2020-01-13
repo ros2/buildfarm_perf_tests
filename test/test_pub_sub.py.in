@@ -69,7 +69,7 @@ def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
         ]
 
     with open(csv_path[:-4] + "_" + type + ".csv", 'w') as csv:
-        csv.write(','.join(['@TEST_NAME_PUB_SUB@'] * len(values)) + '\n')
+        csv.write(','.join(['Publisher: @COMM_PUB@ / Subscriber: @COMM_SUB@'] * len(values)) + '\n')
         csv.write(','.join(values) + '\n')
 
 
