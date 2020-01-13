@@ -6,10 +6,7 @@ set(PERF_TEST_TOPIC "Array1k"
 find_package(launch_testing_ament_cmake REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
 
-# set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
-# set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
-
-function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
+function(add_performance_test TEST_NAME COMM)
   get_filename_component(
     PERFORMANCE_REPORT_PNG
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.png"
@@ -49,7 +46,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
 
-  set(PUBSUB_TIMEOUT "5")
+  set(PUBSUB_TIMEOUT "60")
 
   get_available_rmw_implementations(_rmw_implementations)
 
@@ -58,8 +55,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     set(COMM_PUB ${COMM})
     set(COMM_SUB ${rmw_impl})
     set(TEST_NAME_PUB_SUB ${COMM}_${rmw_impl})
-
-    message("TEST_NAME_PUB_SUB " ${TEST_NAME_PUB_SUB})
 
     get_filename_component(
       PERFORMANCE_OVERHEAD_CSV
@@ -120,13 +115,11 @@ macro(try_add_performance_test)
   add_performance_test(
     ${rmw_implementation}
     ${rmw_implementation}
-    ${rmw_implementation}
   )
   if(COMM_TYPE_${rmw_implementation})
     add_performance_test(
       ${COMM_TYPE_${rmw_implementation}}
       ${COMM_TYPE_${rmw_implementation}}
-      ${rmw_implementation}
     )
   else()
     message(STATUS "No standalone DDS support for RMW: ${rmw_implementation}")
