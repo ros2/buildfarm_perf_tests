@@ -49,7 +49,7 @@ function(add_performance_test TEST_NAME COMM)
     "RMW_IMPLEMENTATION=${COMM}"
   )
 
-  set(PUBSUB_TIMEOUT "60")
+  set(PUBSUB_TIMEOUT "30")
 
   get_available_rmw_implementations(_rmw_implementations)
 
@@ -91,7 +91,7 @@ function(add_performance_test TEST_NAME COMM)
     )
   endforeach()
 
-  set(PUBSUB_TIMEOUT "60")
+  set(PUBSUB_TIMEOUT "30")
 
   configure_file(
     test_spinning.py.in
