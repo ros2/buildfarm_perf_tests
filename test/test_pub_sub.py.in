@@ -166,7 +166,8 @@ def generate_test_description(ready_fn):
             '-l', performance_log_prefix_pub,
             '--rate', '5',
             '--roundtrip_mode', 'Main',
-        ]
+        ],
+        additional_env={'RMW_IMPLEMENTATION': '@COMM_PUB@'},
     )
 
     node_relay_test = Node(
@@ -178,7 +179,8 @@ def generate_test_description(ready_fn):
             '-l', performance_log_prefix_sub,
             '--rate', '5',
             '--roundtrip_mode', 'Relay',
-        ]
+        ],
+        additional_env={'RMW_IMPLEMENTATION': '@COMM_SUB@'},
     )
 
     return LaunchDescription([
