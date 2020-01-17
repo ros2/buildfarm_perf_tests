@@ -61,12 +61,12 @@ function(add_performance_test TEST_NAME COMM)
 
     get_filename_component(
       PERFORMANCE_OVERHEAD_CSV
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}.csv"
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results.csv"
       ABSOLUTE
     )
     get_filename_component(
       PERFORMANCE_OVERHEAD_PNG
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}"
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results"
       ABSOLUTE
     )
 
