@@ -69,7 +69,7 @@ def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
         ]
 
     with open(csv_path[:-4] + "_" + type + ".csv", 'w') as csv:
-        csv.write(','.join(['Publisher: @COMM_PUB@ / Subscriber: @COMM_SUB@'] * len(values)) + '\n')
+        csv.write(','.join(['Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@'] * len(values)) + '\n')
         csv.write(','.join(values) + '\n')
 
 
@@ -80,22 +80,22 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
     dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub virtual memory usage\n' + type + ': ' + rmw_impl )
     plt.ylim(0, 1024)
-    plt.savefig(png_path + "_" + type + "_virtual_memory.png")
+    plt.savefig(png_path + "_" + 'Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@' + "_virtual_memory.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub CPU usage\n' + type + ': ' + rmw_impl)
     plt.ylim(0, 100)
-    plt.savefig(png_path + "_" + type +  "_cpu_usage.png")
+    plt.savefig(png_path + "_" + 'Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@' +  "_cpu_usage.png")
 
     dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub physical memory usage\n' + type + ': ' + rmw_impl)
     plt.ylim(0, 100)
-    plt.savefig(png_path + "_" + type +  "_physical_memory.png")
+    plt.savefig(png_path + "_" + 'Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@' +  "_physical_memory.png")
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub resident anonymous memory\n' + type + ': ' + rmw_impl)
     plt.ylim(0, 100)
-    plt.savefig(png_path + "_" + type +  "_resident_anonymous_memory.png")
+    plt.savefig(png_path + "_" + 'Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@' +  "_resident_anonymous_memory.png")
 
     if type == 'subscriber':
       return
@@ -104,7 +104,7 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
     pd.options.display.float_format = '{:.4f}'.format
     dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
     plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + type + ': ' + rmw_impl)
-    plt.savefig(png_path + "_" + type + "_histogram.png")
+    plt.savefig(png_path + "_" + 'Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@' + "_histogram.png")
 
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
@@ -116,7 +116,7 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
     plt.title('Simple Pub/Sub latency\n' + type + ': ' + "@COMM_PUB@" + "\nsubscriber: " + "@COMM_SUB@")
-    plt.savefig(png_path + "_" + type + "_latency.png")
+    plt.savefig(png_path + "_" + 'Publisher:@COMM_PUB@_Subscriber:@COMM_SUB@' + "_latency.png")
 
 
 def generate_test_description(ready_fn):
