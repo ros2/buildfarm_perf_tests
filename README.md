@@ -69,7 +69,7 @@ Again we plot measurement:
 
 ## Test 3 - Node spinning
 
-This test creates one process and spin for 1 minute to evaluate ROS 2 overhead and detect obvious leaks.
+This test creates one process and spins for 1 minute to evaluate ROS 2 overhead and detect obvious leaks.
 
 We measurement:
 
