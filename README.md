@@ -51,9 +51,9 @@ We measurement for both publisher and subscriber:
  - CPU usage ( readed from the filesystem )
  - Total lost packets
  - Received/Sent packets
- - Physical memory (Mb)
- - Resident anonymous memory (Mb)
- - Virtual memory (Mb)
+ - Physical memory
+ - Resident anonymous memory
+ - Virtual memory
 
 Again we plot measurement:
  - [One per-build](http://3.83.10.11/job/Dci__nightly-performance-overhead-multi_ubuntu_bionic_amd64/lastBuild/)
