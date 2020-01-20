@@ -16,7 +16,7 @@ This package defines some tests. On one hand it invokes `perf_test` from Apex.AI
 
 ### Test 1 - Performance Test  (APEX.AI)
 
-In this test we are testing the Performance Test provided by APEX.AI. Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
+In this test we are running the Performance Test provided by APEX.AI. Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
 
 In this test we are measurement:
  - Average round-trip time
