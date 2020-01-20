@@ -37,6 +37,37 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
+
+  get_filename_component(
+    PERFORMANCE_TWO_PROCESS_REPORT_PNG
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME}.png"
+    ABSOLUTE
+  )
+  get_filename_component(
+    PERFORMANCE_TWO_PROCESS_REPORT_CSV
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME}.csv"
+    ABSOLUTE
+  )
+
+  configure_file(
+    test_performance_two_process.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME}.py.configure
+    @ONLY
+  )
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME}.py"
+    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME}.py.configure"
+  )
+
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME}.py"
+    TARGET test_performance_two_process_${TEST_NAME}
+    ENV
+    "PERFORMANCE_TWO_PROCESS_REPORT_PNG=${PERFORMANCE_TWO_PROCESS_REPORT_PNG}"
+    "PERFORMANCE_TWO_PROCESS_REPORT_CSV=${PERFORMANCE_TWO_PROCESS_REPORT_CSV}"
+    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+  )
+
 endfunction()
 
 macro(try_add_performance_test)
