@@ -71,7 +71,7 @@ Again we plot measurement:
 
 This test creates one process and spins for 1 minute to evaluate ROS 2 overhead and detect obvious leaks.
 
-We measurement:
+We measure:
 
  - CPU usage ( readed from file system )
  - Physical memory
