@@ -29,7 +29,7 @@ We are generating two plots per measurement
  - [One per-build](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/lastBuild/)
  - [Other over time](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/)
 
-**The test only measure the latency between the same rmw implementation**
+**The test only measures the latency between the same RMW implementation**
 
 | Publisher/Subscriber     | rmw_fastrtps_cpp         | rmw_opensplice_cpp       | rmw_cyclonedds_cpp       | rmw_fastrtps_dynamic_cpp | rmw_connext_cpp          |
 |--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|
