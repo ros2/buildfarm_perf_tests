@@ -37,6 +37,39 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
+
+  set(NODE_SPINNING_TIMEOUT "30")
+
+  get_filename_component(
+    PERFORMANCE_OVERHEAD_NODE_CSV
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME}.csv"
+    ABSOLUTE
+  )
+  get_filename_component(
+    PERFORMANCE_OVERHEAD_NODE_PNG
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME}.png"
+    ABSOLUTE
+  )
+
+  configure_file(
+    test_spinning.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure
+    @ONLY
+  )
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
+    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME}.py.configure"
+  )
+
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME}.py"
+    TARGET test_spinning_${TEST_NAME}
+    ENV
+    "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
+    "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
+    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+    TIMEOUT 120
+  )
 endfunction()
 
 macro(try_add_performance_test)

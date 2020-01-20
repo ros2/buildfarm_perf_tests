@@ -1,0 +1,150 @@
+# generated from buildfarm_perf_tests/test/test_performance.py.in
+# generated code does not contain a copyright notice
+
+from glob import glob
+import os
+import sys
+import tempfile
+import unittest
+
+import launch
+from launch import LaunchDescription
+from launch.substitutions import LaunchConfiguration
+import ament_index_python
+from launch_ros.actions import Node
+import launch_testing
+
+import matplotlib  # noqa: F401
+import matplotlib.pyplot as plt
+import numpy as np  # noqa: F401
+import pandas as pd
+
+plt.switch_backend('agg')
+
+def _cleanUpLogs(performance_log_prefix):
+    for log in glob(performance_log_prefix + '*'):
+        os.remove(log)
+
+def _raw_to_csv(csv_data, csv_path):
+    """
+    Convert from the raw csv format to the csv for the Jenkins plot plugin.
+
+    Do not change the order of the columns. The plot plugin indexes into the
+    csv using the column number instead of the column name, because we're
+    using the columns to identify which test produced the data.
+
+    Changing the column names here will change the name of the line that
+    appears on the plot.
+    """
+    dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe_agg = dataframe.agg(['median', 'mean'])
+
+    values = [
+        str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
+        str(dataframe_agg.loc['median', 'virtual memory (Mb)']),
+        str(dataframe['virtual memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
+        str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
+        str(dataframe_agg.loc['median', 'cpu_usage (%)']),
+        str(dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5]),
+        str(dataframe_agg.loc['mean', 'physical memory (Mb)']),
+        str(dataframe_agg.loc['median', 'physical memory (Mb)']),
+        str(dataframe['physical memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
+        str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
+        str(dataframe_agg.loc['median', 'resident anonymous memory (Mb)']),
+        str(dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
+        ]
+
+
+    with open(csv_path, 'w') as csv:
+        csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
+        csv.write(','.join(values) + '\n')
+
+
+def _raw_to_png(csv_data, png_path):
+    dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
+    pd.options.display.float_format = '{:.4f}'.format
+    dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
+
+    plt.title('Node spinning virtual memory usage\n@TEST_NAME@')
+    plt.ylim(0, 1024)
+    plt.savefig(png_path[:-4] + "_virtual_memory.png")
+
+    dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
+    plt.title('Node spinning CPU usage\n@TEST_NAME@')
+    plt.ylim(0, 100)
+    plt.savefig(png_path[:-4] + "_cpu_usage.png")
+
+    dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
+    plt.ylim(0, 100)
+    plt.title('Node spinning physical memory usage\n@TEST_NAME@')
+    plt.savefig(png_path[:-4] + "_physical_memory.png")
+
+    dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
+    plt.title('Node spinning resident anonymous memory\n@TEST_NAME@')
+    plt.ylim(0, 100)
+    plt.savefig(png_path[:-4] + "_resident_anonymous_memory.png")
+
+
+def generate_test_description(ready_fn):
+    performance_log_prefix = tempfile.mkstemp(
+        prefix='overhead_node_test_results_@TEST_NAME@_', text=True)[1]
+
+    node_under_test = launch.actions.ExecuteProcess(
+      cmd=[
+          os.path.join(
+              ament_index_python.get_package_prefix('buildfarm_perf_tests'),
+              'lib/buildfarm_perf_tests',
+              'system_metric_collector',
+          ),
+          # Arguments
+          "--timeout", "@NODE_SPINNING_TIMEOUT@",
+          "--log", performance_log_prefix,
+          "--process_name", "node_spinning"
+      ],);
+
+    node_spinning_test = Node(
+        package='buildfarm_perf_tests', node_executable='node_spinning', output='log',
+        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=@NODE_SPINNING_TIMEOUT@+2)
+    )
+
+    return LaunchDescription([
+        node_under_test,
+        node_spinning_test,
+        launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
+    ]), locals()
+
+class PerformanceTestTermination(unittest.TestCase):
+
+    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
+      proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@NODE_SPINNING_TIMEOUT@ * 2))
+
+@launch_testing.post_shutdown_test()
+class PerformanceTestResults(unittest.TestCase):
+
+    def test_results_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
+        self.addCleanup(_cleanUpLogs, performance_log_prefix)
+
+        launch_testing.asserts.assertExitCodes(
+            proc_info,
+            [launch_testing.asserts.EXIT_OK],
+            node_under_test,
+        )
+
+        performance_logs = glob(performance_log_prefix + '*')
+
+        if performance_logs:
+            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_NODE_CSV')
+            if performance_report_csv:
+                _raw_to_csv(performance_logs[0], performance_report_csv)
+            else:
+                print('No CSV report written - set PERFORMANCE_OVERHEAD_NODE_CSV to write a report',
+                      file=sys.stderr)
+
+            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_NODE_PNG')
+            if performance_report_png:
+                _raw_to_png(performance_logs[0], performance_report_png)
+            else:
+                print('No PNG report written - set PERFORMANCE_OVERHEAD_NODE_PNG to write a report',
+                      file=sys.stderr)
+        else:
+            print('No report written - no performance log was produced', file=sys.stderr)

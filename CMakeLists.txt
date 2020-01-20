@@ -1,8 +1,25 @@
 cmake_minimum_required(VERSION 3.5)
-project(buildfarm_perf_tests LANGUAGES C)
+project(buildfarm_perf_tests)
+
+# Default to C++14
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 14)
+endif()
+
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rcpputils REQUIRED)
+find_package(rcutils REQUIRED)
+
+add_executable(node_spinning src/node_spinning.cpp)
+ament_target_dependencies(node_spinning
+  rclcpp
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -10,5 +27,11 @@ if(BUILD_TESTING)
 
   add_subdirectory(test)
 endif()
+
+install(TARGETS
+  node_spinning
+  DESTINATION
+  lib/${PROJECT_NAME}
+)
 
 ament_package()
