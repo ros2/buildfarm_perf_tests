@@ -12,7 +12,6 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(Boost REQUIRED COMPONENTS program_options)
 
 include_directories(include)
 
@@ -23,9 +22,6 @@ add_executable(system_metric_collector
   src/linux_cpu_system_measurement.cpp
   src/linux_memory_system_measurement.cpp
   src/utilities/utilities.cpp
-)
-ament_target_dependencies(system_metric_collector
-  Boost
 )
 
 target_link_libraries(system_metric_collector

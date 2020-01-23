@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <boost/program_options.hpp>
 #include <string>
 #include <chrono>
 #include <thread>
@@ -20,6 +19,18 @@
 #include "linux_cpu_process_measurement.hpp"
 #include "linux_memory_system_measurement.hpp"
 #include "linux_cpu_system_measurement.hpp"
+
+void show_usage()
+{
+    std::cerr << "Usage: system_metric_collector [OPTION [ARG]] ...\n"
+              << "Options:\n"
+              << "\t-h,--help\t\tShow this help message\n"
+              << "\t--timeout arg (=60)\tTest duration\n"
+              << "\t--log arg (=out.csv)\tLog filename\n"
+              << "\t--process_name arg\tProcess_name\n"
+              << "\t--process_arguments arg\tProcess_arguments\n"
+              << std::endl;
+}
 
 int main(int argc, char * argv[])
 {
@@ -29,50 +40,47 @@ int main(int argc, char * argv[])
   std::string process_name;
   std::string process_arguments;
 
-  try {
-    boost::program_options::options_description desc{"Options"};
-
-    desc.add_options()("help,h", "Help screen")("timeout",
-      boost::program_options::value<float>()->default_value(30), "Test duration")("log",
-      boost::program_options::value<std::string>()->default_value("out.csv"),
-      "Log filename")("process_name",
-      boost::program_options::value<std::string>()->default_value(""),
-      "process_name")("process_arguments",
-      boost::program_options::value<std::string>()->default_value(""), "process_arguments");
-
-    boost::program_options::variables_map vm;
-    store(parse_command_line(argc, argv, desc), vm);
-    notify(vm);
-
-    if (vm.count("help")) {
-      std::cout << desc << '\n';
-      return 0;
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if ((arg == "-h") || (arg == "--help")) {
+        show_usage();
+        return 0;
+    } else if (arg == "--process_name") {
+        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
+            process_name = argv[++i]; // Increment 'i' so we don't get the argument as the next argv[i].
+        } else { // Uh-oh, there was no argument to the destination option.
+            std::cerr << "--process_name option requires one argument." << std::endl;
+            return 1;
+        }
+    } else if (arg == "--process_arguments") {
+        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
+            process_arguments = argv[++i]; // Increment 'i' so we don't get the argument as the next argv[i].
+        } else { // Uh-oh, there was no argument to the destination option.
+            std::cerr << "--process_arguments option requires one argument." << std::endl;
+            return 1;
+        }
+    } else if (arg == "--timeout") {
+        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
+          timeout = std::atoi(argv[++i]); // Increment 'i' so we don't get the argument as the next argv[i].
+        } else { // Uh-oh, there was no argument to the destination option.
+            std::cerr << "--timeout option requires one argument." << std::endl;
+            return 1;
+        }
+    } else if (arg == "--log") {
+        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
+          std::string filename = argv[++i];
+          m_os.open(filename, std::ofstream::out);
+          std::cout << "file_name " << filename << std::endl;
+          if (m_os.is_open()) {
+            m_os << "T_experiment" << ",cpu_usage (%)" << ",virtual memory (Mb)" <<
+              ",physical memory (Mb)" << ",resident anonymous memory (Mb)" <<
+              ",system_cpu_usage (%)" << ",system virtual memory (Mb)" << std::endl;
+          }
+        } else { // Uh-oh, there was no argument to the destination option.
+            std::cerr << "--log option requires one argument." << std::endl;
+            return 1;
+        }
     }
-    if (vm.count("timeout")) {
-      timeout = vm["timeout"].as<float>();
-      printf("Duration of the test %5f\n", timeout);
-    }
-
-    if (vm.count("log")) {
-      m_os.open(vm["log"].as<std::string>(), std::ofstream::out);
-      std::cout << "file_name " << vm["log"].as<std::string>() << std::endl;
-      if (m_os.is_open()) {
-        m_os << "T_experiment" << ",cpu_usage (%)" << ",virtual memory (Mb)" <<
-          ",physical memory (Mb)" << ",resident anonymous memory (Mb)" <<
-          ",system_cpu_usage (%)" << ",system virtual memory (Mb)" << std::endl;
-      }
-    }
-
-    if (vm.count("process_name")) {
-      process_name = vm["process_name"].as<std::string>();
-      std::cout << "process_name " << process_name << std::endl;
-    }
-    if (vm.count("process_arguments")) {
-      process_arguments = vm["process_arguments"].as<std::string>();
-      std::cout << "process_arguments " << process_arguments << std::endl;
-    }
-  } catch (const boost::program_options::error & ex) {
-    std::cerr << ex.what() << '\n';
   }
 
   auto start = std::chrono::high_resolution_clock::now();
