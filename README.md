@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This package defines some tests. On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations. On the other hand we are evaluating the additional overhead caused by a single pub-sub topic or one process spinning and detect potential leaks related to theses activities.
+This package defines some tests. On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations. On the other hand we are evaluating the additional overhead caused by a single pub/sub topic or one process spinning and detect potential leaks related to theses activities.
 
 * There is a test for each RMW:
 
@@ -41,9 +41,7 @@ We are generating two plots per measurement
 
 ## Test 2 - Simple pub/sub
 
-In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz. This will allow us to
- evaluate additional overhead caused by a single pub-sub topic and detect leaks related to this
-activity.
+In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz. This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
 
 We measurement for both publisher and subscriber:
 
