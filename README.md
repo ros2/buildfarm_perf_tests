@@ -48,7 +48,7 @@ We measurement for both publisher and subscriber:
  - Average round trip
  - CPU usage ( readed from the filesystem )
  - Total lost packets
- - Received/Sent packets
+ - Received/Sent packets per second
  - Physical memory
  - Resident anonymous memory
  - Virtual memory
