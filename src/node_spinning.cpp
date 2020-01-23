@@ -1,4 +1,4 @@
-// Copyright 2016 Open Source Robotics Foundation, Inc.
+// Copyright 2020 Open Source Robotics Foundation, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,25 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <rclcpp/rclcpp.hpp>
+
 #include <memory>
 
-#include "rclcpp/rclcpp.hpp"
-
-/* This example creates a subclass of Node and uses a fancy C++11 lambda
- * function to shorten the callback syntax, at the expense of making the
- * code somewhat more difficult to understand at first glance. */
-
-class MinimalPublisher : public rclcpp::Node
+class MinimalNode : public rclcpp::Node
 {
 public:
-  MinimalPublisher()
+  MinimalNode()
   : Node("minimal_node") {}
 };
 
 int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
-  rclcpp::spin(std::make_shared<MinimalPublisher>());
+  rclcpp::spin(std::make_shared<MinimalNode>());
   rclcpp::shutdown();
   return 0;
 }
