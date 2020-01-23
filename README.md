@@ -43,7 +43,7 @@ We are generating two plots per measurement
 
 In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz. This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
 
-We measurement for both publisher and subscriber:
+We measure for both publisher and subscriber:
 
  - Average round trip
  - CPU usage ( readed from the filesystem )
