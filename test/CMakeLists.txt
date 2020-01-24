@@ -44,13 +44,13 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
 
   foreach(rmw_impl ${_rmw_implementations})
 
-    set(COMM_PUB ${COMM})
+    set(COMM_PUB ${RMW_IMPLEMENTATION})
     set(COMM_SUB ${rmw_impl})
-    set(TEST_NAME_PUB_SUB ${COMM}_${RMW_IMPLEMENTATION}_${rmw_impl})
+    set(TEST_NAME_PUB_SUB ${RMW_IMPLEMENTATION}_${rmw_impl}_${COMM})
 
     get_filename_component(
       PERFORMANCE_OVERHEAD_CSV
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results.csv"
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}.csv"
       ABSOLUTE
     )
     get_filename_component(
