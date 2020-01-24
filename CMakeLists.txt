@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.5)
 project(buildfarm_perf_tests)
 
+if(WIN32 OR APPLE OR ANDROID)
+  message(STATUS "buildfarm_perf_tests is only supported on Linux, skipping...")
+  return()
+endif()
+
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
