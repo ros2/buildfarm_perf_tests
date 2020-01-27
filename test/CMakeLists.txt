@@ -44,6 +44,12 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
 
   foreach(rmw_impl ${_rmw_implementations})
 
+    # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
+    #  processes are splitted in two
+    if(NOT COMM STREQUAL "ROS2")
+      continue()
+    endif()
+
     set(COMM_PUB ${RMW_IMPLEMENTATION})
     set(COMM_SUB ${rmw_impl})
     set(TEST_NAME_PUB_SUB ${RMW_IMPLEMENTATION}_${rmw_impl}_${COMM})
