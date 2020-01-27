@@ -169,7 +169,7 @@ def generate_test_description(ready_fn):
     node_publisher_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
-            '-c', '@COMM_PUB@',
+            '-c', '@COMM@',
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_pub,
@@ -182,7 +182,7 @@ def generate_test_description(ready_fn):
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
-            '-c', '@COMM_SUB@',
+            '-c', '@COMM@',
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_sub,
