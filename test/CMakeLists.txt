@@ -46,8 +46,9 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
 
     # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
     #  processes are splitted in two
-    if(NOT COMM STREQUAL "ROS2")
-      continue()
+    set(SKIP_TEST "")
+    if(${COMM} STREQUAL "CycloneDDS" OR ${COMM} STREQUAL "FastRTPS")
+      set(SKIP_TEST "SKIP_TEST")
     endif()
 
     set(COMM_PUB ${RMW_IMPLEMENTATION})
@@ -83,6 +84,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
       "PERFORMANCE_OVERHEAD_PNG=${PERFORMANCE_OVERHEAD_PNG}"
       "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
       TIMEOUT 120
+      ${SKIP_TEST}
     )
   endforeach()
 endfunction()
