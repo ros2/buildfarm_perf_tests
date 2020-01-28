@@ -63,3 +63,38 @@ colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_MAX
 ![](img/lost_packets.png)
 ![](img/received_packets.png)
 ![](img/sent_packets.png)
+
+## System metrics collector tool
+
+This tool allows to create statistics based on the name of the process and arguments. This tool allows to collect the following statistics:
+
+ - CPU usage (%): This information is fetched from `/proc/stat`.
+ - CPU memory virtual, ResidentAnonymousMemory and physical: This information is fetched from `/proc/meminfo`.
+ - Process usage (%):  This information is fetched from `/proc/<pid/>stat`.
+ - Process memory: a) virtual, b) resident anonymous memory and c) physical:  This information is fetched from  `/proc/<pid/statm` and `/proc/<pid/status`.
+
+These are the argument to launch the tool:
+
+```
+ros2 run buildfarm_perf_tests system_metric_collector -h
+Options:
+  -h [ --help ]           Help screen
+  --timeout arg (=60)     Test duration
+  --log arg (=out.csv)    Log filename
+  --process_pid arg      process pid
+```
+
+A general overview of what a typical run might do, for example:
+
+1. Start process under test. For example `perf_test`
+2. Launch `system_metrics_collector` using the argument `--process_pid` with the pid of the process (in this case `perf_test`).
+3. Finally `system_metrics_collector` will fetch the data from the files describe above. If you have include the option `--log` then the data it's recorded in the file otherwise the standard output will show the reading.
+
+### Examples
+
+```bash
+ros2 run performance_test perf_test -c ROS2 -t Array1k &
+ps -e | grep perf_test
+  8621 pts/5    00:00:01 perf_test
+ros2 run buildfarm_perf_tests system_metric_collector -process_pid 8621
+```
