@@ -7,7 +7,6 @@ import sys
 import tempfile
 import unittest
 
-import launch
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration, EnvironmentVariable
 import ament_index_python
@@ -100,7 +99,7 @@ def generate_test_description(ready_fn):
     node_spinning_log_prefix = tempfile.mkstemp(
         prefix='overhead_node_test_results_@TEST_NAME@_', text=True)[1]
 
-    node_metrics_collector = launch.actions.ExecuteProcess(
+    node_metrics_collector = ExecuteProcess(
       cmd=[
           os.path.join(
               ament_index_python.get_package_prefix('buildfarm_perf_tests'),
