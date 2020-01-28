@@ -1,4 +1,4 @@
-set(PERF_TEST_MAX_RUNTIME 3
+set(PERF_TEST_MAX_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 set(PERF_TEST_TOPIC "Array1k"
   CACHE STRING "Performance test topic")
