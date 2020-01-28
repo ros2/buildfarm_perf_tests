@@ -44,14 +44,16 @@ int main(int argc, char * argv[])
       return 0;
     } else if (arg == "--process_pid") {
       if (i + 1 < argc) {   // Make sure we aren't at the end of argv!
-        process_pid = argv[++i];     // Increment 'i' so we don't get the argument as the next argv[i].
+        // Increment 'i' so we don't get the argument as the next argv[i].
+        process_pid = argv[++i];
       } else {   // Uh-oh, there was no argument to the destination option.
         std::cerr << "--process_pid option requires one argument." << std::endl;
         return 1;
       }
     } else if (arg == "--timeout") {
       if (i + 1 < argc) {   // Make sure we aren't at the end of argv!
-        timeout = std::atoi(argv[++i]);   // Increment 'i' so we don't get the argument as the next argv[i].
+        // Increment 'i' so we don't get the argument as the next argv[i].
+        timeout = std::atoi(argv[++i]);
       } else {   // Uh-oh, there was no argument to the destination option.
         std::cerr << "--timeout option requires one argument." << std::endl;
         return 1;
