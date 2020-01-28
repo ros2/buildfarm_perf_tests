@@ -152,7 +152,7 @@ def generate_test_description(ready_fn):
     performance_log_prefix_sub = tempfile.mkstemp(
         prefix='overhead_sub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
 
-    system_metric_collector_pub = launch.actions.ExecuteProcess(
+    system_metric_collector_pub = ExecuteProcess(
       cmd=[
           os.path.join(
               ament_index_python.get_package_prefix('buildfarm_perf_tests'),
