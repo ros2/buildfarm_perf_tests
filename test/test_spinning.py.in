@@ -9,11 +9,14 @@ import unittest
 
 import launch
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, EnvironmentVariable
 import ament_index_python
 from launch_ros.actions import Node
 import launch_testing
-
+from launch.actions import (
+    ExecuteProcess, OpaqueFunction,
+    RegisterEventHandler, SetEnvironmentVariable)
+from launch.event_handlers import OnProcessStart
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
 import numpy as np  # noqa: F401
@@ -88,11 +91,16 @@ def _raw_to_png(csv_data, png_path):
     plt.savefig(png_path[:-4] + "_resident_anonymous_memory.png")
 
 
+def on_process_start(process_started, launch_context, observation_process):
+    SetEnvironmentVariable(
+        'PROCESS_UNDER_TEST_ID', str(process_started.pid)).execute(launch_context)
+    observation_process.execute(launch_context)
+
 def generate_test_description(ready_fn):
     node_spinning_log_prefix = tempfile.mkstemp(
         prefix='overhead_node_test_results_@TEST_NAME@_', text=True)[1]
 
-    node_under_test = launch.actions.ExecuteProcess(
+    node_metrics_collector = launch.actions.ExecuteProcess(
       cmd=[
           os.path.join(
               ament_index_python.get_package_prefix('buildfarm_perf_tests'),
@@ -102,7 +110,7 @@ def generate_test_description(ready_fn):
           # Arguments
           "--timeout", "@NODE_SPINNING_TIMEOUT@",
           "--log", node_spinning_log_prefix,
-          "--process_name", "node_spinning"
+          "--process_pid", EnvironmentVariable('PROCESS_UNDER_TEST_ID')
       ],)
 
     node_spinning_test = Node(
@@ -113,16 +121,19 @@ def generate_test_description(ready_fn):
     )
 
     return LaunchDescription([
-        node_under_test,
+      RegisterEventHandler(OnProcessStart(
+          target_action=node_spinning_test,
+          on_start=lambda p, c: on_process_start(p, c, node_metrics_collector)
+        )),
         node_spinning_test,
-        launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
+        OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 
 class NodeSpinningTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
-        proc_info.assertWaitForShutdown(process=node_under_test,
+    def test_termination_@TEST_NAME@(self, node_metrics_collector, proc_info):
+        proc_info.assertWaitForShutdown(process=node_metrics_collector,
                                         timeout=(@NODE_SPINNING_TIMEOUT@ * 2))
 
 
@@ -130,13 +141,13 @@ class NodeSpinningTestTermination(unittest.TestCase):
 class NodeSpinningTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(self, node_spinning_log_prefix,
-                                 node_under_test, proc_info):
+                                 node_metrics_collector, proc_info):
         self.addCleanup(_cleanUpLogs, node_spinning_log_prefix)
 
         launch_testing.asserts.assertExitCodes(
             proc_info,
             [launch_testing.asserts.EXIT_OK],
-            node_under_test,
+            node_metrics_collector,
         )
 
         node_spinning_logs = glob(node_spinning_log_prefix + '*')
