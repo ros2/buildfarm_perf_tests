@@ -27,8 +27,7 @@ void show_usage()
               << "\t-h,--help\t\tShow this help message\n"
               << "\t--timeout arg (=60)\tTest duration\n"
               << "\t--log arg (=out.csv)\tLog filename\n"
-              << "\t--process_name arg\tProcess_name\n"
-              << "\t--process_arguments arg\tProcess_arguments\n"
+              << "\t--process_pid arg\tProcess PID\n"
               << std::endl;
 }
 
@@ -36,27 +35,18 @@ int main(int argc, char * argv[])
 {
   float timeout = 60;
   std::ofstream m_os;
-  std::string pid_sub;
-  std::string process_name;
-  std::string process_arguments;
+  std::string process_pid;
 
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
     if ((arg == "-h") || (arg == "--help")) {
         show_usage();
         return 0;
-    } else if (arg == "--process_name") {
+    } else if (arg == "--process_pid") {
         if (i + 1 < argc) { // Make sure we aren't at the end of argv!
-            process_name = argv[++i]; // Increment 'i' so we don't get the argument as the next argv[i].
+            process_pid = argv[++i]; // Increment 'i' so we don't get the argument as the next argv[i].
         } else { // Uh-oh, there was no argument to the destination option.
-            std::cerr << "--process_name option requires one argument." << std::endl;
-            return 1;
-        }
-    } else if (arg == "--process_arguments") {
-        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
-            process_arguments = argv[++i]; // Increment 'i' so we don't get the argument as the next argv[i].
-        } else { // Uh-oh, there was no argument to the destination option.
-            std::cerr << "--process_arguments option requires one argument." << std::endl;
+            std::cerr << "--process_pid option requires one argument." << std::endl;
             return 1;
         }
     } else if (arg == "--timeout") {
@@ -85,28 +75,8 @@ int main(int argc, char * argv[])
 
   auto start = std::chrono::high_resolution_clock::now();
 
-  while (true) {
-    pid_sub = getPIDByName(process_name, argv[0], process_arguments);
-    std::cout << "pid_sub " << pid_sub << std::endl;
-
-    auto finish = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::milli> elapsed = finish - start;
-    float seconds_running = elapsed.count() / 1000;
-
-    if (seconds_running > timeout) {
-      return -1;
-    }
-
-    if (pid_sub.empty() || atoi(pid_sub.c_str()) < 1024) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-      continue;
-    } else {
-      break;
-    }
-  }
-
-  LinuxMemoryProcessMeasurement linux_memory_process_measurement(pid_sub);
-  LinuxCPUProcessMeasurement linux_cpu_process_measurement(pid_sub);
+  LinuxMemoryProcessMeasurement linux_memory_process_measurement(process_pid);
+  LinuxCPUProcessMeasurement linux_cpu_process_measurement(process_pid);
 
   LinuxCPUSystemMeasurement linux_cpu_system_measurement;
   LinuxMemorySystemMeasurement linux_memory_system_measurement;
