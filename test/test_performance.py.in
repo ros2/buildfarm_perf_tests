@@ -37,21 +37,26 @@ def _raw_to_csv(csv_data, csv_path):
     appears on the plot.
     """
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
-    dataframe_agg = dataframe.agg(['max', 'mean', 'sum'])
+    dataframe_agg = dataframe.agg(['max', 'mean', 'sum', 'median'])
 
+    percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
+    percentils_cpu_usage = dataframe['cpu_usage (%)'].describe(percentiles=[0.95])
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
+        str(dataframe_agg.loc['median', 'latency_mean (ms)']),
+        str(percentils_latency.iloc[5]),
         str(dataframe_agg.loc['max', 'ru_maxrss']),
         str(dataframe_agg.loc['mean', 'received']),
         str(dataframe_agg.loc['mean', 'sent']),
         str(dataframe_agg.loc['sum', 'lost']),
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
+        str(percentils_cpu_usage.iloc[5]),
+        str(dataframe_agg.loc['median', 'cpu_usage (%)']),
         ]
 
     with open(csv_path, 'w') as csv:
-        csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
-        csv.write(','.join(values) + '\n')
-
+         csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
+         csv.write(','.join(values) + '\n')
 
 def _raw_to_png(csv_data, png_path):
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
@@ -76,15 +81,40 @@ def _raw_to_png(csv_data, png_path):
 
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
-    dataframe.plot(kind='bar',y=['received', 'sent', 'lost'])
+    dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
 
     plt.title('@TEST_NAME@  Received/Sent packets per second and Lost packets')
 
     plt.savefig(png_path[:-4] + "_histogram.png")
 
+
 def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
+
+    launch_description = []
+    args = [
+        '-c', '@COMM@',
+        '-t', '@PERF_TEST_TOPIC@',
+        '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
+        '-l', performance_log_prefix,
+    ]
+
+    if '@NUMBER_PROCESS@' == 2:
+        args.append('--roundtrip_mode')
+        args.append('Main')
+
+        node_relay = Node(
+          package='performance_test', node_executable='perf_test', output='log',
+          arguments=[
+              '-c', '@COMM@',
+              '-t', '@PERF_TEST_TOPIC@',
+              '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
+              "--roundtrip_mode", "Relay",
+          ]
+        )
+        launch_description.append(node_relay)
+
     node_under_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
@@ -95,17 +125,18 @@ def generate_test_description(ready_fn):
         ]
     )
 
-    return LaunchDescription([
-        node_under_test,
-        launch_testing.util.KeepAliveProc(),
-        launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
-    ]), locals()
+    launch_description.append(node_under_test)
+    launch_description.append(launch_testing.util.KeepAliveProc())
+    launch_description.append(launch.actions.OpaqueFunction(function=lambda context: ready_fn()))
+
+    return LaunchDescription(launch_description), locals()
 
 
 class PerformanceTestTermination(unittest.TestCase):
 
     def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
-        proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PERF_TEST_MAX_RUNTIME@ * 2))
+        proc_info.assertWaitForShutdown(process=node_under_test,
+                                        timeout=(@PERF_TEST_MAX_RUNTIME@ * 2))
 
 
 @launch_testing.post_shutdown_test()

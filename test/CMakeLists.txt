@@ -10,6 +10,8 @@ set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
 set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
 
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
+  set(NUMBER_PROCESS "1")
+
   get_filename_component(
     PERFORMANCE_REPORT_PNG
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.png"
@@ -38,8 +40,45 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
 
-  set(NODE_SPINNING_TIMEOUT "30")
+  set(NUMBER_PROCESS "2")
+  # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
+  # processes are splitted in two
+  set(SKIP_TEST "")
+  if(${COMM} STREQUAL "CycloneDDS" OR ${COMM} STREQUAL "FastRTPS")
+    set(SKIP_TEST "SKIP_TEST")
+  endif()
 
+  get_filename_component(
+    PERFORMANCE_TWO_PROCESS_REPORT_PNG
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME}.png"
+    ABSOLUTE
+  )
+  get_filename_component(
+    PERFORMANCE_TWO_PROCESS_REPORT_CSV
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME}.csv"
+    ABSOLUTE
+  )
+  configure_file(
+    test_performance.py.in
+    ${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME}.py.configure
+    @ONLY
+  )
+  file(GENERATE
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME}.py"
+    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME}.py.configure"
+  )
+
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME}.py"
+    TARGET test_performance_two_process_${TEST_NAME}
+    ENV
+    "PERFORMANCE_REPORT_PNG=${PERFORMANCE_TWO_PROCESS_REPORT_PNG}"
+    "PERFORMANCE_REPORT_CSV=${PERFORMANCE_TWO_PROCESS_REPORT_CSV}"
+    "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+    ${SKIP_TEST}
+  )
+
+  set(NODE_SPINNING_TIMEOUT "30")
   get_filename_component(
     PERFORMANCE_OVERHEAD_NODE_CSV
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME}.csv"
