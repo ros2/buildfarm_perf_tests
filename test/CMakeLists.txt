@@ -1,4 +1,4 @@
-set(PERF_TEST_MAX_RUNTIME 30
+set(PERF_TEST_MAX_RUNTIME 3
   CACHE STRING "Duration for each performance test run")
 set(PERF_TEST_TOPIC "Array1k"
   CACHE STRING "Performance test topic")
@@ -10,6 +10,8 @@ set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
 set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
 
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
+  set(NUMBER_PROCESS "1")
+
   get_filename_component(
     PERFORMANCE_REPORT_PNG
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME}.png"
@@ -38,6 +40,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
   )
 
+  set(NUMBER_PROCESS "2")
+
   # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
   # processes are splitted in two
   set(SKIP_TEST "")
@@ -55,9 +59,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME}.csv"
     ABSOLUTE
   )
-
   configure_file(
-    test_performance_two_process.py.in
+    test_performance.py.in
     ${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME}.py.configure
     @ONLY
   )
@@ -70,8 +73,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
     "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME}.py"
     TARGET test_performance_two_process_${TEST_NAME}
     ENV
-    "PERFORMANCE_TWO_PROCESS_REPORT_PNG=${PERFORMANCE_TWO_PROCESS_REPORT_PNG}"
-    "PERFORMANCE_TWO_PROCESS_REPORT_CSV=${PERFORMANCE_TWO_PROCESS_REPORT_CSV}"
+    "PERFORMANCE_REPORT_PNG=${PERFORMANCE_TWO_PROCESS_REPORT_PNG}"
+    "PERFORMANCE_REPORT_CSV=${PERFORMANCE_TWO_PROCESS_REPORT_CSV}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
     ${SKIP_TEST}
   )
