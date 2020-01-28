@@ -302,3 +302,6 @@ class PerformanceTestResults(unittest.TestCase):
                       file=sys.stderr)
         else:
             print('No report written - no performance log was produced', file=sys.stderr)
+
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
