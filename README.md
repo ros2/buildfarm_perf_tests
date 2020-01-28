@@ -81,30 +81,20 @@ Options:
   -h [ --help ]           Help screen
   --timeout arg (=60)     Test duration
   --log arg (=out.csv)    Log filename
-  --process_name arg      process_name
-  --process_arguments arg process_arguments
+  --process_pid arg      process pid
 ```
 
 A general overview of what a typical run might do, for example:
 
 1. Start process under test. For example `perf_test`
-2. Launch `system_metrics_collector` using the argument  `--process_name` with the name of the process (in this case `perf_test`). You can also use the argument `--process_argument` to include one of the arguments of the `perf_test`, For example if you are running `perf_test` with `--roundtrip_mode` you can include in this option `Main` or `Relay` to identify each one of the processes.
+2. Launch `system_metrics_collector` using the argument `--process_pid` with the pid of the process (in this case `perf_test`).
 3. Finally `system_metrics_collector` will fetch the data from the files describe above. If you have include the option `--log` then the data it's recorded in the file otherwise the standard output will show the reading.
 
 ### Examples
 
-Example 1:
-
 ```bash
-ros2 run performance_test perf_test -c FastRTPS -t Array1k
-ros2 run buildfarm_perf_tests system_metric_collector --process_name perf_test
-```
-
-Example 2:
-
-```bash
-ros2 run performance_test perf_test -c FastRTPS -t Array1k --roundtrip_mode Relay
-ros2 run performance_test perf_test -c FastRTPS -t Array1k --roundtrip_mode Main
-ros2 run buildfarm_perf_tests system_metric_collector --process_name perf_test --process_argument Main
-ros2 run buildfarm_perf_tests system_metric_collector --process_name perf_test --process_argument Relay
+ros2 run performance_test perf_test -c ROS2 -t Array1k &
+ps -e | grep perf_test
+  8621 pts/5    00:00:01 perf_test
+ros2 run buildfarm_perf_tests system_metric_collector -process_pid 8621
 ```
