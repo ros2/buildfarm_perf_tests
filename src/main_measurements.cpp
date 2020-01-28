@@ -22,13 +22,13 @@
 
 void show_usage()
 {
-    std::cerr << "Usage: system_metric_collector [OPTION [ARG]] ...\n"
-              << "Options:\n"
-              << "\t-h,--help\t\tShow this help message\n"
-              << "\t--timeout arg (=60)\tTest duration\n"
-              << "\t--log arg (=out.csv)\tLog filename\n"
-              << "\t--process_pid arg\tProcess PID\n"
-              << std::endl;
+  std::cerr << "Usage: system_metric_collector [OPTION [ARG]] ...\n" <<
+    "Options:\n" <<
+    "\t-h,--help\t\tShow this help message\n" <<
+    "\t--timeout arg (=60)\tTest duration\n" <<
+    "\t--log arg (=out.csv)\tLog filename\n" <<
+    "\t--process_pid arg\tProcess PID\n" <<
+    std::endl;
 }
 
 int main(int argc, char * argv[])
@@ -40,36 +40,36 @@ int main(int argc, char * argv[])
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
     if ((arg == "-h") || (arg == "--help")) {
-        show_usage();
-        return 0;
+      show_usage();
+      return 0;
     } else if (arg == "--process_pid") {
-        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
-            process_pid = argv[++i]; // Increment 'i' so we don't get the argument as the next argv[i].
-        } else { // Uh-oh, there was no argument to the destination option.
-            std::cerr << "--process_pid option requires one argument." << std::endl;
-            return 1;
-        }
+      if (i + 1 < argc) {   // Make sure we aren't at the end of argv!
+        process_pid = argv[++i];     // Increment 'i' so we don't get the argument as the next argv[i].
+      } else {   // Uh-oh, there was no argument to the destination option.
+        std::cerr << "--process_pid option requires one argument." << std::endl;
+        return 1;
+      }
     } else if (arg == "--timeout") {
-        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
-          timeout = std::atoi(argv[++i]); // Increment 'i' so we don't get the argument as the next argv[i].
-        } else { // Uh-oh, there was no argument to the destination option.
-            std::cerr << "--timeout option requires one argument." << std::endl;
-            return 1;
-        }
+      if (i + 1 < argc) {   // Make sure we aren't at the end of argv!
+        timeout = std::atoi(argv[++i]);   // Increment 'i' so we don't get the argument as the next argv[i].
+      } else {   // Uh-oh, there was no argument to the destination option.
+        std::cerr << "--timeout option requires one argument." << std::endl;
+        return 1;
+      }
     } else if (arg == "--log") {
-        if (i + 1 < argc) { // Make sure we aren't at the end of argv!
-          std::string filename = argv[++i];
-          m_os.open(filename, std::ofstream::out);
-          std::cout << "file_name " << filename << std::endl;
-          if (m_os.is_open()) {
-            m_os << "T_experiment" << ",cpu_usage (%)" << ",virtual memory (Mb)" <<
-              ",physical memory (Mb)" << ",resident anonymous memory (Mb)" <<
-              ",system_cpu_usage (%)" << ",system virtual memory (Mb)" << std::endl;
-          }
-        } else { // Uh-oh, there was no argument to the destination option.
-            std::cerr << "--log option requires one argument." << std::endl;
-            return 1;
+      if (i + 1 < argc) {   // Make sure we aren't at the end of argv!
+        std::string filename = argv[++i];
+        m_os.open(filename, std::ofstream::out);
+        std::cout << "file_name " << filename << std::endl;
+        if (m_os.is_open()) {
+          m_os << "T_experiment" << ",cpu_usage (%)" << ",virtual memory (Mb)" <<
+            ",physical memory (Mb)" << ",resident anonymous memory (Mb)" <<
+            ",system_cpu_usage (%)" << ",system virtual memory (Mb)" << std::endl;
         }
+      } else {   // Uh-oh, there was no argument to the destination option.
+        std::cerr << "--log option requires one argument." << std::endl;
+        return 1;
+      }
     }
   }
 
