@@ -9,11 +9,14 @@ import unittest
 
 import launch
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, EnvironmentVariable
 import ament_index_python
 from launch_ros.actions import Node
 import launch_testing
-
+from launch.actions import (
+    ExecuteProcess, OpaqueFunction,
+    RegisterEventHandler, SetEnvironmentVariable)
+from launch.event_handlers import OnProcessStart
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
 import numpy as np  # noqa: F401
@@ -128,6 +131,18 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
                 + type + "_latency.png")
 
 
+def on_process_main_start(process_started, launch_context, observation_process):
+    SetEnvironmentVariable(
+        'PUB_PROCESS_UNDER_TEST_ID', str(process_started.pid)).execute(launch_context)
+    observation_process.execute(launch_context)
+
+
+def on_process_relay_start(process_started, launch_context, observation_process):
+    SetEnvironmentVariable(
+        'SUB_PROCESS_UNDER_TEST_ID', str(process_started.pid)).execute(launch_context)
+    observation_process.execute(launch_context)
+
+
 def generate_test_description(ready_fn):
     performance_log_prefix_cpumem_pub = tempfile.mkstemp(
         prefix='overhead_cpumem_pub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
@@ -138,7 +153,7 @@ def generate_test_description(ready_fn):
     performance_log_prefix_sub = tempfile.mkstemp(
         prefix='overhead_sub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
 
-    node_under_test = launch.actions.ExecuteProcess(
+    system_metric_collector_pub = launch.actions.ExecuteProcess(
       cmd=[
           os.path.join(
               ament_index_python.get_package_prefix('buildfarm_perf_tests'),
@@ -148,8 +163,7 @@ def generate_test_description(ready_fn):
           # Arguments
           "--timeout", "@PUBSUB_TIMEOUT@",
           "--log", performance_log_prefix_cpumem_pub,
-          "--process_name", "perf_test",
-          "--process_arguments", "Main"
+          "--process_pid", EnvironmentVariable('PUB_PROCESS_UNDER_TEST_ID'),
       ],)
 
     system_metric_collector_sub = launch.actions.ExecuteProcess(
@@ -162,11 +176,10 @@ def generate_test_description(ready_fn):
           # Arguments
           "--timeout", "@PUBSUB_TIMEOUT@",
           "--log", performance_log_prefix_cpumem_sub,
-          "--process_name", "perf_test",
-          "--process_arguments", "Relay"
+          "--process_pid", EnvironmentVariable('SUB_PROCESS_UNDER_TEST_ID'),
       ],)
 
-    node_publisher_test = Node(
+    node_main_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
             '-c', '@COMM@',
@@ -193,24 +206,31 @@ def generate_test_description(ready_fn):
     )
 
     return LaunchDescription([
-        node_under_test,
-        system_metric_collector_sub,
-        node_publisher_test,
+        RegisterEventHandler(OnProcessStart(
+          target_action=node_relay_test,
+          on_start=lambda p, c: on_process_relay_start(p, c, system_metric_collector_sub)
+        )),
+        RegisterEventHandler(OnProcessStart(
+            target_action=node_main_test,
+            on_start=lambda p, c: on_process_main_start(p, c, system_metric_collector_pub)
+        )),
+        node_main_test,
         node_relay_test,
         launch_testing.util.KeepAliveProc(),
-        launch.actions.OpaqueFunction(function=lambda context: ready_fn()),
+        OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 
 class PerformanceTestTermination(unittest.TestCase):
 
     def test_termination_@TEST_NAME_PUB_SUB@(self, system_metric_collector_sub,
-                                             node_under_test, node_publisher_test,
+                                             system_metric_collector_pub, node_main_test,
                                              node_relay_test, proc_info):
         proc_info.assertWaitForShutdown(process=system_metric_collector_sub,
                                         timeout=(@PUBSUB_TIMEOUT@ * 2))
-        proc_info.assertWaitForShutdown(process=node_under_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
-        proc_info.assertWaitForShutdown(process=node_publisher_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
+        proc_info.assertWaitForShutdown(process=system_metric_collector_pub,
+                                        timeout=(@PUBSUB_TIMEOUT@ * 2))
+        proc_info.assertWaitForShutdown(process=node_main_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
         proc_info.assertWaitForShutdown(process=node_relay_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
 
 
@@ -222,17 +242,23 @@ class PerformanceTestResults(unittest.TestCase):
                                          performance_log_prefix_cpumem_sub,
                                          performance_log_prefix_pub,
                                          performance_log_prefix_sub,
-                                         proc_info):
-        # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
-        # self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
+                                         proc_info,
+                                         node_relay_test,
+                                         node_main_test):
         self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
         self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
 
-        # launch_testing.asserts.assertExitCodes(
-        #     proc_info,
-        #     [launch_testing.asserts.EXIT_OK],
-        #     node_under_test,
-        # )
+        launch_testing.asserts.assertExitCodes(
+            proc_info,
+            [launch_testing.asserts.EXIT_OK],
+            node_relay_test,
+        )
+
+        launch_testing.asserts.assertExitCodes(
+            proc_info,
+            [launch_testing.asserts.EXIT_OK],
+            node_main_test,
+        )
 
         performance_logs = glob(performance_log_prefix_cpumem_pub + '*')
         performance_logs_perf_test = glob(performance_log_prefix_pub + '_*')
