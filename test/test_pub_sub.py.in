@@ -7,7 +7,6 @@ import sys
 import tempfile
 import unittest
 
-import launch
 from launch import LaunchDescription
 from launch.substitutions import LaunchConfiguration, EnvironmentVariable
 import ament_index_python
