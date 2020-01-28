@@ -246,7 +246,9 @@ class PerformanceTestResults(unittest.TestCase):
                                          node_main_test):
         self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
         self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
-
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
+        
         launch_testing.asserts.assertExitCodes(
             proc_info,
             [launch_testing.asserts.EXIT_OK],
@@ -302,6 +304,3 @@ class PerformanceTestResults(unittest.TestCase):
                       file=sys.stderr)
         else:
             print('No report written - no performance log was produced', file=sys.stderr)
-
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
