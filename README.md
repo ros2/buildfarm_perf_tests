@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This package defines some tests which invoke `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations.
+This package defines some tests. On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations. On the other hand we are evaluating the additional overhead caused by a single pub/sub topic or one process spinning and detect potential leaks related to theses activities.
 
 * There is a test for each RMW:
 
@@ -13,6 +13,80 @@ This package defines some tests which invoke `perf_test` from Apex.AI's [perform
   - rmw_fastrtps_cpp
   - rmw_fastrtps_dynamic_cpp
   - rmw_opensplice_cpp
+
+### Test 1 - Performance Test  (Apex.AI)
+
+In this test we are running the Performance Test provided by Apex.AI. Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
+
+In this test we are measurement:
+ - Average round-trip time
+ - CPU usage (provided by Apex.AI tool)
+ - Sent/Received packets per second
+ - Total lost packets
+ - Max resident set size
+
+We are generating two plots per measurement
+ - [One per-build](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/lastBuild/)
+ - [Other over time](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/)
+
+**The test only measures the latency between the same RMW implementation**
+
+| Publisher/Subscriber     | rmw_fastrtps_cpp         | rmw_opensplice_cpp       | rmw_cyclonedds_cpp       | rmw_fastrtps_dynamic_cpp | rmw_connext_cpp          |
+|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|--------------------------|
+| rmw_fastrtps_cpp         | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| rmw_opensplice_cpp       | :heavy_multiplication_x: | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| rmw_cyclonedds_cpp       | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_check_mark:       | :heavy_multiplication_x: | :heavy_multiplication_x: |
+| rmw_fastrtps_dynamic_cpp | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_check_mark:       | :heavy_multiplication_x: |
+| rmw_connext_cpp          | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_multiplication_x: | :heavy_check_mark:       |
+
+## Test 2 - Simple pub/sub
+
+In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz. This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
+
+We measure for both publisher and subscriber:
+
+ - Average round trip
+ - CPU usage ( readed from the filesystem )
+ - Total lost packets
+ - Received/Sent packets per second
+ - Physical memory
+ - Resident anonymous memory
+ - Virtual memory
+
+Again we plot measurement:
+ - [One per-build](http://3.83.10.11/job/Dci__nightly-performance-overhead-multi_ubuntu_bionic_amd64/lastBuild/)
+ - [Other over time](http://3.83.10.11/job/Dci__nightly-performance-overhead-multi_ubuntu_bionic_amd64/plot/)
+
+| Publisher/Subscriber     | rmw_fastrtps_cpp   | rmw_opensplice_cpp | rmw_cyclonedds_cpp | rmw_fastrtps_dynamic_cpp | rmw_connext_cpp    |
+|--------------------------|--------------------|--------------------|--------------------|--------------------------|--------------------|
+| rmw_fastrtps_cpp         | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark: |
+| rmw_opensplice_cpp       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark: |
+| rmw_cyclonedds_cpp       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark: |
+| rmw_fastrtps_dynamic_cpp | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark: |
+| rmw_connext_cpp          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:       | :heavy_check_mark: |
+
+## Test 3 - Node spinning
+
+This test creates one process and spins for 1 minute to evaluate ROS 2 overhead and detect obvious leaks.
+
+We measure:
+
+ - CPU usage ( readed from file system )
+ - Physical memory
+ - Resident anonymous memory
+ - Virtual memory
+
+Again we plot measurement:
+ - [One per-build](http://3.83.10.11/job/Dci__nightly-performance-overhead_ubuntu_bionic_amd64/lastBuild/)
+ - [Other over time](http://3.83.10.11/job/Dci__nightly-performance-overhead_ubuntu_bionic_amd64/plot/Node%20Spinnig%20Results/)
+
+| DDS                      | Process 1 |
+|--------------------------|-----------|
+| rmw_fastrtps_cpp         | :heavy_check_mark:   |
+| rmw_opensplice_cpp       |  :heavy_check_mark:   |
+| rmw_cyclonedds_cpp       | :heavy_check_mark:   |
+| rmw_fastrtps_dynamic_cpp |  :heavy_check_mark:   |
+| rmw_connext_cpp          |   :heavy_check_mark:   |
 
 ##  Build
 
