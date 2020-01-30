@@ -165,7 +165,7 @@ def generate_test_description(ready_fn):
           "--process_pid", EnvironmentVariable('PUB_PROCESS_UNDER_TEST_ID'),
       ],)
 
-     system_metric_collector_sub = ExecuteProcess(
+    system_metric_collector_sub = ExecuteProcess(
       cmd=[
           os.path.join(
               ament_index_python.get_package_prefix('buildfarm_perf_tests'),
@@ -248,7 +248,7 @@ class PerformanceTestResults(unittest.TestCase):
         self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
         self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
         self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
-        
+
         launch_testing.asserts.assertExitCodes(
             proc_info,
             [launch_testing.asserts.EXIT_OK],
