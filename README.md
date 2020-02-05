@@ -135,27 +135,27 @@ colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_MAX
    - You should be able to click one of those points to jump to the aforementioned PNG plot that produced that aggregated point.
 ![](img/agregate_latency.png)
 
-  ***note: graph data is for demonstration only, data may be out-of-date***
+  ***Note: the graphs presented below are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ![](img/size.png)
 
-  ***note: graph data is for demonstration only, data may be out-of-date***
+  ***Note: the graphs presented below are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ![](img/cpu.png)
 
-  ***note: graph data is for demonstration only, data may be out-of-date***
+  ***Note: the graphs presented below are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ![](img/lost_packets.png)
 
-  ***note: graph data is for demonstration only, data may be out-of-date***
+  ***Note: the graphs presented below are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ![](img/received_packets.png)
 
-  ***note: graph data is for demonstration only, data may be out-of-date***
+  ***Note: the graphs presented below are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ![](img/sent_packets.png)
 
-  ***note: graph data is for demonstration only, data may be out-of-date***
+  ***Note: the graphs presented below are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ## System metrics collector tool
 
