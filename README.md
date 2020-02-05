@@ -127,16 +127,35 @@ colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_MAX
   - These plots are displayed on the build's summary page, and are part of the output artifacts for the build.
 ![](img/latency.png)
 
+  ***note: graph data is for demonstration only, data may be out-of-date***
+
 * Each test also produces a couple of [aggregated measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/) in a small csv file, used to plot build-over-build using the Jenkins plot plugin.
 
    - To see these plots, click the "Plots" link on the left side of the JOB summary (not a build summary)
    - You should be able to click one of those points to jump to the aforementioned PNG plot that produced that aggregated point.
 ![](img/agregate_latency.png)
+
+  ***note: graph data is for demonstration only, data may be out-of-date***
+
 ![](img/size.png)
+
+  ***note: graph data is for demonstration only, data may be out-of-date***
+
 ![](img/cpu.png)
+
+  ***note: graph data is for demonstration only, data may be out-of-date***
+
 ![](img/lost_packets.png)
+
+  ***note: graph data is for demonstration only, data may be out-of-date***
+
 ![](img/received_packets.png)
+
+  ***note: graph data is for demonstration only, data may be out-of-date***
+
 ![](img/sent_packets.png)
+
+  ***note: graph data is for demonstration only, data may be out-of-date***
 
 ## System metrics collector tool
 
