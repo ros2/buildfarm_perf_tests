@@ -113,6 +113,8 @@ Add at the end the flags `--event-handlers console_direct+` if you want to visua
 
 ## Details
 
+  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
+
 * Each test runs for **30** seconds with a **1k payload**, but this can be changed using CMake variables.
  - `PERF_TEST_MAX_RUNTIME`: Maximum number of seconds to run before  exiting. Zero runs forever.
  - `PERF_TEST_TOPIC`: Topic to use. These are all available topics: `Array1k`, `Array4k`, `Array16k`, `Array32k`, `Array60k`, `Array1m`, `Array2m`, `Struct16`, `Struct256`, `Struct4k`, `Struct32k`, `PointCloud512k`, `PointCloud1m`, `PointCloud2m`, `PointCloud4m`, `Range`, `NavSatFix`, `RadarDetection` and `RadarTrack`.
@@ -127,35 +129,16 @@ colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_MAX
   - These plots are displayed on the build's summary page, and are part of the output artifacts for the build.
 ![](img/latency.png)
 
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
-
 * Each test also produces a couple of [aggregated measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/) in a small csv file, used to plot build-over-build using the Jenkins plot plugin.
 
    - To see these plots, click the "Plots" link on the left side of the JOB summary (not a build summary)
    - You should be able to click one of those points to jump to the aforementioned PNG plot that produced that aggregated point.
 ![](img/agregate_latency.png)
-
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
-
 ![](img/size.png)
-
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
-
 ![](img/cpu.png)
-
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
-
 ![](img/lost_packets.png)
-
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
-
 ![](img/received_packets.png)
-
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
-
 ![](img/sent_packets.png)
-
-  ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 ## System metrics collector tool
 
