@@ -117,12 +117,7 @@ def generate_test_description(ready_fn):
 
     node_under_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
-        arguments=[
-            '-c', '@COMM@',
-            '-t', '@PERF_TEST_TOPIC@',
-            '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
-            '-l', performance_log_prefix,
-        ]
+        arguments=args
     )
 
     launch_description.append(node_under_test)
