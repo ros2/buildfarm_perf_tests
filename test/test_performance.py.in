@@ -100,7 +100,7 @@ def generate_test_description(ready_fn):
         '-l', performance_log_prefix,
     ]
 
-    if '@NUMBER_PROCESS@' == 2:
+    if @NUMBER_PROCESS@ == 2:
         args.append('--roundtrip_mode')
         args.append('Main')
 
