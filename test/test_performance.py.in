@@ -84,7 +84,6 @@ def _raw_to_png(csv_data, png_path):
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@')
-    plt.ylim(0, 100)
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
     dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
