@@ -66,7 +66,7 @@ def _raw_to_png(csv_data, png_path):
     dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
     percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
     dataframe['latency_p95 (ms)'] = percentils_latency.iloc[5]
-    dataframe[['T_experiment',
+    ax = dataframe[['T_experiment',
                'latency_min (ms)',
                'latency_max (ms)',
                'latency_mean (ms)',
@@ -80,14 +80,17 @@ def _raw_to_png(csv_data, png_path):
       plot_name = "Two Processes"
 
     plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@')
+    ax.set_ylabel("ms")
     plt.savefig(png_path)
 
-    dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
+    ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@')
+    ax.set_ylabel("%")
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
-    dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
+    ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
     plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@')
+    ax.set_ylabel("Number of packets")
     plt.savefig(png_path[:-4] + "_histogram.png")
 
 
