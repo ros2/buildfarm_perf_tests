@@ -41,6 +41,7 @@ def _raw_to_csv(csv_data, csv_path):
 
     percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
     percentils_cpu_usage = dataframe['cpu_usage (%)'].describe(percentiles=[0.95])
+    percentils_data_received = dataframe['data_received'].describe(percentiles=[0.95])
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
         str(dataframe_agg.loc['median', 'latency_mean (ms)']),
@@ -52,6 +53,9 @@ def _raw_to_csv(csv_data, csv_path):
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
         str(percentils_cpu_usage.iloc[5]),
         str(dataframe_agg.loc['median', 'cpu_usage (%)']),
+        str(dataframe_agg.loc['mean', 'data_received'] / 1024),
+        str(dataframe_agg.loc['median', 'data_received'] / 1024),
+        str(percentils_data_received.iloc[5] / 1024)
         ]
 
     with open(csv_path, 'w') as csv:
@@ -74,6 +78,14 @@ def _raw_to_png(csv_data, png_path):
     plt.title('@TEST_NAME@ Performance Test')
 
     plt.savefig(png_path)
+
+    dataframe['data_received Mbits/s'] = dataframe['data_received'] / 1024
+    percentils_data_received = dataframe['data_received Mbits/s'].describe(percentiles=[0.95])
+    dataframe['data_received Mbits/s (P95)'] = percentils_data_received.iloc[5]
+    ax = dataframe[['T_experiment',  'data_received Mbits/s', 'data_received Mbits/s (P95)']].plot(x='T_experiment')
+    plt.title('@TEST_NAME@ throughput (Mbits/s) Tests')
+    ax.set_ylabel("Mbits/s")
+    plt.savefig(png_path[:-4] + "_throughtput.png")
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
 
