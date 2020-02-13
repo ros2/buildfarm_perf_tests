@@ -55,7 +55,7 @@ def _raw_to_csv(csv_data, csv_path):
         ]
 
     with open(csv_path, 'w') as csv:
-         csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
+         csv.write(','.join(['@TEST_NAME@_@PERF_TEST_TOPIC@'] * len(values)) + '\n')
          csv.write(','.join(values) + '\n')
 
 def _raw_to_png(csv_data, png_path):
