@@ -22,6 +22,7 @@ plt.switch_backend('agg')
 BYTE_TO_MBYTE = 1 / (1024*1024)
 BYTE_TO_KBYTE = 1 / (1024)
 
+
 def _cleanUpLogs(performance_log_prefix):
     for log in glob(performance_log_prefix + '*'):
         os.remove(log)
@@ -70,15 +71,23 @@ def _raw_to_png(csv_data, png_path):
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] * BYTE_TO_KBYTE
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
     dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
-    dataframe[['T_experiment',
+    percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
+    dataframe['latency_p95 (ms)'] = percentils_latency.iloc[5]
+    ax = dataframe[['T_experiment',
                'latency_min (ms)',
                'latency_max (ms)',
                'latency_mean (ms)',
+               'latency_p95 (ms)',
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
 
-    plt.title('@TEST_NAME@ Performance Test')
+    plot_name = "One Process"
 
+    if '@NUMBER_PROCESS@' == 2:
+      plot_name = "Two Processes"
+
+    plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@')
+    ax.set_ylabel("ms")
     plt.savefig(png_path)
 
     dataframe['data_received Mbits/s'] = dataframe['data_received'] * BYTE_TO_MBYTE
@@ -89,16 +98,14 @@ def _raw_to_png(csv_data, png_path):
     ax.set_ylabel("Mbits/s")
     plt.savefig(png_path[:-4] + "_throughput.png")
 
-    dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-
-    plt.title('@TEST_NAME@ CPU usage (%) Test')
-
+    ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
+    plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@')
+    ax.set_ylabel("%")
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
-    dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
-
-    plt.title('@TEST_NAME@  Received/Sent packets per second and Lost packets')
-
+    ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
+    plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@')
+    ax.set_ylabel("Number of packets")
     plt.savefig(png_path[:-4] + "_histogram.png")
 
 
