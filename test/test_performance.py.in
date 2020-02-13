@@ -79,17 +79,17 @@ def _raw_to_png(csv_data, png_path):
     if '@NUMBER_PROCESS@' == 2:
       plot_name = "Two Processes"
 
-    plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@')
+    plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("ms")
     plt.savefig(png_path)
 
     ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@')
+    plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("%")
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
     ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
-    plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@')
+    plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("Number of packets")
     plt.savefig(png_path[:-4] + "_histogram.png")
 
