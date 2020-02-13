@@ -83,7 +83,7 @@ def _raw_to_png(csv_data, png_path):
     percentils_data_received = dataframe['data_received Mbits/s'].describe(percentiles=[0.95])
     dataframe['data_received Mbits/s (P95)'] = percentils_data_received.iloc[5]
     ax = dataframe[['T_experiment',  'data_received Mbits/s', 'data_received Mbits/s (P95)']].plot(x='T_experiment')
-    plt.title('@TEST_NAME@ throughput (Mbits/s) Tests')
+    plt.title('@TEST_NAME@ Throughput (Mbits/s) Tests')
     ax.set_ylabel("Mbits/s")
     plt.savefig(png_path[:-4] + "_throughput.png")
 
