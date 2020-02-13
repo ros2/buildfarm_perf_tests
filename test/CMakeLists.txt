@@ -1,4 +1,4 @@
-set(PERF_TEST_MAX_RUNTIME 5
+set(PERF_TEST_MAX_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 
 find_package(launch_testing_ament_cmake REQUIRED)
