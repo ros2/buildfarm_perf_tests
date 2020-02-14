@@ -19,6 +19,9 @@ import pandas as pd
 
 plt.switch_backend('agg')
 
+BYTE_TO_MBYTE = 1 / (1024*1024)
+BYTE_TO_KBYTE = 1 / (1024)
+
 
 def _cleanUpLogs(performance_log_prefix):
     for log in glob(performance_log_prefix + '*'):
@@ -41,6 +44,7 @@ def _raw_to_csv(csv_data, csv_path):
 
     percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
     percentils_cpu_usage = dataframe['cpu_usage (%)'].describe(percentiles=[0.95])
+    percentils_data_received = dataframe['data_received'].describe(percentiles=[0.95])
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
         str(dataframe_agg.loc['median', 'latency_mean (ms)']),
@@ -52,6 +56,9 @@ def _raw_to_csv(csv_data, csv_path):
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
         str(percentils_cpu_usage.iloc[5]),
         str(dataframe_agg.loc['median', 'cpu_usage (%)']),
+        str(dataframe_agg.loc['mean', 'data_received'] *BYTE_TO_MBYTE),
+        str(dataframe_agg.loc['median', 'data_received'] * BYTE_TO_MBYTE),
+        str(percentils_data_received.iloc[5] * BYTE_TO_MBYTE)
         ]
 
     with open(csv_path, 'w') as csv:
@@ -61,7 +68,7 @@ def _raw_to_csv(csv_data, csv_path):
 def _raw_to_png(csv_data, png_path):
     dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
-    dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
+    dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] * BYTE_TO_KBYTE
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
     dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
     percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
@@ -82,6 +89,14 @@ def _raw_to_png(csv_data, png_path):
     plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@')
     ax.set_ylabel("ms")
     plt.savefig(png_path)
+
+    dataframe['data_received Mbits/s'] = dataframe['data_received'] * BYTE_TO_MBYTE
+    percentils_data_received = dataframe['data_received Mbits/s'].describe(percentiles=[0.95])
+    dataframe['data_received Mbits/s (P95)'] = percentils_data_received.iloc[5]
+    ax = dataframe[['T_experiment',  'data_received Mbits/s', 'data_received Mbits/s (P95)']].plot(x='T_experiment')
+    plt.title('@TEST_NAME@ Throughput (Mbits/s) Tests')
+    ax.set_ylabel("Mbits/s")
+    plt.savefig(png_path[:-4] + "_throughput.png")
 
     ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@')
