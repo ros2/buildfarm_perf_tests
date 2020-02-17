@@ -62,7 +62,7 @@ def _raw_to_csv(csv_data, csv_path):
         ]
 
     with open(csv_path, 'w') as csv:
-         csv.write(','.join(['@TEST_NAME@'] * len(values)) + '\n')
+         csv.write(','.join(['@TEST_NAME@_@PERF_TEST_TOPIC@'] * len(values)) + '\n')
          csv.write(','.join(values) + '\n')
 
 def _raw_to_png(csv_data, png_path):
@@ -86,7 +86,7 @@ def _raw_to_png(csv_data, png_path):
     if '@NUMBER_PROCESS@' == 2:
       plot_name = "Two Processes"
 
-    plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@')
+    plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("ms")
     plt.savefig(png_path)
 
@@ -94,17 +94,17 @@ def _raw_to_png(csv_data, png_path):
     percentils_data_received = dataframe['data_received Mbits/s'].describe(percentiles=[0.95])
     dataframe['data_received Mbits/s (P95)'] = percentils_data_received.iloc[5]
     ax = dataframe[['T_experiment',  'data_received Mbits/s', 'data_received Mbits/s (P95)']].plot(x='T_experiment')
-    plt.title('@TEST_NAME@ Throughput (Mbits/s) Tests')
+    plt.title('Performance ' + plot_name + ' Throughput (Mbits/s) Tests\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("Mbits/s")
     plt.savefig(png_path[:-4] + "_throughput.png")
 
     ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@')
+    plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("%")
     plt.savefig(png_path[:-4] + "_cpu_usage.png")
 
     ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
-    plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@')
+    plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@ @PERF_TEST_TOPIC@')
     ax.set_ylabel("Number of packets")
     plt.savefig(png_path[:-4] + "_histogram.png")
 
