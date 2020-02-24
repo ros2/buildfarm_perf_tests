@@ -18,7 +18,13 @@ set(TOPICS
   Array2m
 )
 
-function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
+get_filename_component(
+    FASTRTPS_DEFAULT_PROFILES_FILE
+    "${CMAKE_CURRENT_SOURCE_DIR}/DEFAULT_FASTRTPS_PROFILES.xml"
+    ABSOLUTE
+)
+
+function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
   foreach(topic ${TOPICS})
 
@@ -138,7 +144,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION)
 
     set(COMM_PUB ${RMW_IMPLEMENTATION})
     set(COMM_SUB ${rmw_impl})
-    set(TEST_NAME_PUB_SUB ${RMW_IMPLEMENTATION}_${rmw_impl}_${COMM})
+    set(TEST_NAME_PUB_SUB ${TEST_NAME}_${rmw_impl}_${COMM})
 
     get_filename_component(
       PERFORMANCE_OVERHEAD_CSV
@@ -179,16 +185,32 @@ macro(try_add_performance_test)
     ${rmw_implementation}
     "ROS2"
     ${rmw_implementation}
+    "async"
   )
   if(COMM_TYPE_${rmw_implementation})
     add_performance_test(
       ${COMM_TYPE_${rmw_implementation}}
       ${COMM_TYPE_${rmw_implementation}}
       ${rmw_implementation}
+      "async"
     )
   else()
     message(STATUS "No standalone DDS support for RMW: ${rmw_implementation}")
   endif()
 endmacro()
+
+add_performance_test(
+  "rmw_fastrtps_sync_cpp"
+  "ROS2"
+  "rmw_fastrtps_cpp"
+  "sync"
+)
+
+add_performance_test(
+  "FASTRTPS_sync"
+  "FastRTPS"
+  "rmw_fastrtps_cpp"
+  "sync"
+)
 
 call_for_each_rmw_implementation(try_add_performance_test)
