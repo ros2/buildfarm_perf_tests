@@ -199,12 +199,12 @@ macro(try_add_performance_test)
   endif()
 endmacro()
 
-add_performance_test(
-  "rmw_fastrtps_sync_cpp"
-  "ROS2"
-  "rmw_fastrtps_cpp"
-  "sync"
-)
+# add_performance_test(
+#   "rmw_fastrtps_sync_cpp"
+#   "ROS2"
+#   "rmw_fastrtps_cpp"
+#   "sync"
+# )
 
 add_performance_test(
   "FASTRTPS_sync"

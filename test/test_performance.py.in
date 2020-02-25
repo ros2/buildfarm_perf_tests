@@ -122,7 +122,7 @@ def generate_test_description(ready_fn):
     ]
 
     sync_env = {}
-    if '@SYNC_MODE@' == 'sync':
+    if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2':
       args.append('--disable_async')
       if '@RMW_IMPLEMENTATION@' == 'rmw_fastrtps_cpp':
         sync_env = {'FASTRTPS_DEFAULT_PROFILES_FILE': '@FASTRTPS_DEFAULT_PROFILES_FILE@',
