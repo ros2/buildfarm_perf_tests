@@ -125,8 +125,9 @@ def generate_test_description(ready_fn):
     if '@SYNC_MODE@' == 'sync':
       args.append('--disable_async')
       if '@RMW_IMPLEMENTATION@' == 'rmw_fastrtps_cpp':
-        sync_env = {'FASTRTPS_DEFAULT_PROFILES_FILE': '@FASTRTPS_DEFAULT_PROFILES_FILE@'}
-
+        sync_env = {'FASTRTPS_DEFAULT_PROFILES_FILE': '@FASTRTPS_DEFAULT_PROFILES_FILE@',
+                    'RMW_FASTRTPS_USE_QOS_FROM_XML': '1'}
+                    
     if @NUMBER_PROCESS@ == 2:
         args.append('--roundtrip_mode')
         args.append('Main')
