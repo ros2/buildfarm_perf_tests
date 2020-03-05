@@ -124,10 +124,7 @@ def generate_test_description(ready_fn):
     sync_env = {}
     if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2':
       args.append('--disable_async')
-      if '@RMW_IMPLEMENTATION@' == 'rmw_fastrtps_cpp':
-        sync_env = {'FASTRTPS_DEFAULT_PROFILES_FILE': '@FASTRTPS_DEFAULT_PROFILES_FILE@',
-                    'RMW_FASTRTPS_USE_QOS_FROM_XML': '1'}
-                    
+
     if @NUMBER_PROCESS@ == 2:
         args.append('--roundtrip_mode')
         args.append('Main')
@@ -140,14 +137,12 @@ def generate_test_description(ready_fn):
               '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
               "--roundtrip_mode", "Relay",
           ],
-          additional_env=sync_env,
         )
         launch_description.append(node_relay)
 
     node_under_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=args,
-        additional_env=sync_env,
     )
 
     launch_description.append(node_under_test)
