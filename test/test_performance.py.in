@@ -39,7 +39,7 @@ def _raw_to_csv(csv_data, csv_path):
     Changing the column names here will change the name of the line that
     appears on the plot.
     """
-    dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe = pd.read_csv(csv_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['max', 'mean', 'sum', 'median'])
 
     percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
@@ -66,7 +66,7 @@ def _raw_to_csv(csv_data, csv_path):
          csv.write(','.join(values) + '\n')
 
 def _raw_to_png(csv_data, png_path):
-    dataframe = pd.read_csv(csv_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe = pd.read_csv(csv_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] * BYTE_TO_KBYTE
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
