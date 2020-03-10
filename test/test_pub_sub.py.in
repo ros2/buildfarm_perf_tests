@@ -187,6 +187,7 @@ def generate_test_description(ready_fn):
             '-l', performance_log_prefix_pub,
             '--rate', '5',
             '--roundtrip_mode', 'Main',
+            "--ignore", "3",
         ],
         additional_env={'RMW_IMPLEMENTATION': '@COMM_PUB@'},
     )
@@ -200,6 +201,7 @@ def generate_test_description(ready_fn):
             '-l', performance_log_prefix_sub,
             '--rate', '5',
             '--roundtrip_mode', 'Relay',
+            "--ignore", "3",
         ],
         additional_env={'RMW_IMPLEMENTATION': '@COMM_SUB@'},
     )

@@ -118,6 +118,7 @@ def generate_test_description(ready_fn):
         '-c', '@COMM@',
         '-t', '@PERF_TEST_TOPIC@',
         '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
+        "--ignore", "3",
         '-l', performance_log_prefix,
     ]
 
