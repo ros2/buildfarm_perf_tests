@@ -43,7 +43,7 @@ def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
     dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['median', 'mean'])
 
-    dataframe_perf = pd.read_csv(csv_perf_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe_perf = pd.read_csv(csv_perf_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg_perf = dataframe_perf.agg(['max', 'mean', 'sum', 'median'])
 
     percentils_latency = dataframe_agg_perf['latency_mean (ms)'].describe(percentiles=[0.95])
@@ -108,7 +108,7 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
     if type == 'subscriber':
         return
 
-    dataframe = pd.read_csv(csv_perf_data, skiprows=21, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe = pd.read_csv(csv_perf_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
     pd.options.display.float_format = '{:.4f}'.format
     dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
     plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + type + ': ' + rmw_impl)
