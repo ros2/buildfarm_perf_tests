@@ -71,7 +71,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
     # processes are splitted in two
     set(SKIP_TEST "")
-    if(${COMM} STREQUAL "CycloneDDS" OR ${COMM} STREQUAL "FastRTPS")
+    if(${COMM} STREQUAL "CycloneDDS")
       set(SKIP_TEST "SKIP_TEST")
     endif()
 

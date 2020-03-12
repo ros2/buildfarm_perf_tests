@@ -60,4 +60,9 @@ install(TARGETS
   lib/${PROJECT_NAME}
 )
 
+install(PROGRAMS
+  scripts/kill_relay.bash
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_package()
