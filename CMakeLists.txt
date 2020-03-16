@@ -60,4 +60,13 @@ install(TARGETS
   lib/${PROJECT_NAME}
 )
 
+install(DIRECTORY templates
+  DESTINATION share/${PROJECT_NAME}
+)
+
+install(PROGRAMS
+  scripts/generate_config_yaml.py
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 ament_package()
