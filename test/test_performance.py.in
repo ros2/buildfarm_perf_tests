@@ -10,8 +10,6 @@ import unittest
 import launch
 from launch import LaunchDescription
 from launch_ros.actions import Node
-from launch.event_handlers import OnProcessStart
-from ament_index_python import get_package_prefix
 import launch_testing
 
 import matplotlib  # noqa: F401
