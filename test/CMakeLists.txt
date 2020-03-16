@@ -20,16 +20,33 @@ set(TOPICS
 
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
-  if(${SYNC_MODE} STREQUAL "sync")
+  if(${SYNC_MODE} STREQUAL "async" AND ${RMW_IMPLEMENTATION} STREQUAL "rmw_cyclonedds_cpp")
+    message(STATUS "No async mode in RMW_IMPLEMENTATION: rmw_cyclonedds_cpp")
+    return()
+  endif()
+
+  if(${SYNC_MODE} STREQUAL "sync" AND ${RMW_IMPLEMENTATION} STREQUAL "rmw_opensplice_cpp")
+    message(STATUS "No sync mode in RMW_IMPLEMENTATION: rmw_opensplice_cpp")
+    return()
+  endif()
+
+  if(${SYNC_MODE} STREQUAL "sync" AND ${RMW_IMPLEMENTATION} STREQUAL "rmw_connext_cpp")
+    message(STATUS "No sync mode in RMW_IMPLEMENTATION: rmw_connext_cpp")
+    return()
+  endif()
+
+  # Enviroment variables to configure rmw_fastrtps_cpp in sync or async
+  if(${SYNC_MODE} STREQUAL "sync" AND
+    (${RMW_IMPLEMENTATION} STREQUAL "rmw_fastrtps_cpp" OR ${RMW_IMPLEMENTATION} STREQUAL "rmw_fastrtps_dynamic_cpp"))
+      set(RMW_FASTRTPS_USE_QOS_FROM_XML 1)
+      get_filename_component(
+          FASTRTPS_DEFAULT_PROFILES_FILE
+          "${CMAKE_CURRENT_SOURCE_DIR}/DEFAULT_FASTRTPS_PROFILES.xml"
+          ABSOLUTE
+      )
+  else()
     set(RMW_FASTRTPS_USE_QOS_FROM_XML 0)
     set(FASTRTPS_DEFAULT_PROFILES_FILE "")
-  else()
-    set(RMW_FASTRTPS_USE_QOS_FROM_XML 1)
-    get_filename_component(
-        FASTRTPS_DEFAULT_PROFILES_FILE
-        "${CMAKE_CURRENT_SOURCE_DIR}/DEFAULT_FASTRTPS_PROFILES.xml"
-        ABSOLUTE
-    )
   endif()
 
   foreach(topic ${TOPICS})
@@ -68,7 +85,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     )
 
     set(NUMBER_PROCESS "2")
-    # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
+    # TODO (ahcorde): perf_test is not working with CycloneDDS when
     # processes are splitted in two
     set(SKIP_TEST "")
     if(${COMM} STREQUAL "CycloneDDS")
@@ -137,6 +154,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
     "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
     "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
+    "RMW_FASTRTPS_USE_QOS_FROM_XML=${RMW_FASTRTPS_USE_QOS_FROM_XML}"
+    "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_FILE}"
     TIMEOUT 120
   )
   set(PUBSUB_TIMEOUT "30")
@@ -145,10 +164,11 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
   foreach(rmw_impl ${_rmw_implementations})
 
-    # TODO (ahcorde): perf_test is not working with CycloneDDS or FastRTPS when
+    # TODO (ahcorde): perf_test is not working with CycloneDDS when
     #  processes are splitted in two
+    # waht(): Round tip mode is not implemented for Cyclone DDS
     set(SKIP_TEST "")
-    if(${COMM} STREQUAL "CycloneDDS" OR ${COMM} STREQUAL "FastRTPS")
+    if(${COMM} STREQUAL "CycloneDDS")
       set(SKIP_TEST "SKIP_TEST")
     endif()
 
@@ -194,27 +214,32 @@ endfunction()
 
 macro(try_add_performance_test)
   add_performance_test(
-    ${rmw_implementation}
+    "${rmw_implementation}_async"
     "ROS2"
     ${rmw_implementation}
     "async"
   )
 
+  add_performance_test(
+    "${rmw_implementation}_sync"
+    "ROS2"
+    ${rmw_implementation}
+    "sync"
+  )
+
   if(COMM_TYPE_${rmw_implementation})
     add_performance_test(
-      ${COMM_TYPE_${rmw_implementation}}
+      "${COMM_TYPE_${rmw_implementation}}_async"
       ${COMM_TYPE_${rmw_implementation}}
       ${rmw_implementation}
       "async"
     )
-    if(${rmw_implementation} STREQUAL "rmw_fastrtps_cpp")
-      add_performance_test(
-        "${COMM_TYPE_${rmw_implementation}}_sync"
-        ${COMM_TYPE_${rmw_implementation}}
-        ${rmw_implementation}
-        "sync"
-      )
-    endif()
+    add_performance_test(
+      "${COMM_TYPE_${rmw_implementation}}_sync"
+      ${COMM_TYPE_${rmw_implementation}}
+      ${rmw_implementation}
+      "sync"
+    )
   else()
     message(STATUS "No standalone DDS support for RMW: ${rmw_implementation}")
   endif()
