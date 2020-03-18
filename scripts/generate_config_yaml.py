@@ -114,11 +114,11 @@ def overhead_simple_publisher_and_subscriber(file_output, rmw_implementations, c
 def main():
     """Call main function."""
     parser = argparse.ArgumentParser(description='Create ros buildfarm config.')
-    parser.add_argument('-filename', dest='filename', required=True,
+    parser.add_argument('-f', '--filename', dest='filename', required=True,
                         help='output file', metavar='FILE')
-    parser.add_argument('-ci_name', dest='ci_name', required=True,
+    parser.add_argument('-c', '--ci_name', dest='ci_name', required=True,
                         help='ci_name job', metavar='ci_name',)
-    parser.add_argument('-rmw_implementations', metavar='rmw_implementations', nargs='+',
+    parser.add_argument('-rmw', '--rmw_implementations', metavar='rmw_implementations', nargs='+',
                         help='This will integrate the rmw_implementation in the plots')
     args = parser.parse_args()
 
