@@ -122,6 +122,10 @@ def generate_test_description(ready_fn):
         '-l', performance_log_prefix,
     ]
 
+    sync_env = {}
+    if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2':
+      args.append('--disable_async')
+
     if @NUMBER_PROCESS@ == 2:
         args.append('--roundtrip_mode')
         args.append('Main')
@@ -133,13 +137,13 @@ def generate_test_description(ready_fn):
               '-t', '@PERF_TEST_TOPIC@',
               '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
               "--roundtrip_mode", "Relay",
-          ]
+          ],
         )
         launch_description.append(node_relay)
 
     node_under_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
-        arguments=args
+        arguments=args,
     )
 
     launch_description.append(node_under_test)
