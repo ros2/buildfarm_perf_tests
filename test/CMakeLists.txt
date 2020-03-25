@@ -59,6 +59,25 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
     set(PERF_TEST_TOPIC ${topic})
 
+    # Fast-RTPS ros2-eloquent branch (1.9.3 + bugfixes) does not support synchronous
+    # sending of fragments. This means that in that branch, topics PointCloud512k,
+    # Array1m, and Array2m cannot be sent synchronously in ROS 2 Eloquent (either
+    # from standalone Fast-RTPS, or from rmw_fastrtps_*)
+    # https://github.com/ros2/buildfarm_perf_tests/pull/26#discussion_r393229707
+    set(SKIP_TEST "")
+    if(${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_cpp_sync_Array2m" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_cpp_sync_Array1m" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_cpp_sync_PointCloud512k" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_dynamic_cpp_sync_Array2m" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_dynamic_cpp_sync_Array1m" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_dynamic_cpp_sync_PointCloud512k" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "FastRTPS_sync_Array2m" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "FastRTPS_sync_Array1m" OR
+       ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "FastRTPS_sync_PointCloud512k"
+      )
+      set(SKIP_TEST "SKIP_TEST")
+    endif()
+
     set(NUMBER_PROCESS "1")
     get_filename_component(
       PERFORMANCE_REPORT_PNG
@@ -88,12 +107,12 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "RMW_IMPLEMENTATION=${RMW_IMPLEMENTATION}"
       "RMW_FASTRTPS_USE_QOS_FROM_XML=${RMW_FASTRTPS_USE_QOS_FROM_XML}"
       "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_FILE}"
+      ${SKIP_TEST}
     )
 
     set(NUMBER_PROCESS "2")
     # TODO (ahcorde): perf_test is not working with CycloneDDS when
     # processes are splitted in two
-    set(SKIP_TEST "")
     if(${COMM} STREQUAL "CycloneDDS")
       set(SKIP_TEST "SKIP_TEST")
     endif()
