@@ -16,9 +16,9 @@
 #include <vector>
 
 LinuxCPUProcessMeasurement::LinuxCPUProcessMeasurement(std::string pid)
-: pid_(pid),
-  tickspersec_(sysconf(_SC_CLK_TCK)),
-  numProcessors_(0)
+: numProcessors_(0),
+  pid_(pid),
+  tickspersec_(sysconf(_SC_CLK_TCK))
 {
   initCPUProcess();
 }
