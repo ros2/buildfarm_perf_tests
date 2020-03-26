@@ -2,8 +2,8 @@ repositories:
   buildfarm_perf_tests:
     type: git
     url: https://github.com/ros2/buildfarm_perf_tests.git
-    version: master
+    version: dashing
   performance_test:
     type: git
     url: https://github.com/ros2/performance_test.git
-    version: run_on_buildfarm
+    version: dashing/run_on_buildfarm
