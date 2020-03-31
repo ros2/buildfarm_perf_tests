@@ -65,7 +65,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     # from standalone Fast-RTPS, or from rmw_fastrtps_*)
     # https://github.com/ros2/buildfarm_perf_tests/pull/26#discussion_r393229707
     set(SKIP_TEST "")
-    if(($ENV{ROS_DISTRO} STREQUAL "eloquent" OR $ENV{ROS_DISTRO} STREQUAL "dashing") AND
+    if(("$ENV{ROS_DISTRO}" STREQUAL "eloquent" OR "$ENV{ROS_DISTRO}" STREQUAL "dashing") AND
         ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_cpp_sync_Array2m" OR
         ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_cpp_sync_Array1m" OR
         ${TEST_NAME}_${PERF_TEST_TOPIC} STREQUAL "rmw_fastrtps_cpp_sync_PointCloud512k" OR
