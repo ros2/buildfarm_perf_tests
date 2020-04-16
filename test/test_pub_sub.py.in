@@ -67,7 +67,7 @@ def _raw_to_csv(dataframe, dataframe_perf, csv_path, mode):
 
     write_jenkins_plot_csv(
         '%s_%s.csv' % (csv_path[:-4], mode),
-        'Publisher-@TEST_NAME@_Subscriber-@COMM_SUB@', values)
+        'Publisher-@TEST_NAME@_Subscriber-@RMW_IMPLEMENTATION_SUB@', values)
 
 
 def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
@@ -77,28 +77,28 @@ def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
     plt.title('Simple Pub/Sub virtual memory usage\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 1024)
     plt.savefig(png_path + '_'
-                + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
+                + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_virtual_memory.png')
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub CPU usage\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 100)
     plt.savefig(png_path + '_'
-                + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
+                + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_cpu_usage.png')
 
     dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub physical memory usage\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 100)
     plt.savefig(png_path + '_'
-                + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
+                + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_physical_memory.png')
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
     plt.title('Simple Pub/Sub resident anonymous memory\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 100)
     plt.savefig(png_path + '_'
-                + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
+                + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_resident_anonymous_memory.png')
 
     if mode == 'subscriber':
@@ -109,7 +109,7 @@ def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
     dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
     plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + mode + ': ' + rmw_impl)
     plt.savefig(png_path + '_'
-                + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
+                + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_histogram.png')
 
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
@@ -121,10 +121,10 @@ def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
                'latency_mean (ms)',
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
-    plt.title('Simple Pub/Sub latency\n' + mode + ': ' + '@COMM_PUB@'
-              + '\nsubscriber: ' + '@COMM_SUB@')
+    plt.title('Simple Pub/Sub latency\n' + mode + ': ' + '@RMW_IMPLEMENTATION@'
+              + '\nsubscriber: ' + '@RMW_IMPLEMENTATION_SUB@')
     plt.savefig(png_path + '_'
-                + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
+                + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_latency.png')
 
 
@@ -157,7 +157,6 @@ def generate_test_description(ready_fn):
             '--roundtrip_mode', 'Main',
             '--ignore', '3',
         ],
-        additional_env={'RMW_IMPLEMENTATION': '@COMM_PUB@'},
     )
 
     system_metric_collector_pub, node_main_test_hook = attach_system_metric_collector(
@@ -174,7 +173,7 @@ def generate_test_description(ready_fn):
             '--roundtrip_mode', 'Relay',
             '--ignore', '3',
         ],
-        additional_env={'RMW_IMPLEMENTATION': '@COMM_SUB@'},
+        additional_env={'RMW_IMPLEMENTATION': '@RMW_IMPLEMENTATION_SUB@'},
     )
 
     system_metric_collector_sub, node_relay_test_hook = attach_system_metric_collector(
@@ -247,7 +246,7 @@ class PerformanceTestResults(unittest.TestCase):
             performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
             if performance_report_png:
                 _raw_to_png(performance_log_data, performance_log_perf_data,
-                            performance_report_png, 'publisher', '@COMM_PUB@')
+                            performance_report_png, 'publisher', '@RMW_IMPLEMENTATION@')
             else:
                 print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
                       file=sys.stderr)
@@ -273,7 +272,7 @@ class PerformanceTestResults(unittest.TestCase):
             performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
             if performance_report_png:
                 _raw_to_png(performance_log_data, performance_log_perf_data,
-                            performance_report_png, 'subscriber', '@COMM_SUB@')
+                            performance_report_png, 'subscriber', '@RMW_IMPLEMENTATION_SUB@')
             else:
                 print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
                       file=sys.stderr)
