@@ -181,7 +181,7 @@ def generate_test_description(ready_fn):
     node_main_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
-            '-c', '@COMM@',
+            '-c', 'ROS2',
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_pub,
@@ -195,7 +195,7 @@ def generate_test_description(ready_fn):
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
-            '-c', '@COMM@',
+            '-c', 'ROS2',
             '-t', '@PERF_TEST_TOPIC@',
             '--max_runtime', '@PUBSUB_TIMEOUT@',
             '-l', performance_log_prefix_sub,
