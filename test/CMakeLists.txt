@@ -1,3 +1,5 @@
+set(PERF_TEST_SKIP OFF
+  CACHE BOOL "Skip all of the performance tests and only test the package itself")
 set(PERF_TEST_MAX_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 
