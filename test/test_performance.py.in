@@ -126,6 +126,8 @@ def generate_test_description(ready_fn):
     if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2':
       args.append('--disable_async')
 
+    nodes = []
+
     if @NUMBER_PROCESS@ == 2:
         args.append('--roundtrip_mode')
         args.append('Main')
@@ -140,11 +142,13 @@ def generate_test_description(ready_fn):
           ],
         )
         launch_description.append(node_relay)
+        nodes.append(node_relay)
 
     node_under_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=args,
     )
+    nodes.append(node_under_test)
 
     launch_description.append(node_under_test)
     launch_description.append(launch_testing.util.KeepAliveProc())
@@ -155,22 +159,25 @@ def generate_test_description(ready_fn):
 
 class PerformanceTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, node_under_test, proc_info):
-        proc_info.assertWaitForShutdown(process=node_under_test,
-                                        timeout=(@PERF_TEST_MAX_RUNTIME@ * 2))
+    def test_termination_@TEST_NAME@(self, nodes, proc_info):
+        for node in nodes:
+            proc_info.assertWaitForShutdown(
+                process=node,
+                timeout=(@PERF_TEST_MAX_RUNTIME@ * 2))
 
 
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_results_@TEST_NAME@(self, performance_log_prefix, node_under_test, proc_info):
+    def test_results_@TEST_NAME@(self, performance_log_prefix, nodes, proc_info):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
-        launch_testing.asserts.assertExitCodes(
-            proc_info,
-            [launch_testing.asserts.EXIT_OK],
-            node_under_test,
-        )
+        for node in nodes:
+            launch_testing.asserts.assertExitCodes(
+                proc_info,
+                [launch_testing.asserts.EXIT_OK],
+                node,
+            )
 
         performance_logs = glob(performance_log_prefix + '_*')
         if performance_logs:
