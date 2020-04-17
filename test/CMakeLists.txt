@@ -7,6 +7,8 @@ find_package(rmw_implementation_cmake REQUIRED)
 set(COMM_TYPE_rmw_cyclonedds_cpp "CycloneDDS")
 set(COMM_TYPE_rmw_fastrtps_cpp "FastRTPS")
 
+set(PERF_TEST_TOPIC_PUB_SUB Array60k
+  CACHE STRING "perf_test topic used by pub/stub tests")
 set(TOPICS
   Array1k
   Array4k
@@ -151,6 +153,10 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     )
   endforeach()
 
+  if(NOT "${COMM}" STREQUAL "ROS2")
+    return()
+  endif()
+
   set(NODE_SPINNING_TIMEOUT "30")
   get_filename_component(
     PERFORMANCE_OVERHEAD_NODE_CSV
@@ -185,6 +191,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     TIMEOUT 120
   )
   set(PUBSUB_TIMEOUT "30")
+  set(PERF_TEST_TOPIC ${PERF_TEST_TOPIC_PUB_SUB})
 
   get_available_rmw_implementations(_rmw_implementations)
 
