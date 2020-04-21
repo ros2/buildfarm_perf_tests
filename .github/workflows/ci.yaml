@@ -1,0 +1,35 @@
+name: Continuous Integration
+on: [push, pull_request]
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    container: ${{matrix.container_image}}
+    strategy:
+      matrix:
+        container_image: ['ros:eloquent', 'osrf/ros2:nightly-rmw-nonfree']
+
+    steps:
+    - name: Clone buildfarm_perf_tests
+      uses: actions/checkout@v2
+      with:
+        path: src/buildfarm_perf_tests
+    - name: Update, build, and test
+      run: |
+        echo ::group::Update packages
+        apt-get update
+        apt-get upgrade -y
+        rosdep update
+        echo ::endgroup::
+        . /opt/ros/*/setup.sh
+        echo ::group::Install dependencies
+        rosdep install -y --from-path src --ignore-src --skip-keys 'performance_test'
+        echo ::endgroup::
+        echo ::group::Build package
+        colcon build --event-handler console_direct+ --cmake-args -DPERF_TEST_SKIP:BOOL=1 -DCMAKE_CXX_FLAGS=-Werror -Werror=dev -Werror=deprecated
+        echo ::endgroup::
+        echo ::group::Test package
+        colcon test --event-handler console_direct+
+        echo ::endgroup::
+        colcon test-result
