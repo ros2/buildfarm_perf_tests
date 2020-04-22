@@ -8,15 +8,17 @@
   <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
 
   <depend>rclcpp</depend>
 
   <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>python3-pandas</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
-  <test_depend>launch</test_depend>
-  <test_depend>launch_ros</test_depend>
   <test_depend>launch_testing_ament_cmake</test_depend>
   <test_depend>performance_test</test_depend>
   <test_depend>rmw_implementation_cmake</test_depend>
@@ -24,7 +26,6 @@
   <!-- For plot generation -->
   <test_depend>python3-matplotlib</test_depend>
   <test_depend>python3-numpy</test_depend>
-  <test_depend>python3-pandas</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

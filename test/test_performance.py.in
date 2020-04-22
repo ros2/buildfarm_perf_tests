@@ -7,6 +7,8 @@ import sys
 import tempfile
 import unittest
 
+from buildfarm_perf_tests.test_results import read_performance_test_csv
+from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 import launch
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -28,9 +30,9 @@ def _cleanUpLogs(performance_log_prefix):
         os.remove(log)
 
 
-def _raw_to_csv(csv_data, csv_path):
+def _raw_to_csv(dataframe, csv_path):
     """
-    Convert from the raw csv format to the csv for the Jenkins plot plugin.
+    Convert from the raw csv data to the csv for the Jenkins plot plugin.
 
     Do not change the order of the columns. The plot plugin indexes into the
     csv using the column number instead of the column name, because we're
@@ -39,35 +41,32 @@ def _raw_to_csv(csv_data, csv_path):
     Changing the column names here will change the name of the line that
     appears on the plot.
     """
-    dataframe = pd.read_csv(csv_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['max', 'mean', 'sum', 'median'])
 
-    percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
-    percentils_cpu_usage = dataframe['cpu_usage (%)'].describe(percentiles=[0.95])
-    percentils_data_received = dataframe['data_received'].describe(percentiles=[0.95])
     values = [
         str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
         str(dataframe_agg.loc['median', 'latency_mean (ms)']),
-        str(percentils_latency.iloc[5]),
+        str(dataframe['latency_mean (ms)'].describe(percentiles=[0.95]).iloc[5]),
         str(dataframe_agg.loc['max', 'ru_maxrss']),
         str(dataframe_agg.loc['mean', 'received']),
         str(dataframe_agg.loc['mean', 'sent']),
         str(dataframe_agg.loc['sum', 'lost']),
         str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
-        str(percentils_cpu_usage.iloc[5]),
+        str(dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5]),
         str(dataframe_agg.loc['median', 'cpu_usage (%)']),
         str(dataframe_agg.loc['mean', 'data_received'] *BYTE_TO_MBYTE),
         str(dataframe_agg.loc['median', 'data_received'] * BYTE_TO_MBYTE),
-        str(percentils_data_received.iloc[5] * BYTE_TO_MBYTE)
+        str(dataframe['data_received'].describe(percentiles=[0.95]).iloc[5] * BYTE_TO_MBYTE)
         ]
 
-    with open(csv_path, 'w') as csv:
-         csv.write(','.join(['@TEST_NAME@_@PERF_TEST_TOPIC@'] * len(values)) + '\n')
-         csv.write(','.join(values) + '\n')
+    write_jenkins_plot_csv(csv_path, '@TEST_NAME@_@PERF_TEST_TOPIC@', values)
 
-def _raw_to_png(csv_data, png_path):
-    dataframe = pd.read_csv(csv_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
+
+def _raw_to_png(dataframe, png_path):
     pd.options.display.float_format = '{:.4f}'.format
+
+    dataframe = dataframe.copy()
+
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] * BYTE_TO_KBYTE
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
     dataframe['latency_variance (ms) * 100'] = 100.0 * dataframe['latency_variance (ms)']
@@ -180,17 +179,20 @@ class PerformanceTestResults(unittest.TestCase):
             )
 
         performance_logs = glob(performance_log_prefix + '_*')
+
         if performance_logs:
+            performance_log_data = read_performance_test_csv(performance_logs[0])
+
             performance_report_csv = os.environ.get('PERFORMANCE_REPORT_CSV')
             if performance_report_csv:
-                _raw_to_csv(performance_logs[0], performance_report_csv)
+                _raw_to_csv(performance_log_data, performance_report_csv)
             else:
                 print('No CSV report written - set PERFORMANCE_REPORT_CSV to write a report',
                       file=sys.stderr)
 
             performance_report_png = os.environ.get('PERFORMANCE_REPORT_PNG')
             if performance_report_png:
-                _raw_to_png(performance_logs[0], performance_report_png)
+                _raw_to_png(performance_log_data, performance_report_png)
             else:
                 print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report',
                       file=sys.stderr)
