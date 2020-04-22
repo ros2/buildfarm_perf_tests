@@ -1,5 +1,3 @@
-set(PERF_TEST_SKIP OFF
-  CACHE BOOL "Skip all of the performance tests and only test the package itself")
 set(PERF_TEST_MAX_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 
@@ -83,10 +81,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       set(SKIP_TEST "SKIP_TEST")
     endif()
 
-    if(PERF_TEST_SKIP)
-      set(SKIP_TEST "SKIP_TEST")
-    endif()
-
     set(NUMBER_PROCESS "1")
     get_filename_component(
       PERFORMANCE_REPORT_PNG
@@ -126,7 +120,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     set(NUMBER_PROCESS "2")
     # TODO (ahcorde): perf_test is not working with CycloneDDS when
     # processes are splitted in two
-    if(${COMM} STREQUAL "CycloneDDS" OR PERF_TEST_SKIP)
+    if(${COMM} STREQUAL "CycloneDDS")
       set(SKIP_TEST "SKIP_TEST")
     endif()
 
@@ -172,12 +166,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   endif()
 
   set(NODE_SPINNING_TIMEOUT "30")
-  set(SKIP_TEST "")
-  if(PERF_TEST_SKIP)
-    set(SKIP_TEST "SKIP_TEST")
-  endif()
-
-
   get_filename_component(
     PERFORMANCE_OVERHEAD_NODE_CSV
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME}.csv"
@@ -209,7 +197,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     "RMW_FASTRTPS_USE_QOS_FROM_XML=${RMW_FASTRTPS_USE_QOS_FROM_XML}"
     "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_FILE}"
     TIMEOUT 120
-    ${SKIP_TEST}
   )
   set_tests_properties(test_spinning_${TEST_NAME} PROPERTIES
     RUN_SERIAL TRUE
@@ -226,7 +213,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     #  processes are splitted in two
     # what(): Round tip mode is not implemented for Cyclone DDS
     set(SKIP_TEST "")
-    if(${COMM} STREQUAL "CycloneDDS" OR PERF_TEST_SKIP)
+    if(${COMM} STREQUAL "CycloneDDS")
       set(SKIP_TEST "SKIP_TEST")
     endif()
 
