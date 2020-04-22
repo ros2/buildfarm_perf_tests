@@ -118,6 +118,10 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_FILE}"
       ${SKIP_TEST}
     )
+    set_tests_properties(test_performance_${TEST_NAME}_${PERF_TEST_TOPIC} PROPERTIES
+      RUN_SERIAL TRUE
+      LABELS "performance"
+    )
 
     set(NUMBER_PROCESS "2")
     # TODO (ahcorde): perf_test is not working with CycloneDDS when
@@ -156,6 +160,10 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "RMW_FASTRTPS_USE_QOS_FROM_XML=${RMW_FASTRTPS_USE_QOS_FROM_XML}"
       "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_TWO_PROCESSES_FILE}"
       ${SKIP_TEST}
+    )
+    set_tests_properties(test_performance_two_process_${TEST_NAME}_${PERF_TEST_TOPIC} PROPERTIES
+      RUN_SERIAL TRUE
+      LABELS "performance"
     )
   endforeach()
 
@@ -202,6 +210,10 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_FILE}"
     TIMEOUT 120
     ${SKIP_TEST}
+  )
+  set_tests_properties(test_spinning_${TEST_NAME} PROPERTIES
+    RUN_SERIAL TRUE
+    LABELS "performance"
   )
   set(PUBSUB_TIMEOUT "30")
   set(PERF_TEST_TOPIC ${PERF_TEST_TOPIC_PUB_SUB})
@@ -254,6 +266,10 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "FASTRTPS_DEFAULT_PROFILES_FILE=${FASTRTPS_DEFAULT_PROFILES_TWO_PROCESSES_FILE}"
       TIMEOUT 120
       ${SKIP_TEST}
+    )
+    set_tests_properties(test_pub_sub_${TEST_NAME_PUB_SUB} PROPERTIES
+      RUN_SERIAL TRUE
+      LABELS "performance"
     )
   endforeach()
 endfunction()
