@@ -1,6 +1,6 @@
 # buildfarm perf tests
 
-![buildfarm_perf_tests CI](https://github.com/ros2/buildfarm_perf_tests/workflows/Continuous%20Integration/badge.svg?branch=master&event=push)
+[![Continuous Integration](https://github.com/ros2/buildfarm_perf_tests/workflows/Continuous%20Integration/badge.svg?branch=master&event=push)](https://github.com/ros2/buildfarm_perf_tests/actions?query=branch%3Amaster+event%3Apush)
 
 ## Purpose
 
