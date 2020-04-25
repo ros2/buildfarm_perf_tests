@@ -16,6 +16,17 @@ from pandas import read_csv
 
 
 def read_performance_test_csv(csv_path, start_marker='---EXPERIMENT-START---\n'):
+    """
+    Read CSV data from a file on disk, optionall skipping header data.
+
+    Parameters
+    ----------
+    csv_path : str
+        Path to the *.csv file to read data from.
+    start_marker : str, optional
+        Full line contents which mark the end of the header.
+
+    """
     with open(csv_path, 'r') as csv:
         if start_marker:
             while csv.readline() not in [start_marker, '']:
@@ -24,6 +35,19 @@ def read_performance_test_csv(csv_path, start_marker='---EXPERIMENT-START---\n')
 
 
 def write_jenkins_plot_csv(csv_path, column_name, values):
+    """
+    Write some values to a CSV file for the Jenkins plot plugin to use.
+
+    Parameters
+    ----------
+    csv_path : str
+        Path to where the *.csv file should be written to.
+    column_name : str
+        Name of this data series, such as the RMW or COMM value.
+    values : list
+        List of string to be written to the file.
+
+    """
     with open(csv_path, 'w') as csv:
         csv.write(','.join([column_name] * len(values)) + '\n')
-        csv.write(','.join(values) + '\n')
+        csv.write(','.join([str(v) for v in values]) + '\n')

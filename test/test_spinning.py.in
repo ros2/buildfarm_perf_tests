@@ -42,18 +42,18 @@ def _raw_to_csv(dataframe, csv_path):
     dataframe_agg = dataframe.agg(['median', 'mean'])
 
     values = [
-      str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
-      str(dataframe_agg.loc['median', 'virtual memory (Mb)']),
-      str(dataframe['virtual memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
-      str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
-      str(dataframe_agg.loc['median', 'cpu_usage (%)']),
-      str(dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5]),
-      str(dataframe_agg.loc['mean', 'physical memory (Mb)']),
-      str(dataframe_agg.loc['median', 'physical memory (Mb)']),
-      str(dataframe['physical memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
-      str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
-      str(dataframe_agg.loc['median', 'resident anonymous memory (Mb)']),
-      str(dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
+        dataframe_agg.loc['mean', 'virtual memory (Mb)'],
+        dataframe_agg.loc['median', 'virtual memory (Mb)'],
+        dataframe['virtual memory (Mb)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['mean', 'cpu_usage (%)'],
+        dataframe_agg.loc['median', 'cpu_usage (%)'],
+        dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['mean', 'physical memory (Mb)'],
+        dataframe_agg.loc['median', 'physical memory (Mb)'],
+        dataframe['physical memory (Mb)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['mean', 'resident anonymous memory (Mb)'],
+        dataframe_agg.loc['median', 'resident anonymous memory (Mb)'],
+        dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5],
     ]
 
     write_jenkins_plot_csv(csv_path, '@TEST_NAME@', values)

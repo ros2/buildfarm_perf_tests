@@ -44,20 +44,20 @@ def _raw_to_csv(dataframe, csv_path):
     dataframe_agg = dataframe.agg(['max', 'mean', 'sum', 'median'])
 
     values = [
-        str(dataframe_agg.loc['mean', 'latency_mean (ms)']),
-        str(dataframe_agg.loc['median', 'latency_mean (ms)']),
-        str(dataframe['latency_mean (ms)'].describe(percentiles=[0.95]).iloc[5]),
-        str(dataframe_agg.loc['max', 'ru_maxrss']),
-        str(dataframe_agg.loc['mean', 'received']),
-        str(dataframe_agg.loc['mean', 'sent']),
-        str(dataframe_agg.loc['sum', 'lost']),
-        str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
-        str(dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5]),
-        str(dataframe_agg.loc['median', 'cpu_usage (%)']),
-        str(dataframe_agg.loc['mean', 'data_received'] *BYTE_TO_MBYTE),
-        str(dataframe_agg.loc['median', 'data_received'] * BYTE_TO_MBYTE),
-        str(dataframe['data_received'].describe(percentiles=[0.95]).iloc[5] * BYTE_TO_MBYTE)
-        ]
+        dataframe_agg.loc['mean', 'latency_mean (ms)'],
+        dataframe_agg.loc['median', 'latency_mean (ms)'],
+        dataframe['latency_mean (ms)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['max', 'ru_maxrss'],
+        dataframe_agg.loc['mean', 'received'],
+        dataframe_agg.loc['mean', 'sent'],
+        dataframe_agg.loc['sum', 'lost'],
+        dataframe_agg.loc['mean', 'cpu_usage (%)'],
+        dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['median', 'cpu_usage (%)'],
+        dataframe_agg.loc['mean', 'data_received'] *BYTE_TO_MBYTE,
+        dataframe_agg.loc['median', 'data_received'] * BYTE_TO_MBYTE,
+        dataframe['data_received'].describe(percentiles=[0.95]).iloc[5] * BYTE_TO_MBYTE,
+    ]
 
     write_jenkins_plot_csv(csv_path, '@TEST_NAME@_@PERF_TEST_TOPIC@', values)
 
