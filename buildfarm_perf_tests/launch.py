@@ -20,6 +20,18 @@ from launch_ros.actions import Node
 
 
 def attach_system_metric_collector(process, log_file, timeout=None):
+    """Receives a Node Class to get the pid and add this id to system_metric_collector.
+    
+    Parameters
+    ----------
+    process : Node
+        The Node to get the pid
+    log_file : str
+        path to the log file
+    timeout: int
+         time to keep alive system_metric_collector
+         
+    """
     pid_var_name = 'PROCESS_ID_%d' % id(process)
 
     args = [
