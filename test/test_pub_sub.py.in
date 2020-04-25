@@ -1,4 +1,4 @@
-# generated from buildfarm_perf_tests/test/test_performance.py.in
+# generated from buildfarm_perf_tests/test/test_pub_sub.py.in
 # generated code does not contain a copyright notice
 
 from glob import glob
@@ -7,15 +7,13 @@ import sys
 import tempfile
 import unittest
 
+from buildfarm_perf_tests.launch import attach_system_metric_collector
+from buildfarm_perf_tests.test_results import read_performance_test_csv
+from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
-from launch.substitutions import LaunchConfiguration, EnvironmentVariable
-import ament_index_python
+from launch.actions import OpaqueFunction
 from launch_ros.actions import Node
 import launch_testing
-from launch.actions import (
-    ExecuteProcess, OpaqueFunction,
-    RegisterEventHandler, SetEnvironmentVariable)
-from launch.event_handlers import OnProcessStart
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
 import numpy as np  # noqa: F401
@@ -29,9 +27,9 @@ def _cleanUpLogs(performance_log_prefix):
         os.remove(log)
 
 
-def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
+def _raw_to_csv(dataframe, dataframe_perf, csv_path, type):
     """
-    Convert from the raw csv format to the csv for the Jenkins plot plugin.
+    Convert from the raw csv data to the csv for the Jenkins plot plugin.
 
     Do not change the order of the columns. The plot plugin indexes into the
     csv using the column number instead of the column name, because we're
@@ -40,45 +38,39 @@ def _raw_to_csv(csv_data, csv_perf_data, csv_path, type):
     Changing the column names here will change the name of the line that
     appears on the plot.
     """
-    dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg = dataframe.agg(['median', 'mean'])
-
-    dataframe_perf = pd.read_csv(csv_perf_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
     dataframe_agg_perf = dataframe_perf.agg(['max', 'mean', 'sum', 'median'])
 
-    percentils_latency = dataframe_agg_perf['latency_mean (ms)'].describe(percentiles=[0.95])
-
     values = [
-        str(dataframe_agg.loc['mean', 'virtual memory (Mb)']),
-        str(dataframe_agg.loc['median', 'virtual memory (Mb)']),
-        str(dataframe['virtual memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
-        str(dataframe_agg.loc['mean', 'cpu_usage (%)']),
-        str(dataframe_agg.loc['median', 'cpu_usage (%)']),
-        str(dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5]),
-        str(dataframe_agg.loc['mean', 'physical memory (Mb)']),
-        str(dataframe_agg.loc['median', 'physical memory (Mb)']),
-        str(dataframe['physical memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
-        str(dataframe_agg.loc['mean', 'resident anonymous memory (Mb)']),
-        str(dataframe_agg.loc['median', 'resident anonymous memory (Mb)']),
-        str(dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5]),
-        str(dataframe_agg_perf.loc['mean', 'latency_mean (ms)']),
-        str(dataframe_agg_perf.loc['median', 'latency_mean (ms)']),
-        str(percentils_latency.iloc[5]),
-        str(dataframe_agg_perf.loc['max', 'ru_maxrss']),
-        str(dataframe_agg_perf.loc['mean', 'received']),
-        str(dataframe_agg_perf.loc['mean', 'sent']),
-        str(dataframe_agg_perf.loc['sum', 'lost']),
-        str(dataframe_agg.loc['mean', 'system_cpu_usage (%)']),
-        str(dataframe_agg.loc['mean', 'system virtual memory (Mb)']),
-        ]
+        dataframe_agg.loc['mean', 'virtual memory (Mb)'],
+        dataframe_agg.loc['median', 'virtual memory (Mb)'],
+        dataframe['virtual memory (Mb)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['mean', 'cpu_usage (%)'],
+        dataframe_agg.loc['median', 'cpu_usage (%)'],
+        dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['mean', 'physical memory (Mb)'],
+        dataframe_agg.loc['median', 'physical memory (Mb)'],
+        dataframe['physical memory (Mb)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg.loc['mean', 'resident anonymous memory (Mb)'],
+        dataframe_agg.loc['median', 'resident anonymous memory (Mb)'],
+        dataframe['resident anonymous memory (Mb)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg_perf.loc['mean', 'latency_mean (ms)'],
+        dataframe_agg_perf.loc['median', 'latency_mean (ms)'],
+        dataframe_agg_perf['latency_mean (ms)'].describe(percentiles=[0.95]).iloc[5],
+        dataframe_agg_perf.loc['max', 'ru_maxrss'],
+        dataframe_agg_perf.loc['mean', 'received'],
+        dataframe_agg_perf.loc['mean', 'sent'],
+        dataframe_agg_perf.loc['sum', 'lost'],
+        dataframe_agg.loc['mean', 'system_cpu_usage (%)'],
+        dataframe_agg.loc['mean', 'system virtual memory (Mb)'],
+    ]
 
-    with open(csv_path[:-4] + "_" + type + ".csv", 'w') as csv:
-        csv.write(','.join(['Publisher-@TEST_NAME@_Subscriber-@COMM_SUB@'] * len(values)) + '\n')
-        csv.write(','.join(values) + '\n')
+    write_jenkins_plot_csv(
+        '%s_%s.csv' % (csv_path[:-4], type),
+        'Publisher-@TEST_NAME@_Subscriber-@COMM_SUB@', values)
 
 
-def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
-    dataframe = pd.read_csv(csv_data, skiprows=0, sep='[ \t]*,[ \t]*', engine='python')
+def _raw_to_png(dataframe, dataframe_perf, png_path, type, rmw_impl):
     pd.options.display.float_format = '{:.4f}'.format
 
     dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
@@ -108,7 +100,7 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
     if type == 'subscriber':
         return
 
-    dataframe = pd.read_csv(csv_perf_data, skiprows=22, sep='[ \t]*,[ \t]*', engine='python')
+    dataframe = dataframe_perf.copy()
     pd.options.display.float_format = '{:.4f}'.format
     dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
     plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + type + ': ' + rmw_impl)
@@ -130,18 +122,6 @@ def _raw_to_png(csv_data, csv_perf_data, png_path, type, rmw_impl):
                 + type + "_latency.png")
 
 
-def on_process_main_start(process_started, launch_context, observation_process):
-    SetEnvironmentVariable(
-        'PUB_PROCESS_UNDER_TEST_ID', str(process_started.pid)).execute(launch_context)
-    observation_process.execute(launch_context)
-
-
-def on_process_relay_start(process_started, launch_context, observation_process):
-    SetEnvironmentVariable(
-        'SUB_PROCESS_UNDER_TEST_ID', str(process_started.pid)).execute(launch_context)
-    observation_process.execute(launch_context)
-
-
 def generate_test_description(ready_fn):
     performance_log_prefix_cpumem_pub = tempfile.mkstemp(
         prefix='overhead_cpumem_pub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
@@ -151,32 +131,6 @@ def generate_test_description(ready_fn):
         prefix='overhead_pub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
     performance_log_prefix_sub = tempfile.mkstemp(
         prefix='overhead_sub_test_results_@TEST_NAME_PUB_SUB@_', text=True)[1]
-
-    system_metric_collector_pub = ExecuteProcess(
-      cmd=[
-          os.path.join(
-              ament_index_python.get_package_prefix('buildfarm_perf_tests'),
-              'lib/buildfarm_perf_tests',
-              'system_metric_collector',
-          ),
-          # Arguments
-          "--timeout", "@PUBSUB_TIMEOUT@",
-          "--log", performance_log_prefix_cpumem_pub,
-          "--process_pid", EnvironmentVariable('PUB_PROCESS_UNDER_TEST_ID'),
-      ],)
-
-    system_metric_collector_sub = ExecuteProcess(
-      cmd=[
-          os.path.join(
-              ament_index_python.get_package_prefix('buildfarm_perf_tests'),
-              'lib/buildfarm_perf_tests',
-              'system_metric_collector',
-          ),
-          # Arguments
-          "--timeout", "@PUBSUB_TIMEOUT@",
-          "--log", performance_log_prefix_cpumem_sub,
-          "--process_pid", EnvironmentVariable('SUB_PROCESS_UNDER_TEST_ID'),
-      ],)
 
     node_main_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
@@ -192,6 +146,9 @@ def generate_test_description(ready_fn):
         additional_env={'RMW_IMPLEMENTATION': '@COMM_PUB@'},
     )
 
+    system_metric_collector_pub, node_main_test_hook = attach_system_metric_collector(
+        node_main_test, performance_log_prefix_cpumem_pub, timeout=@PUBSUB_TIMEOUT@)
+
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
@@ -206,15 +163,12 @@ def generate_test_description(ready_fn):
         additional_env={'RMW_IMPLEMENTATION': '@COMM_SUB@'},
     )
 
+    system_metric_collector_sub, node_relay_test_hook = attach_system_metric_collector(
+        node_relay_test, performance_log_prefix_cpumem_sub, timeout=@PUBSUB_TIMEOUT@)
+
     return LaunchDescription([
-        RegisterEventHandler(OnProcessStart(
-          target_action=node_relay_test,
-          on_start=lambda p, c: on_process_relay_start(p, c, system_metric_collector_sub)
-        )),
-        RegisterEventHandler(OnProcessStart(
-            target_action=node_main_test,
-            on_start=lambda p, c: on_process_main_start(p, c, system_metric_collector_pub)
-        )),
+        node_main_test_hook,
+        node_relay_test_hook,
         node_main_test,
         node_relay_test,
         launch_testing.util.KeepAliveProc(),
@@ -267,9 +221,12 @@ class PerformanceTestResults(unittest.TestCase):
         performance_logs_perf_test = glob(performance_log_prefix_pub + '_*')
 
         if performance_logs and performance_logs_perf_test:
+            performance_log_data = read_performance_test_csv(performance_logs[0], start_marker=None)
+            performance_log_perf_data = read_performance_test_csv(performance_logs_perf_test[0])
+
             performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
             if performance_report_csv:
-                _raw_to_csv(performance_logs[0], performance_logs_perf_test[0],
+                _raw_to_csv(performance_log_data, performance_log_perf_data,
                             performance_report_csv, "pub")
             else:
                 print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
@@ -277,7 +234,7 @@ class PerformanceTestResults(unittest.TestCase):
 
             performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
             if performance_report_png:
-                _raw_to_png(performance_logs[0], performance_logs_perf_test[0],
+                _raw_to_png(performance_log_data, performance_log_perf_data,
                             performance_report_png, "publisher", "@COMM_PUB@")
             else:
                 print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
@@ -289,9 +246,12 @@ class PerformanceTestResults(unittest.TestCase):
         performance_logs_perf_test = glob(performance_log_prefix_sub + '_*')
 
         if performance_logs and performance_logs_perf_test:
+            performance_log_data = read_performance_test_csv(performance_logs[0], start_marker=None)
+            performance_log_perf_data = read_performance_test_csv(performance_logs_perf_test[0])
+
             performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
             if performance_report_csv:
-                _raw_to_csv(performance_logs[0], performance_logs_perf_test[0],
+                _raw_to_csv(performance_log_data, performance_log_perf_data,
                             performance_report_csv, "sub")
             else:
                 print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
@@ -299,7 +259,7 @@ class PerformanceTestResults(unittest.TestCase):
 
             performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
             if performance_report_png:
-                _raw_to_png(performance_logs[0], performance_logs_perf_test[0],
+                _raw_to_png(performance_log_data, performance_log_perf_data,
                             performance_report_png, "subscriber", "@COMM_SUB@")
             else:
                 print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
