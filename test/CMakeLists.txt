@@ -1,6 +1,7 @@
 set(PERF_TEST_MAX_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 
+find_package(ament_cmake_flake8 REQUIRED)
 find_package(launch_testing_ament_cmake REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
 
@@ -18,6 +19,10 @@ set(TOPICS
   PointCloud512k
   Array1m
   Array2m
+)
+
+ament_flake8(TESTNAME "flake8_generated"
+  ${CMAKE_CURRENT_BINARY_DIR}/test
 )
 
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)

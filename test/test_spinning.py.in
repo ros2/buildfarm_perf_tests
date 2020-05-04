@@ -115,8 +115,9 @@ class NodeSpinningTestTermination(unittest.TestCase):
 @launch_testing.post_shutdown_test()
 class NodeSpinningTestResults(unittest.TestCase):
 
-    def test_results_@TEST_NAME@(self, node_spinning_log_prefix,
-                                 node_metrics_collector, proc_info):
+    def test_results_@TEST_NAME@(
+            self, node_spinning_log_prefix,
+            node_metrics_collector, proc_info):
         self.addCleanup(_cleanUpLogs, node_spinning_log_prefix)
 
         launch_testing.asserts.assertExitCodes(
@@ -128,21 +129,24 @@ class NodeSpinningTestResults(unittest.TestCase):
         node_spinning_logs = glob(node_spinning_log_prefix + '*')
 
         if node_spinning_logs:
-            node_spinning_data = read_performance_test_csv(node_spinning_logs[0], start_marker=None)
+            node_spinning_data = read_performance_test_csv(
+                node_spinning_logs[0], start_marker=None)
 
             node_spinning_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_NODE_CSV')
             if node_spinning_report_csv:
                 _raw_to_csv(node_spinning_data, node_spinning_report_csv)
             else:
-                print('No CSV report written - set PERFORMANCE_OVERHEAD_NODE_CSV to write a report',
-                      file=sys.stderr)
+                print(
+                    'No CSV report written - set PERFORMANCE_OVERHEAD_NODE_CSV to write a report',
+                    file=sys.stderr)
 
             node_spinning_report_png = os.environ.get('PERFORMANCE_OVERHEAD_NODE_PNG')
             if node_spinning_report_png:
                 _raw_to_png(node_spinning_data, node_spinning_report_png)
             else:
-                print('No PNG report written - set PERFORMANCE_OVERHEAD_NODE_PNG to write a report',
-                      file=sys.stderr)
+                print(
+                    'No PNG report written - set PERFORMANCE_OVERHEAD_NODE_PNG to write a report',
+                    file=sys.stderr)
         else:
             print('No report written - no performance log was produced',
                   file=sys.stderr)
