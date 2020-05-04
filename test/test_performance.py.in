@@ -54,7 +54,7 @@ def _raw_to_csv(dataframe, csv_path):
         dataframe_agg.loc['mean', 'cpu_usage (%)'],
         dataframe['cpu_usage (%)'].describe(percentiles=[0.95]).iloc[5],
         dataframe_agg.loc['median', 'cpu_usage (%)'],
-        dataframe_agg.loc['mean', 'data_received'] *BYTE_TO_MBYTE,
+        dataframe_agg.loc['mean', 'data_received'] * BYTE_TO_MBYTE,
         dataframe_agg.loc['median', 'data_received'] * BYTE_TO_MBYTE,
         dataframe['data_received'].describe(percentiles=[0.95]).iloc[5] * BYTE_TO_MBYTE,
     ]
@@ -73,39 +73,46 @@ def _raw_to_png(dataframe, png_path):
     percentils_latency = dataframe['latency_mean (ms)'].describe(percentiles=[0.95])
     dataframe['latency_p95 (ms)'] = percentils_latency.iloc[5]
     ax = dataframe[['T_experiment',
-               'latency_min (ms)',
-               'latency_max (ms)',
-               'latency_mean (ms)',
-               'latency_p95 (ms)',
-               'latency_variance (ms) * 100',
-               'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
+                    'latency_min (ms)',
+                    'latency_max (ms)',
+                    'latency_mean (ms)',
+                    'latency_p95 (ms)',
+                    'latency_variance (ms) * 100',
+                    'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
 
-    plot_name = "One Process"
+    plot_name = 'One Process'
 
     if '@NUMBER_PROCESS@' == 2:
-      plot_name = "Two Processes"
+        plot_name = 'Two Processes'
 
-    plt.title('Performance ' + plot_name + ' tests latency\n@TEST_NAME@ @PERF_TEST_TOPIC@')
-    ax.set_ylabel("ms")
+    plt.title('Performance ' + plot_name +
+              ' tests latency\n@TEST_NAME@ @PERF_TEST_TOPIC@')
+    ax.set_ylabel('ms')
     plt.savefig(png_path)
 
     dataframe['data_received Mbits/s'] = dataframe['data_received'] * BYTE_TO_MBYTE
     percentils_data_received = dataframe['data_received Mbits/s'].describe(percentiles=[0.95])
     dataframe['data_received Mbits/s (P95)'] = percentils_data_received.iloc[5]
-    ax = dataframe[['T_experiment',  'data_received Mbits/s', 'data_received Mbits/s (P95)']].plot(x='T_experiment')
-    plt.title('Performance ' + plot_name + ' Throughput (Mbits/s) Tests\n@TEST_NAME@ @PERF_TEST_TOPIC@')
-    ax.set_ylabel("Mbits/s")
-    plt.savefig(png_path[:-4] + "_throughput.png")
+    ax = dataframe[['T_experiment',
+                    'data_received Mbits/s',
+                    'data_received Mbits/s (P95)']].plot(x='T_experiment')
+    plt.title('Performance ' + plot_name
+              + ' Throughput (Mbits/s) Tests\n@TEST_NAME@ @PERF_TEST_TOPIC@')
+    ax.set_ylabel('Mbits/s')
+    plt.savefig(png_path[:-4] + '_throughput.png')
 
     ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Performance ' + plot_name + ' tests CPU usage (%)\n@TEST_NAME@ @PERF_TEST_TOPIC@')
-    ax.set_ylabel("%")
-    plt.savefig(png_path[:-4] + "_cpu_usage.png")
+    plt.title('Performance ' + plot_name
+              + ' tests CPU usage (%)\n@TEST_NAME@ @PERF_TEST_TOPIC@')
+    ax.set_ylabel('%')
+    plt.savefig(png_path[:-4] + '_cpu_usage.png')
 
     ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
-    plt.title(plot_name + ' Received/Sent packets per second and Lost packets\n@TEST_NAME@ @PERF_TEST_TOPIC@')
-    ax.set_ylabel("Number of packets")
-    plt.savefig(png_path[:-4] + "_histogram.png")
+    plt.title(plot_name
+              + ' Received/Sent packets per second and Lost packets\n'
+              + '@TEST_NAME@ @PERF_TEST_TOPIC@')
+    ax.set_ylabel('Number of packets')
+    plt.savefig(png_path[:-4] + '_histogram.png')
 
 
 def generate_test_description(ready_fn):
@@ -117,13 +124,13 @@ def generate_test_description(ready_fn):
         '-c', '@COMM@',
         '-t', '@PERF_TEST_TOPIC@',
         '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
-        "--ignore", "3",
+        '--ignore', '3',
         '-l', performance_log_prefix,
     ]
 
     sync_env = {}
     if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2':
-      args.append('--disable_async')
+        args.append('--disable_async')
 
     nodes = []
 
@@ -137,7 +144,7 @@ def generate_test_description(ready_fn):
               '-c', '@COMM@',
               '-t', '@PERF_TEST_TOPIC@',
               '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
-              "--roundtrip_mode", "Relay",
+              '--roundtrip_mode', 'Relay',
           ],
         )
         launch_description.append(node_relay)
@@ -168,7 +175,8 @@ class PerformanceTestTermination(unittest.TestCase):
 @launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
-    def test_results_@TEST_NAME@(self, performance_log_prefix, nodes, proc_info):
+    def test_results_@TEST_NAME@(
+            self, performance_log_prefix, nodes, proc_info):
         self.addCleanup(_cleanUpLogs, performance_log_prefix)
 
         for node in nodes:
