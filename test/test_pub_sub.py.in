@@ -27,7 +27,7 @@ def _cleanUpLogs(performance_log_prefix):
         os.remove(log)
 
 
-def _raw_to_csv(dataframe, dataframe_perf, csv_path, type):
+def _raw_to_csv(dataframe, dataframe_perf, csv_path, mode):
     """
     Convert from the raw csv data to the csv for the Jenkins plot plugin.
 
@@ -66,51 +66,51 @@ def _raw_to_csv(dataframe, dataframe_perf, csv_path, type):
     ]
 
     write_jenkins_plot_csv(
-        '%s_%s.csv' % (csv_path[:-4], type),
+        '%s_%s.csv' % (csv_path[:-4], mode),
         'Publisher-@TEST_NAME@_Subscriber-@COMM_SUB@', values)
 
 
-def _raw_to_png(dataframe, dataframe_perf, png_path, type, rmw_impl):
+def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
     pd.options.display.float_format = '{:.4f}'.format
 
     dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub virtual memory usage\n' + type + ': ' + rmw_impl)
+    plt.title('Simple Pub/Sub virtual memory usage\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 1024)
     plt.savefig(png_path + '_'
                 + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
-                + type + '_virtual_memory.png')
+                + mode + '_virtual_memory.png')
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub CPU usage\n' + type + ': ' + rmw_impl)
+    plt.title('Simple Pub/Sub CPU usage\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 100)
     plt.savefig(png_path + '_'
                 + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
-                + type + '_cpu_usage.png')
+                + mode + '_cpu_usage.png')
 
     dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub physical memory usage\n' + type + ': ' + rmw_impl)
+    plt.title('Simple Pub/Sub physical memory usage\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 100)
     plt.savefig(png_path + '_'
                 + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
-                + type + '_physical_memory.png')
+                + mode + '_physical_memory.png')
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
-    plt.title('Simple Pub/Sub resident anonymous memory\n' + type + ': ' + rmw_impl)
+    plt.title('Simple Pub/Sub resident anonymous memory\n' + mode + ': ' + rmw_impl)
     plt.ylim(0, 100)
     plt.savefig(png_path + '_'
                 + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
-                + type + '_resident_anonymous_memory.png')
+                + mode + '_resident_anonymous_memory.png')
 
-    if type == 'subscriber':
+    if mode == 'subscriber':
         return
 
     dataframe = dataframe_perf.copy()
     pd.options.display.float_format = '{:.4f}'.format
     dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
-    plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + type + ': ' + rmw_impl)
+    plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + mode + ': ' + rmw_impl)
     plt.savefig(png_path + '_'
                 + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
-                + type + '_histogram.png')
+                + mode + '_histogram.png')
 
     dataframe['maxrss (Mb)'] = dataframe['ru_maxrss'] / 1e3
     dataframe.drop(list(dataframe.filter(regex='ru_')), axis=1, inplace=True)
@@ -121,11 +121,11 @@ def _raw_to_png(dataframe, dataframe_perf, png_path, type, rmw_impl):
                'latency_mean (ms)',
                'latency_variance (ms) * 100',
                'maxrss (Mb)']].plot(x='T_experiment', secondary_y=['maxrss (Mb)'])
-    plt.title('Simple Pub/Sub latency\n' + type + ': ' + '@COMM_PUB@'
+    plt.title('Simple Pub/Sub latency\n' + mode + ': ' + '@COMM_PUB@'
               + '\nsubscriber: ' + '@COMM_SUB@')
     plt.savefig(png_path + '_'
                 + 'Publisher-@COMM_PUB@_Subscriber-@COMM_SUB@_'
-                + type + '_latency.png')
+                + mode + '_latency.png')
 
 
 def generate_test_description(ready_fn):
