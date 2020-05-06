@@ -91,13 +91,15 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     )
 
     configure_file(
-      test_performance.py.in
-      ${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME_SYNC_TOPIC}.py.configure
+      "test_performance.py.in"
+      "${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME_SYNC_TOPIC}.py.configure"
       @ONLY
     )
     file(GENERATE
-      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME_SYNC_TOPIC}.py"
-      INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME_SYNC_TOPIC}.py.configure"
+      OUTPUT
+      "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME_SYNC_TOPIC}.py"
+      INPUT
+      "${CMAKE_CURRENT_BINARY_DIR}/test_performance_${TEST_NAME_SYNC_TOPIC}.py.configure"
     )
     add_launch_test(
       "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME_SYNC_TOPIC}.py"
@@ -115,11 +117,14 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     if(NOT SKIP_TEST_TOPIC)
       if(PERF_TEST_SKIP_two_process_${TEST_NAME_SYNC_TOPIC} OR
           PERF_TEST_SKIP_two_process_${TEST_NAME_SYNC})
-        message(STATUS "Skipping performance tests: two_process_${TEST_NAME_SYNC_TOPIC}")
+        message(STATUS
+          "Skipping performance tests: two_process_${TEST_NAME_SYNC_TOPIC}")
         set(SKIP_TEST_TOPIC "SKIP_TEST")
       endif()
     endif()
-    list(APPEND TEST_ENV_TOPIC ${PERF_TEST_ENV_two_process_${TEST_NAME_SYNC_TOPIC}})
+    list(APPEND TEST_ENV_TOPIC
+      ${PERF_TEST_ENV_two_process_${TEST_NAME_SYNC_TOPIC}}
+    )
 
     set(NUMBER_PROCESS "2")
 
@@ -139,13 +144,15 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     )
 
     configure_file(
-      test_performance.py.in
-      ${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py.configure
+      "test_performance.py.in"
+      "${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py.configure"
       @ONLY
     )
     file(GENERATE
-      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py"
-      INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py.configure"
+      OUTPUT
+      "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py"
+      INPUT
+      "${CMAKE_CURRENT_BINARY_DIR}/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py.configure"
     )
 
     add_launch_test(
@@ -154,7 +161,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       ENV ${TEST_ENV_TOPIC}
       ${SKIP_TEST_TOPIC}
     )
-    set_tests_properties(test_performance_two_process_${TEST_NAME_SYNC_TOPIC} PROPERTIES
+    set_tests_properties(
+      test_performance_two_process_${TEST_NAME_SYNC_TOPIC} PROPERTIES
       RUN_SERIAL TRUE
       LABELS "performance"
     )
@@ -165,7 +173,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   #
 
   if(NOT "${COMM}" STREQUAL "ROS2")
-    # Since standalone DDS can never run correctly, exclude instead of skipping the tests.
+    # Since standalone DDS can never run correctly,
+    # exclude instead of skipping the tests.
     return()
   endif()
 
@@ -175,7 +184,9 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
   if(NOT ENABLE_SYSTEM_METRIC_COLLECTOR)
     set(SKIP_TEST "SKIP_TEST")
-    message(STATUS "Skipping performance tests: ${TEST_NAME_SYNC} (no system_metric_collector)")
+    message(STATUS
+      "Skipping performance tests: ${TEST_NAME_SYNC}"
+      " (no system_metric_collector)")
   endif()
 
   #
@@ -211,13 +222,15 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   )
 
   configure_file(
-    test_spinning.py.in
+    "test_spinning.py.in"
     ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME_SYNC}.py.configure
     @ONLY
   )
   file(GENERATE
-    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME_SYNC}.py"
-    INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME_SYNC}.py.configure"
+    OUTPUT
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME_SYNC}.py"
+    INPUT
+    "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME_SYNC}.py.configure"
   )
 
   add_launch_test(
@@ -244,8 +257,10 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     set(TEST_NAME_PUB_SUB "${TEST_NAME_SYNC}_${RMW_IMPLEMENTATION_SUB}_${COMM}")
     set(SKIP_TEST_PUB_SUB "${SKIP_TEST}")
     if(NOT SKIP_TEST_PUB_SUB)
-      if(PERF_TEST_SKIP_${TEST_NAME_PUB_SUB} OR PERF_TEST_SKIP_pub_sub_${TEST_NAME_SYNC} OR
-          PERF_TEST_SKIP_pub_sub OR PERF_TEST_SKIP_apex_ai_suite OR NOT ENABLE_SYSTEM_METRIC_COLLECTOR)
+      if(PERF_TEST_SKIP_${TEST_NAME_PUB_SUB} OR
+          PERF_TEST_SKIP_pub_sub_${TEST_NAME_SYNC} OR
+          PERF_TEST_SKIP_pub_sub OR PERF_TEST_SKIP_apex_ai_suite OR
+          NOT ENABLE_SYSTEM_METRIC_COLLECTOR)
         message(STATUS "Skipping performance tests: ${TEST_NAME_PUB_SUB}")
         set(SKIP_TEST_PUB_SUB "SKIP_TEST")
       endif()
@@ -271,13 +286,15 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     )
 
     configure_file(
-      test_pub_sub.py.in
+      "test_pub_sub.py.in"
       ${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME_PUB_SUB}.py.configure
       @ONLY
     )
     file(GENERATE
-      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME_PUB_SUB}.py"
-      INPUT "${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME_PUB_SUB}.py.configure"
+      OUTPUT
+      "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME_PUB_SUB}.py"
+      INPUT
+      "${CMAKE_CURRENT_BINARY_DIR}/test_pub_sub_${TEST_NAME_PUB_SUB}.py.configure"
     )
 
     add_launch_test(
@@ -306,9 +323,9 @@ endfunction()
 # - **PERF_TEST_COMM_TYPE_${RMW}** *(string)* – Specifies a standalone
 #   ``COMM`` type that is associated with the given ``RMW``. If undefined or set
 #   to an empty string, no standalone test is added.
-# - **PERF_TEST_SKIP[_pub_sub|_two_process]_${COMM_OR_RMW}[_${SYNC_MODE}[_${TOPIC_NAME}]]**
+# - **PERF_TEST_SKIP[_${TYPE}]_${COMM_OR_RMW}[_${SYNC_MODE}[_${TOPIC_NAME}]]**
 #   *(bool)* – Specifies that matching tests should be automatically skipped.
-# - **PERF_TEST_ENV[_pub_sub|_two_process]_${COMM_OR_RMW}[_${SYNC_MODE}[_${TOPIC_NAME}]]**
+# - **PERF_TEST_ENV[_${TYPE}]_${COMM_OR_RMW}[_${SYNC_MODE}[_${TOPIC_NAME}]]**
 #   *(list of "key=value")* – Specifies additional environment variables to
 #   add to matching tests.
 #
