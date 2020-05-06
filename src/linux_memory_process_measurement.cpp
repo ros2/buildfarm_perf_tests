@@ -30,6 +30,9 @@ LinuxMemoryProcessMeasurement::LinuxMemoryProcessMeasurement(std::string pid)
 int LinuxMemoryProcessMeasurement::getVirtualMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
   std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/statm"));
+  if (!inputFile.good()) {
+    return 0;
+  }
   int process_memory_used;
   int process_memory_used_resident;
   inputFile >> process_memory_used >> process_memory_used_resident;
@@ -39,6 +42,9 @@ int LinuxMemoryProcessMeasurement::getVirtualMemoryCurrentlyUsedByCurrentProcess
 int LinuxMemoryProcessMeasurement::getResidentAnonymousMemoryCurrentlyUsedByCurrentProcess()
 {  // Note: this value is in KB!
   std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/statm"));
+  if (!inputFile.good()) {
+    return 0;
+  }
   int process_memory_used;
   int process_memory_used_resident;
   inputFile >> process_memory_used >> process_memory_used_resident;
@@ -58,7 +64,7 @@ int LinuxMemoryProcessMeasurement::getPhysicalMemoryCurrentlyUsedByCurrentProces
       }
     }
   }
-  return -1;
+  return 0;
 }
 
 void LinuxMemoryProcessMeasurement::makeReading()

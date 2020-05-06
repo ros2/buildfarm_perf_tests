@@ -121,6 +121,10 @@ double LinuxCPUProcessMeasurement::getCPUCurrentlyUsedByCurrentProcess()
 
   std::ifstream inputFile(std::string("/proc/") + this->pid_ + std::string("/stat"));
 
+  if (!inputFile.good()) {
+    return 0;
+  }
+
   inputFile >> pid >> tcomm_string >> state >> ppid >> pgid >> sid >> tty_nr >>
   tty_pgrp >> flags >> min_flt >> cmin_flt >> maj_flt >> cmaj_flt >>
   utime >> stimev >> cutime >> cstime >> priority >> nicev >> num_threads >>
