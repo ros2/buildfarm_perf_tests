@@ -25,7 +25,8 @@ install(TARGETS node_spinning
   EXPORT export_${PROJECT_NAME}
   DESTINATION lib/${PROJECT_NAME})
 
-option(ENABLE_SYSTEM_METRIC_COLLECTOR "Enables the system metric collector and tests which use it" ${UNIX})
+option(ENABLE_SYSTEM_METRIC_COLLECTOR
+  "Enables the system metric collector and tests which use it" ${UNIX})
 if(ENABLE_SYSTEM_METRIC_COLLECTOR)
   add_executable(system_metric_collector
     src/linux_cpu_process_measurement.cpp
