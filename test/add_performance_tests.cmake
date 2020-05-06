@@ -12,6 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Add performance tests for a single COMM/RMW type.
+#
+# Adds the following tests:
+#   1. Apex.AI perf_test for every topic defined in ``PERF_TEST_TOPICS``
+#   2. Same as (1.), but using separate publisher and subscriber processes
+#   3. Standalone spinner/overhead test (Only for ``ROS2`` COMM)
+#   4. Cross-vendor publisher/subscriber tests for each other RMW implementation
+#      (Only for ``ROS2`` COMM)
+#
+# :param TEST_NAME: The name the test, used in the resulting test report, output
+#   artifacts and behavior augmentation variable names.
+# :type TEST_NAME: string
+# :param COMM: The Apex.AI ``performance_test`` ``COMM`` type (e.x. ``ROS2``).
+# :type COMM: string
+# :param RMW_IMPLEMENTATION: The RMW implementation for use when ``COMM`` is set
+#   to ``ROS2``.
+# :type RMW_IMPLEMENTATION: string
+# :param SYNC_MODE: One of ``async`` or ``sync``.
+# :type SYNC_MODE: string
+#
+# All of the behavior augmentations documented for
+# :cmake:macro:`add_performance_tests` also apply to this function.
+#
 function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
   #
@@ -271,6 +295,33 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
 
 endfunction()
 
+#
+# Add performance tests for all available RMW implementations and all sandalone
+# DDS implmenetations associated with those RMWs by invoking
+# :cmake:macro:`add_performance_test` on each of them.
+#
+# The following values, when defined prior to invocation, will augment the
+# behavior of the tests:
+#
+# - **PERF_TEST_COMM_TYPE_${RMW}** *(string)* – Specifies a standalone
+#   ``COMM`` type that is associated with the given ``RMW``. If undefined or set
+#   to an empty string, no standalone test is added.
+# - **PERF_TEST_SKIP[_pub_sub|_two_process]_${COMM_OR_RMW}[_${SYNC_MODE}[_${TOPIC_NAME}]]**
+#   *(bool)* – Specifies that matching tests should be automatically skipped.
+# - **PERF_TEST_ENV[_pub_sub|_two_process]_${COMM_OR_RMW}[_${SYNC_MODE}[_${TOPIC_NAME}]]**
+#   *(list of "key=value")* – Specifies additional environment variables to
+#   add to matching tests.
+#
+# Examples:
+#   ``PERF_TEST_COMM_TYPE_rmw_cyclonedds_cpp=CycloneDDS``
+#     An additional standalone ``COMM`` type called ``CycloneDDS`` should be run
+#     if ``rmw_cyclonedds_cpp`` is found and run.
+#   ``PERF_TEST_SKIP_rmw_connext_cpp_sync=TRUE``
+#     Automatically skip all synchronous tests for ``rmw_cyclonedds_cpp``.
+#   ``PERF_TEST_ENV_rmw_fastrtps_cpp_sync="RMW_FASTRTPS_USE_QOS_FROM_XML=1"``
+#     Set the environment variable ``RMW_FASTRTPS_USE_QOS_FROM_XML`` to ``1``
+#     whenever synchronous tests are run for ``rmw_fastrtps_cpp``.
+#
 macro(add_performance_tests)
   foreach(PERF_TEST_SYNC "async" "sync")
     add_performance_test(
