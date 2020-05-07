@@ -7,7 +7,7 @@ import sys
 import tempfile
 import unittest
 
-from buildfarm_perf_tests.launch import attach_system_metric_collector
+from buildfarm_perf_tests.launch import SystemMetricCollector
 from buildfarm_perf_tests.test_results import read_performance_test_csv
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
@@ -106,11 +106,13 @@ def generate_test_description(ready_fn):
                         process_matcher=matches_action(node_spinning_test)))
                 ])))
 
-    node_metrics_collector, node_spinning_test_hook = attach_system_metric_collector(
-        node_spinning_test, performance_log_prefix_cpumem, timeout=@PERF_TEST_RUNTIME@)
+    node_metrics_collector = SystemMetricCollector(
+        target_action=node_spinning_test,
+        log_file=performance_log_prefix_cpumem,
+        timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
 
     return LaunchDescription([
-        node_spinning_test_hook,
+        node_metrics_collector,
         node_spinning_test,
         node_spinning_timer,
         launch_testing.util.KeepAliveProc(),

@@ -7,7 +7,7 @@ import sys
 import tempfile
 import unittest
 
-from buildfarm_perf_tests.launch import attach_system_metric_collector
+from buildfarm_perf_tests.launch import SystemMetricCollector
 from buildfarm_perf_tests.test_results import read_performance_test_csv
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
@@ -159,8 +159,10 @@ def generate_test_description(ready_fn):
         ],
     )
 
-    system_metric_collector_pub, node_main_test_hook = attach_system_metric_collector(
-        node_main_test, performance_log_prefix_cpumem_pub, timeout=@PERF_TEST_RUNTIME@)
+    system_metric_collector_pub = SystemMetricCollector(
+        target_action=node_main_test,
+        log_file=performance_log_prefix_cpumem_pub,
+        timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
 
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
@@ -176,12 +178,14 @@ def generate_test_description(ready_fn):
         additional_env={'RMW_IMPLEMENTATION': '@RMW_IMPLEMENTATION_SUB@'},
     )
 
-    system_metric_collector_sub, node_relay_test_hook = attach_system_metric_collector(
-        node_relay_test, performance_log_prefix_cpumem_sub, timeout=@PERF_TEST_RUNTIME@)
+    system_metric_collector_sub = SystemMetricCollector(
+        target_action=node_relay_test,
+        log_file=performance_log_prefix_cpumem_sub,
+        timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
 
     return LaunchDescription([
-        node_main_test_hook,
-        node_relay_test_hook,
+        system_metric_collector_pub,
+        system_metric_collector_sub,
         node_main_test,
         node_relay_test,
         launch_testing.util.KeepAliveProc(),
