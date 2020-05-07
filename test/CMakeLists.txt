@@ -2,7 +2,7 @@
 # Global performance test settings
 #
 
-set(PERF_TEST_MAX_RUNTIME 30
+set(PERF_TEST_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 set(PERF_TEST_TOPIC_PUB_SUB Array60k
   CACHE STRING "perf_test topic used by pub/stub tests")

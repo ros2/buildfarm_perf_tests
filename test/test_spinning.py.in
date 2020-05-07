@@ -11,8 +11,13 @@ from buildfarm_perf_tests.launch import attach_system_metric_collector
 from buildfarm_perf_tests.test_results import read_performance_test_csv
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
+from launch.actions import EmitEvent
 from launch.actions import OpaqueFunction
-from launch.substitutions import LaunchConfiguration
+from launch.actions import RegisterEventHandler
+from launch.actions import TimerAction
+from launch.event_handlers import OnProcessStart
+from launch.events import matches_action
+from launch.events.process import ShutdownProcess
 from launch_ros.actions import Node
 import launch_testing
 import matplotlib  # noqa: F401
@@ -92,15 +97,22 @@ def generate_test_description(ready_fn):
         package='buildfarm_perf_tests',
         node_executable='node_spinning',
         output='log',
-        sigterm_timeout=LaunchConfiguration('sigterm_timeout', default=@NODE_SPINNING_TIMEOUT@+2)
     )
+    node_spinning_timer = RegisterEventHandler(OnProcessStart(
+        target_action=node_spinning_test, on_start=TimerAction(
+            period=float(@PERF_TEST_RUNTIME@), actions=[
+                EmitEvent(
+                    event=ShutdownProcess(
+                        process_matcher=matches_action(node_spinning_test)))
+                ])))
 
     node_metrics_collector, node_spinning_test_hook = attach_system_metric_collector(
-        node_spinning_test, performance_log_prefix_cpumem, timeout=@NODE_SPINNING_TIMEOUT@)
+        node_spinning_test, performance_log_prefix_cpumem, timeout=@PERF_TEST_RUNTIME@)
 
     return LaunchDescription([
         node_spinning_test_hook,
         node_spinning_test,
+        node_spinning_timer,
         launch_testing.util.KeepAliveProc(),
         OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
@@ -108,9 +120,12 @@ def generate_test_description(ready_fn):
 
 class NodeSpinningTestTermination(unittest.TestCase):
 
-    def test_termination_@TEST_NAME@(self, node_metrics_collector, proc_info):
+    def test_termination_@TEST_NAME@(
+            self, node_spinning_test, node_metrics_collector, proc_info):
+        proc_info.assertWaitForShutdown(process=node_spinning_test,
+                                        timeout=(@PERF_TEST_RUNTIME@ * 2))
         proc_info.assertWaitForShutdown(process=node_metrics_collector,
-                                        timeout=(@NODE_SPINNING_TIMEOUT@ * 2))
+                                        timeout=(@PERF_TEST_RUNTIME@ * 2))
 
 
 @launch_testing.post_shutdown_test()

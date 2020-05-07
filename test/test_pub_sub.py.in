@@ -151,7 +151,7 @@ def generate_test_description(ready_fn):
         arguments=[
             '-c', 'ROS2',
             '-t', '@PERF_TEST_TOPIC@',
-            '--max_runtime', '@PUBSUB_TIMEOUT@',
+            '--max_runtime', '@PERF_TEST_RUNTIME@',
             '-l', performance_log_prefix_pub,
             '--rate', '5',
             '--roundtrip_mode', 'Main',
@@ -160,14 +160,14 @@ def generate_test_description(ready_fn):
     )
 
     system_metric_collector_pub, node_main_test_hook = attach_system_metric_collector(
-        node_main_test, performance_log_prefix_cpumem_pub, timeout=@PUBSUB_TIMEOUT@)
+        node_main_test, performance_log_prefix_cpumem_pub, timeout=@PERF_TEST_RUNTIME@)
 
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
         arguments=[
             '-c', 'ROS2',
             '-t', '@PERF_TEST_TOPIC@',
-            '--max_runtime', '@PUBSUB_TIMEOUT@',
+            '--max_runtime', '@PERF_TEST_RUNTIME@',
             '-l', performance_log_prefix_sub,
             '--rate', '5',
             '--roundtrip_mode', 'Relay',
@@ -177,7 +177,7 @@ def generate_test_description(ready_fn):
     )
 
     system_metric_collector_sub, node_relay_test_hook = attach_system_metric_collector(
-        node_relay_test, performance_log_prefix_cpumem_sub, timeout=@PUBSUB_TIMEOUT@)
+        node_relay_test, performance_log_prefix_cpumem_sub, timeout=@PERF_TEST_RUNTIME@)
 
     return LaunchDescription([
         node_main_test_hook,
@@ -195,11 +195,11 @@ class PerformanceTestTermination(unittest.TestCase):
             self, system_metric_collector_sub, system_metric_collector_pub,
             node_main_test, node_relay_test, proc_info):
         proc_info.assertWaitForShutdown(process=system_metric_collector_sub,
-                                        timeout=(@PUBSUB_TIMEOUT@ * 2))
+                                        timeout=(@PERF_TEST_RUNTIME@ * 2))
         proc_info.assertWaitForShutdown(process=system_metric_collector_pub,
-                                        timeout=(@PUBSUB_TIMEOUT@ * 2))
-        proc_info.assertWaitForShutdown(process=node_main_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
-        proc_info.assertWaitForShutdown(process=node_relay_test, timeout=(@PUBSUB_TIMEOUT@ * 2))
+                                        timeout=(@PERF_TEST_RUNTIME@ * 2))
+        proc_info.assertWaitForShutdown(process=node_main_test, timeout=(@PERF_TEST_RUNTIME@ * 2))
+        proc_info.assertWaitForShutdown(process=node_relay_test, timeout=(@PERF_TEST_RUNTIME@ * 2))
 
 
 @launch_testing.post_shutdown_test()
