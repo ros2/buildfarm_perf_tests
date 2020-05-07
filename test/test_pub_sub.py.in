@@ -22,8 +22,8 @@ import pandas as pd
 plt.switch_backend('agg')
 
 
-def _cleanUpLogs(performance_log_prefix):
-    for log in glob(performance_log_prefix):
+def _cleanUpLogs(log_pattern):
+    for log in glob(log_pattern):
         os.remove(log)
 
 
@@ -129,14 +129,14 @@ def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
 
 
 def generate_test_description(ready_fn):
-    performance_log_prefix_cpumem_pub = tempfile.mkstemp(
+    performance_log_cpumem_pub = tempfile.mkstemp(
         prefix='overhead_cpumem_pub_test_results_'
                + '@TEST_NAME_PUB_SUB@_',
-        text=True)[1]
-    performance_log_prefix_cpumem_sub = tempfile.mkstemp(
+        suffix='.csv', text=True)[1]
+    performance_log_cpumem_sub = tempfile.mkstemp(
         prefix='overhead_cpumem_sub_test_results_'
                + '@TEST_NAME_PUB_SUB@_',
-        text=True)[1]
+        suffix='.csv', text=True)[1]
     performance_log_prefix_pub = tempfile.mkstemp(
         prefix='overhead_pub_test_results_'
                + '@TEST_NAME_PUB_SUB@_',
@@ -145,6 +145,11 @@ def generate_test_description(ready_fn):
         prefix='overhead_sub_test_results_'
                + '@TEST_NAME_PUB_SUB@_',
         text=True)[1]
+
+    # perf_test will create its own logs with this prefix
+    # we just need the prefix to be unique
+    os.remove(performance_log_prefix_pub)
+    os.remove(performance_log_prefix_sub)
 
     node_main_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
@@ -161,7 +166,7 @@ def generate_test_description(ready_fn):
 
     system_metric_collector_pub = SystemMetricCollector(
         target_action=node_main_test,
-        log_file=performance_log_prefix_cpumem_pub,
+        log_file=performance_log_cpumem_pub,
         timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
 
     node_relay_test = Node(
@@ -180,7 +185,7 @@ def generate_test_description(ready_fn):
 
     system_metric_collector_sub = SystemMetricCollector(
         target_action=node_relay_test,
-        log_file=performance_log_prefix_cpumem_sub,
+        log_file=performance_log_cpumem_sub,
         timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
 
     return LaunchDescription([
@@ -211,13 +216,13 @@ class PerformanceTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME_PUB_SUB@(
             self,
-            performance_log_prefix_cpumem_pub, performance_log_prefix_cpumem_sub,
+            performance_log_cpumem_pub, performance_log_cpumem_sub,
             performance_log_prefix_pub, performance_log_prefix_sub,
             proc_info, node_relay_test, node_main_test):
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_pub)
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_sub)
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_pub)
-        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem_sub)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_pub + '*')
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_sub + '*')
+        self.addCleanup(_cleanUpLogs, performance_log_cpumem_pub)
+        self.addCleanup(_cleanUpLogs, performance_log_cpumem_sub)
 
         launch_testing.asserts.assertExitCodes(
             proc_info,
@@ -235,40 +240,30 @@ class PerformanceTestResults(unittest.TestCase):
         performance_overhead_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
         if results_base_path:
             performance_logs = glob(performance_log_prefix_pub + '*')
-            performance_logs_cpumem = glob(performance_log_prefix_cpumem_pub + '*')
-            if performance_logs and performance_logs_cpumem:
-                performance_data = read_performance_test_csv(performance_logs[0])
-                performance_data_cpumem = read_performance_test_csv(
-                    performance_logs_cpumem[0], start_marker=None)
-                _raw_to_csv(
+            assert len(performance_logs) == 1
+            performance_data = read_performance_test_csv(performance_logs[0])
+            performance_data_cpumem = read_performance_test_csv(
+                performance_log_cpumem_pub, start_marker=None)
+            _raw_to_csv(
+                performance_data_cpumem, performance_data,
+                results_base_path + '.csv', 'pub')
+            if performance_overhead_png:
+                _raw_to_png(
                     performance_data_cpumem, performance_data,
-                    results_base_path + '.csv', 'pub')
-                if performance_overhead_png:
-                    _raw_to_png(
-                        performance_data_cpumem, performance_data,
-                        performance_overhead_png, 'publisher', '@RMW_IMPLEMENTATION@')
-            else:
-                print(
-                    'No report written - no performance log was produced',
-                    file=sys.stderr)
+                    performance_overhead_png, 'publisher', '@RMW_IMPLEMENTATION@')
 
             performance_logs = glob(performance_log_prefix_sub + '*')
-            performance_logs_cpumem = glob(performance_log_prefix_cpumem_sub + '*')
-            if performance_logs and performance_logs_cpumem:
-                performance_data = read_performance_test_csv(performance_logs[0])
-                performance_data_cpumem = read_performance_test_csv(
-                    performance_logs_cpumem[0], start_marker=None)
-                _raw_to_csv(
+            assert len(performance_logs) == 1
+            performance_data = read_performance_test_csv(performance_logs[0])
+            performance_data_cpumem = read_performance_test_csv(
+                performance_log_cpumem_sub, start_marker=None)
+            _raw_to_csv(
+                performance_data_cpumem, performance_data,
+                results_base_path + '.csv', 'sub')
+            if performance_overhead_png:
+                _raw_to_png(
                     performance_data_cpumem, performance_data,
-                    results_base_path + '.csv', 'sub')
-                if performance_overhead_png:
-                    _raw_to_png(
-                        performance_data_cpumem, performance_data,
-                        performance_overhead_png, 'subscriber', '@RMW_IMPLEMENTATION_SUB@')
-            else:
-                print(
-                    'No report written - no performance log was produced',
-                    file=sys.stderr)
+                    performance_overhead_png, 'subscriber', '@RMW_IMPLEMENTATION_SUB@')
         else:
             print(
                 'No results reports written - set PERF_TEST_RESULTS_BASE_PATH to write reports',

@@ -25,8 +25,8 @@ BYTE_TO_MBYTE = 1 / (1024*1024)
 BYTE_TO_KBYTE = 1 / (1024)
 
 
-def _cleanUpLogs(performance_log_prefix):
-    for log in glob(performance_log_prefix + '*'):
+def _cleanUpLogs(log_pattern):
+    for log in glob(log_pattern):
         os.remove(log)
 
 
@@ -119,6 +119,10 @@ def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
 
+    # perf_test will create its own logs with this prefix
+    # we just need the prefix to be unique
+    os.remove(performance_log_prefix)
+
     launch_description = []
     args = [
         '-c', '@COMM@',
@@ -177,7 +181,7 @@ class PerformanceTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(
             self, performance_log_prefix, nodes, proc_info):
-        self.addCleanup(_cleanUpLogs, performance_log_prefix)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix + '*')
 
         for node in nodes:
             launch_testing.asserts.assertExitCodes(
@@ -189,14 +193,10 @@ class PerformanceTestResults(unittest.TestCase):
         results_base_path = os.environ.get('PERF_TEST_RESULTS_BASE_PATH')
         if results_base_path:
             performance_logs = glob(performance_log_prefix + '*')
-            if performance_logs:
-                performance_data = read_performance_test_csv(performance_logs[0])
-                _raw_to_csv(performance_data, results_base_path + '.csv')
-                _raw_to_png(performance_data, results_base_path + '.png')
-            else:
-                print(
-                    'No report written - no performance log was produced',
-                    file=sys.stderr)
+            assert len(performance_logs) == 1
+            performance_data = read_performance_test_csv(performance_logs[0])
+            _raw_to_csv(performance_data, results_base_path + '.csv')
+            _raw_to_png(performance_data, results_base_path + '.png')
         else:
             print(
                 'No results reports written - set PERF_TEST_RESULTS_BASE_PATH to write reports',
