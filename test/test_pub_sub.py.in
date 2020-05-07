@@ -227,54 +227,45 @@ class PerformanceTestResults(unittest.TestCase):
             node_main_test,
         )
 
-        performance_logs = glob(performance_log_prefix_cpumem_pub + '*')
-        performance_logs_perf_test = glob(performance_log_prefix_pub + '_*')
-
-        if performance_logs and performance_logs_perf_test:
-            performance_log_data = read_performance_test_csv(
-                performance_logs[0], start_marker=None)
-            performance_log_perf_data = read_performance_test_csv(performance_logs_perf_test[0])
-
-            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
-            if performance_report_csv:
-                _raw_to_csv(performance_log_data, performance_log_perf_data,
-                            performance_report_csv, 'pub')
+        results_base_path = os.environ.get('PERF_TEST_RESULTS_BASE_PATH')
+        performance_overhead_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
+        if results_base_path:
+            performance_logs = glob(performance_log_prefix_pub + '*')
+            performance_logs_cpumem = glob(performance_log_prefix_cpumem_pub + '*')
+            if performance_logs and performance_logs_cpumem:
+                performance_data = read_performance_test_csv(performance_logs[0])
+                performance_data_cpumem = read_performance_test_csv(
+                    performance_logs_cpumem[0], start_marker=None)
+                _raw_to_csv(
+                    performance_data_cpumem, performance_data,
+                    results_base_path + '.csv', 'pub')
+                if performance_overhead_png:
+                    _raw_to_png(
+                        performance_data_cpumem, performance_data,
+                        performance_overhead_png, 'publisher', '@RMW_IMPLEMENTATION@')
             else:
-                print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
-                      file=sys.stderr)
+                print(
+                    'No report written - no performance log was produced',
+                    file=sys.stderr)
 
-            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
-            if performance_report_png:
-                _raw_to_png(performance_log_data, performance_log_perf_data,
-                            performance_report_png, 'publisher', '@RMW_IMPLEMENTATION@')
+            performance_logs = glob(performance_log_prefix_sub + '*')
+            performance_logs_cpumem = glob(performance_log_prefix_cpumem_sub + '*')
+            if performance_logs and performance_logs_cpumem:
+                performance_data = read_performance_test_csv(performance_logs[0])
+                performance_data_cpumem = read_performance_test_csv(
+                    performance_logs_cpumem[0], start_marker=None)
+                _raw_to_csv(
+                    performance_data_cpumem, performance_data,
+                    results_base_path + '.csv', 'sub')
+                if performance_overhead_png:
+                    _raw_to_png(
+                        performance_data_cpumem, performance_data,
+                        performance_overhead_png, 'subscriber', '@RMW_IMPLEMENTATION_SUB@')
             else:
-                print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
-                      file=sys.stderr)
+                print(
+                    'No report written - no performance log was produced',
+                    file=sys.stderr)
         else:
-            print('No report written - no performance log was produced', file=sys.stderr)
-
-        performance_logs = glob(performance_log_prefix_cpumem_sub + '*')
-        performance_logs_perf_test = glob(performance_log_prefix_sub + '_*')
-
-        if performance_logs and performance_logs_perf_test:
-            performance_log_data = read_performance_test_csv(
-                performance_logs[0], start_marker=None)
-            performance_log_perf_data = read_performance_test_csv(performance_logs_perf_test[0])
-
-            performance_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_CSV')
-            if performance_report_csv:
-                _raw_to_csv(performance_log_data, performance_log_perf_data,
-                            performance_report_csv, 'sub')
-            else:
-                print('No CSV report written - set PERFORMANCE_OVERHEAD_CSV to write a report',
-                      file=sys.stderr)
-
-            performance_report_png = os.environ.get('PERFORMANCE_OVERHEAD_PNG')
-            if performance_report_png:
-                _raw_to_png(performance_log_data, performance_log_perf_data,
-                            performance_report_png, 'subscriber', '@RMW_IMPLEMENTATION_SUB@')
-            else:
-                print('No PNG report written - set PERFORMANCE_OVERHEAD_PNG to write a report',
-                      file=sys.stderr)
-        else:
-            print('No report written - no performance log was produced', file=sys.stderr)
+            print(
+                'No results reports written - set PERF_TEST_RESULTS_BASE_PATH to write reports',
+                file=sys.stderr)

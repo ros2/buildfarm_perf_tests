@@ -186,23 +186,18 @@ class PerformanceTestResults(unittest.TestCase):
                 node,
             )
 
-        performance_logs = glob(performance_log_prefix + '_*')
-
-        if performance_logs:
-            performance_log_data = read_performance_test_csv(performance_logs[0])
-
-            performance_report_csv = os.environ.get('PERFORMANCE_REPORT_CSV')
-            if performance_report_csv:
-                _raw_to_csv(performance_log_data, performance_report_csv)
+        results_base_path = os.environ.get('PERF_TEST_RESULTS_BASE_PATH')
+        if results_base_path:
+            performance_logs = glob(performance_log_prefix + '*')
+            if performance_logs:
+                performance_data = read_performance_test_csv(performance_logs[0])
+                _raw_to_csv(performance_data, results_base_path + '.csv')
+                _raw_to_png(performance_data, results_base_path + '.png')
             else:
-                print('No CSV report written - set PERFORMANCE_REPORT_CSV to write a report',
-                      file=sys.stderr)
-
-            performance_report_png = os.environ.get('PERFORMANCE_REPORT_PNG')
-            if performance_report_png:
-                _raw_to_png(performance_log_data, performance_report_png)
-            else:
-                print('No PNG report written - set PERFORMANCE_REPORT_PNG to write a report',
-                      file=sys.stderr)
+                print(
+                    'No report written - no performance log was produced',
+                    file=sys.stderr)
         else:
-            print('No report written - no performance log was produced', file=sys.stderr)
+            print(
+                'No results reports written - set PERF_TEST_RESULTS_BASE_PATH to write reports',
+                file=sys.stderr)
