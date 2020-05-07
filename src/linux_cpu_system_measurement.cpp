@@ -75,7 +75,9 @@ float LinuxCPUSystemMeasurement::getCPUSystemCurrentlyUsed()
     const float IDLE_TIME = static_cast<float>(GetIdleTime(e2) - GetIdleTime(e1));
     const float TOTAL_TIME = ACTIVE_TIME + IDLE_TIME;
 
-    total += (100.f * ACTIVE_TIME / TOTAL_TIME);
+    if (TOTAL_TIME > 0.0) {
+      total += (100.f * ACTIVE_TIME / TOTAL_TIME);
+    }
   }
 
   entries1_ = entries2_;
@@ -92,25 +94,26 @@ void LinuxCPUSystemMeasurement::ReadStatsCPU(std::vector<CPUData> & entries)
 
   const std::string STR_CPU("cpu");
   const std::size_t LEN_STR_CPU = STR_CPU.size();
-  const std::string STR_TOT("tot");
 
   while (std::getline(fileStat, line)) {
     // cpu stats line found
     if (!line.compare(0, LEN_STR_CPU, STR_CPU)) {
       std::istringstream ss(line);
 
+      // read cpu label
+      std::string label;
+      ss >> label;
+
+      if (label.size() > LEN_STR_CPU) {
+        label.erase(0, LEN_STR_CPU);
+      } else {
+        continue;
+      }
+
       // store entry
       entries.emplace_back(CPUData());
       CPUData & entry = entries.back();
-
-      // read cpu label
-      ss >> entry.cpu;
-
-      if (entry.cpu.size() > LEN_STR_CPU) {
-        entry.cpu.erase(0, LEN_STR_CPU);
-      } else {
-        entry.cpu = STR_TOT;
-      }
+      entry.cpu = label;
 
       // read times
       for (int i = 0; i < NUM_CPU_STATES; ++i) {
