@@ -123,7 +123,7 @@ def generate_test_description(ready_fn):
     args = [
         '-c', '@COMM@',
         '-t', '@PERF_TEST_TOPIC@',
-        '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
+        '--max_runtime', '@PERF_TEST_RUNTIME@',
         '--ignore', '3',
         '-l', performance_log_prefix,
     ]
@@ -143,7 +143,7 @@ def generate_test_description(ready_fn):
           arguments=[
               '-c', '@COMM@',
               '-t', '@PERF_TEST_TOPIC@',
-              '--max_runtime', '@PERF_TEST_MAX_RUNTIME@',
+              '--max_runtime', '@PERF_TEST_RUNTIME@',
               '--roundtrip_mode', 'Relay',
           ],
         )
@@ -169,7 +169,7 @@ class PerformanceTestTermination(unittest.TestCase):
         for node in nodes:
             proc_info.assertWaitForShutdown(
                 process=node,
-                timeout=(@PERF_TEST_MAX_RUNTIME@ * 2))
+                timeout=(@PERF_TEST_RUNTIME@ * 2))
 
 
 @launch_testing.post_shutdown_test()

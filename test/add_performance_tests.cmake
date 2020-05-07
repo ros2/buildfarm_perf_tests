@@ -55,6 +55,9 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   endif()
   list(APPEND TEST_ENV ${PERF_TEST_ENV_${TEST_NAME_SYNC}})
 
+  # Have CTest kill the test if it runs for more than 3x what it should
+  math(EXPR PERF_TEST_TIMEOUT "${PERF_TEST_RUNTIME} * 3")
+
   #
   # Setup for per-topic tests
   #
@@ -99,6 +102,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_${TEST_NAME_SYNC_TOPIC}.py"
       TARGET test_performance_${TEST_NAME_SYNC_TOPIC}
       ENV ${TEST_ENV_TOPIC}
+      TIMEOUT ${PERF_TEST_TIMEOUT}
       ${SKIP_TEST_TOPIC}
     )
     set_tests_properties(test_performance_${TEST_NAME_SYNC_TOPIC} PROPERTIES
@@ -147,6 +151,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "${CMAKE_CURRENT_BINARY_DIR}/test/test_performance_two_process_${TEST_NAME_SYNC_TOPIC}.py"
       TARGET test_performance_two_process_${TEST_NAME_SYNC_TOPIC}
       ENV ${TEST_ENV_TOPIC}
+      TIMEOUT ${PERF_TEST_TIMEOUT}
       ${SKIP_TEST_TOPIC}
     )
     set_tests_properties(
@@ -192,8 +197,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   set(TEST_ENV_SPINNING ${TEST_ENV})
   list(APPEND TEST_ENV_SPINNING ${PERF_TEST_ENV_spinning_${TEST_NAME_SYNC}})
 
-  set(NODE_SPINNING_TIMEOUT "30")
-
   get_filename_component(
     PERF_TEST_RESULTS_BASE_PATH
     "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME_SYNC}"
@@ -219,7 +222,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_${TEST_NAME_SYNC}.py"
     TARGET test_spinning_${TEST_NAME_SYNC}
     ENV ${TEST_ENV_SPINNING}
-    TIMEOUT 120
+    TIMEOUT ${PERF_TEST_TIMEOUT}
     ${SKIP_TEST_SPINNING}
   )
   set_tests_properties(test_spinning_${TEST_NAME_SYNC} PROPERTIES
@@ -231,7 +234,6 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   # Setup for cross-vendor tests
   #
 
-  set(PUBSUB_TIMEOUT "30")
   set(PERF_TEST_TOPIC ${PERF_TEST_TOPIC_PUB_SUB})
   get_available_rmw_implementations(_rmw_implementations)
   foreach(RMW_IMPLEMENTATION_SUB ${_rmw_implementations})
@@ -284,7 +286,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "${CMAKE_CURRENT_BINARY_DIR}/test/test_pub_sub_${TEST_NAME_PUB_SUB}.py"
       TARGET test_pub_sub_${TEST_NAME_PUB_SUB}
       ENV ${TEST_ENV_PUB_SUB}
-      TIMEOUT 120
+      TIMEOUT ${PERF_TEST_TIMEOUT}
       ${SKIP_TEST_PUB_SUB}
     )
     set_tests_properties(test_pub_sub_${TEST_NAME_PUB_SUB} PROPERTIES
