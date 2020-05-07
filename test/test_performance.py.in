@@ -120,23 +120,20 @@ def generate_test_description(ready_fn):
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
 
     launch_description = []
-    args = [
+    arguments = [
         '-c', '@COMM@',
         '-t', '@PERF_TEST_TOPIC@',
         '--max_runtime', '@PERF_TEST_RUNTIME@',
         '--ignore', '3',
         '-l', performance_log_prefix,
-    ]
-
-    sync_env = {}
-    if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2':
-        args.append('--disable_async')
+    ] + ([
+        '--disable-async',
+    ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else [])
 
     nodes = []
 
     if @NUMBER_PROCESS@ == 2:
-        args.append('--roundtrip_mode')
-        args.append('Main')
+        arguments += ['--roundtrip_mode', 'Main']
 
         node_relay = Node(
           package='performance_test', node_executable='perf_test', output='log',
@@ -145,14 +142,16 @@ def generate_test_description(ready_fn):
               '-t', '@PERF_TEST_TOPIC@',
               '--max_runtime', '@PERF_TEST_RUNTIME@',
               '--roundtrip_mode', 'Relay',
-          ],
+          ] + ([
+              '--disable-async',
+          ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []),
         )
         launch_description.append(node_relay)
         nodes.append(node_relay)
 
     node_under_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
-        arguments=args,
+        arguments=arguments,
     )
     nodes.append(node_under_test)
 
