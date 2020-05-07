@@ -76,18 +76,12 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     set(NUMBER_PROCESS "1")
 
     get_filename_component(
-      PERFORMANCE_REPORT_PNG
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME_SYNC_TOPIC}.png"
-      ABSOLUTE
-    )
-    get_filename_component(
-      PERFORMANCE_REPORT_CSV
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME_SYNC_TOPIC}.csv"
+      PERF_TEST_RESULTS_BASE_PATH
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_results_${TEST_NAME_SYNC_TOPIC}"
       ABSOLUTE
     )
     list(APPEND TEST_ENV_TOPIC
-      "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
-      "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
+      "PERF_TEST_RESULTS_BASE_PATH=${PERF_TEST_RESULTS_BASE_PATH}"
     )
 
     configure_file(
@@ -129,18 +123,12 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     set(NUMBER_PROCESS "2")
 
     get_filename_component(
-      PERFORMANCE_REPORT_PNG
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME_SYNC_TOPIC}.png"
-      ABSOLUTE
-    )
-    get_filename_component(
-      PERFORMANCE_REPORT_CSV
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME_SYNC_TOPIC}.csv"
+      PERF_TEST_RESULTS_BASE_PATH
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/performance_test_two_process_results_${TEST_NAME_SYNC_TOPIC}"
       ABSOLUTE
     )
     list(APPEND TEST_ENV_TOPIC
-      "PERFORMANCE_REPORT_PNG=${PERFORMANCE_REPORT_PNG}"
-      "PERFORMANCE_REPORT_CSV=${PERFORMANCE_REPORT_CSV}"
+      "PERF_TEST_RESULTS_BASE_PATH=${PERF_TEST_RESULTS_BASE_PATH}"
     )
 
     configure_file(
@@ -207,18 +195,12 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   set(NODE_SPINNING_TIMEOUT "30")
 
   get_filename_component(
-    PERFORMANCE_OVERHEAD_NODE_CSV
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME_SYNC}.csv"
-    ABSOLUTE
-  )
-  get_filename_component(
-    PERFORMANCE_OVERHEAD_NODE_PNG
-    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME_SYNC}.png"
+    PERF_TEST_RESULTS_BASE_PATH
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_${TEST_NAME_SYNC}"
     ABSOLUTE
   )
   list(APPEND TEST_ENV_SPINNING
-    "PERFORMANCE_OVERHEAD_NODE_CSV=${PERFORMANCE_OVERHEAD_NODE_CSV}"
-    "PERFORMANCE_OVERHEAD_NODE_PNG=${PERFORMANCE_OVERHEAD_NODE_PNG}"
+    "PERF_TEST_RESULTS_BASE_PATH=${PERF_TEST_RESULTS_BASE_PATH}"
   )
 
   configure_file(
@@ -270,8 +252,8 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
     list(APPEND TEST_ENV_PUB_SUB ${PERF_TEST_ENV_${TEST_NAME_PUB_SUB}})
 
     get_filename_component(
-      PERFORMANCE_OVERHEAD_CSV
-      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}.csv"
+      PERF_TEST_RESULTS_BASE_PATH
+      "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results_${TEST_NAME_PUB_SUB}"
       ABSOLUTE
     )
     # TODO: Why doesn't this file name have a suffix?
@@ -280,8 +262,9 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
       "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_test_results"
       ABSOLUTE
     )
+
     list(APPEND TEST_ENV_PUB_SUB
-      "PERFORMANCE_OVERHEAD_CSV=${PERFORMANCE_OVERHEAD_CSV}"
+      "PERF_TEST_RESULTS_BASE_PATH=${PERF_TEST_RESULTS_BASE_PATH}"
       "PERFORMANCE_OVERHEAD_PNG=${PERFORMANCE_OVERHEAD_PNG}"
     )
 

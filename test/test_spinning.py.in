@@ -60,31 +60,32 @@ def _raw_to_csv(dataframe, csv_path):
 
 
 def _raw_to_png(dataframe, png_path):
+    png_base, png_ext = os.path.splitext(png_path)
     pd.options.display.float_format = '{:.4f}'.format
     dataframe[['T_experiment', 'virtual memory (Mb)']].plot(x='T_experiment')
 
     plt.title('Node spinning virtual memory usage\n@TEST_NAME@')
     plt.ylim(0, 1024)
-    plt.savefig(png_path[:-4] + '_virtual_memory.png')
+    plt.savefig(png_base + '_virtual_memory' + png_ext)
 
     dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Node spinning CPU usage\n@TEST_NAME@')
     plt.ylim(0, 100)
-    plt.savefig(png_path[:-4] + '_cpu_usage.png')
+    plt.savefig(png_base + '_cpu_usage' + png_ext)
 
     dataframe[['T_experiment', 'physical memory (Mb)']].plot(x='T_experiment')
     plt.ylim(0, 100)
     plt.title('Node spinning physical memory usage\n@TEST_NAME@')
-    plt.savefig(png_path[:-4] + '_physical_memory.png')
+    plt.savefig(png_base + '_physical_memory' + png_ext)
 
     dataframe[['T_experiment', 'resident anonymous memory (Mb)']].plot(x='T_experiment')
     plt.title('Node spinning resident anonymous memory\n@TEST_NAME@')
     plt.ylim(0, 100)
-    plt.savefig(png_path[:-4] + '_resident_anonymous_memory.png')
+    plt.savefig(png_base + '_resident_anonymous_memory' + png_ext)
 
 
 def generate_test_description(ready_fn):
-    node_spinning_log_prefix = tempfile.mkstemp(
+    performance_log_prefix_cpumem = tempfile.mkstemp(
         prefix='overhead_node_test_results_@TEST_NAME@_', text=True)[1]
 
     node_spinning_test = Node(
@@ -95,7 +96,7 @@ def generate_test_description(ready_fn):
     )
 
     node_metrics_collector, node_spinning_test_hook = attach_system_metric_collector(
-        node_spinning_test, node_spinning_log_prefix, timeout=@NODE_SPINNING_TIMEOUT@)
+        node_spinning_test, performance_log_prefix_cpumem, timeout=@NODE_SPINNING_TIMEOUT@)
 
     return LaunchDescription([
         node_spinning_test_hook,
@@ -116,9 +117,9 @@ class NodeSpinningTestTermination(unittest.TestCase):
 class NodeSpinningTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(
-            self, node_spinning_log_prefix,
+            self, performance_log_prefix_cpumem,
             node_metrics_collector, proc_info):
-        self.addCleanup(_cleanUpLogs, node_spinning_log_prefix)
+        self.addCleanup(_cleanUpLogs, performance_log_prefix_cpumem)
 
         launch_testing.asserts.assertExitCodes(
             proc_info,
@@ -126,27 +127,19 @@ class NodeSpinningTestResults(unittest.TestCase):
             node_metrics_collector,
         )
 
-        node_spinning_logs = glob(node_spinning_log_prefix + '*')
-
-        if node_spinning_logs:
-            node_spinning_data = read_performance_test_csv(
-                node_spinning_logs[0], start_marker=None)
-
-            node_spinning_report_csv = os.environ.get('PERFORMANCE_OVERHEAD_NODE_CSV')
-            if node_spinning_report_csv:
-                _raw_to_csv(node_spinning_data, node_spinning_report_csv)
+        results_base_path = os.environ.get('PERF_TEST_RESULTS_BASE_PATH')
+        if results_base_path:
+            performance_logs_cpumem = glob(performance_log_prefix_cpumem + '*')
+            if performance_logs_cpumem:
+                performance_data_cpumem = read_performance_test_csv(
+                    performance_logs_cpumem[0], start_marker=None)
+                _raw_to_csv(performance_data_cpumem, results_base_path + '.csv')
+                _raw_to_png(performance_data_cpumem, results_base_path + '.png')
             else:
                 print(
-                    'No CSV report written - set PERFORMANCE_OVERHEAD_NODE_CSV to write a report',
-                    file=sys.stderr)
-
-            node_spinning_report_png = os.environ.get('PERFORMANCE_OVERHEAD_NODE_PNG')
-            if node_spinning_report_png:
-                _raw_to_png(node_spinning_data, node_spinning_report_png)
-            else:
-                print(
-                    'No PNG report written - set PERFORMANCE_OVERHEAD_NODE_PNG to write a report',
+                    'No report written - no performance log was produced',
                     file=sys.stderr)
         else:
-            print('No report written - no performance log was produced',
-                  file=sys.stderr)
+            print(
+                'No results reports written - set PERF_TEST_RESULTS_BASE_PATH to write reports',
+                file=sys.stderr)
