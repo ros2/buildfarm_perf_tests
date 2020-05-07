@@ -28,6 +28,8 @@ install(TARGETS node_spinning
 option(ENABLE_SYSTEM_METRIC_COLLECTOR
   "Enables the system metric collector and tests which use it" ${UNIX})
 if(ENABLE_SYSTEM_METRIC_COLLECTOR)
+  find_package(Threads REQUIRED)
+
   add_executable(system_metric_collector
     src/linux_cpu_process_measurement.cpp
     src/linux_cpu_system_measurement.cpp
@@ -39,7 +41,10 @@ if(ENABLE_SYSTEM_METRIC_COLLECTOR)
   target_include_directories(system_metric_collector PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>)
-  target_link_libraries(system_metric_collector "stdc++fs")
+  target_link_libraries(system_metric_collector
+    "stdc++fs"
+    ${CMAKE_THREAD_LIBS_INIT}
+  )
 
   install(TARGETS system_metric_collector
     EXPORT export_${PROJECT_NAME}
