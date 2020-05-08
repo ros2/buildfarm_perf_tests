@@ -19,6 +19,17 @@ from launch.events import matches_action
 from launch.events.process import ShutdownProcess
 from launch.substitutions import LocalSubstitution
 from launch_ros.actions import Node
+import launch_testing.asserts
+
+
+def assert_wait_for_successful_exit(proc_info, process, timeout):
+    """Ensure that a process exits succesfully in a certain amount of time."""
+    proc_info.assertWaitForShutdown(process, timeout=timeout)
+    launch_testing.asserts.assertExitCodes(
+        proc_info,
+        [launch_testing.asserts.EXIT_OK],
+        process,
+    )
 
 
 class SystemMetricCollector(Node):

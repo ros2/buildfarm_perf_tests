@@ -7,12 +7,13 @@ import sys
 import tempfile
 import unittest
 
+from buildfarm_perf_tests.launch import assert_wait_for_successful_exit
 from buildfarm_perf_tests.test_results import read_performance_test_csv
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
-import launch
 from launch import LaunchDescription
+from launch.actions import OpaqueFunction
 from launch_ros.actions import Node
-import launch_testing
+import launch_testing.markers
 
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
@@ -115,6 +116,7 @@ def _raw_to_png(dataframe, png_path):
     plt.savefig(png_path[:-4] + '_histogram.png')
 
 
+@launch_testing.markers.keep_alive
 def generate_test_description(ready_fn):
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
@@ -123,7 +125,6 @@ def generate_test_description(ready_fn):
     # we just need the prefix to be unique
     os.remove(performance_log_prefix)
 
-    launch_description = []
     arguments = [
         '-c', '@COMM@',
         '-t', '@PERF_TEST_TOPIC@',
@@ -150,7 +151,6 @@ def generate_test_description(ready_fn):
               '--disable-async',
           ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []),
         )
-        launch_description.append(node_relay)
         nodes.append(node_relay)
 
     node_under_test = Node(
@@ -159,35 +159,20 @@ def generate_test_description(ready_fn):
     )
     nodes.append(node_under_test)
 
-    launch_description.append(node_under_test)
-    launch_description.append(launch_testing.util.KeepAliveProc())
-    launch_description.append(launch.actions.OpaqueFunction(function=lambda context: ready_fn()))
-
-    return LaunchDescription(launch_description), locals()
+    return LaunchDescription(nodes + [
+        OpaqueFunction(function=lambda context: ready_fn()),
+    ]), locals()
 
 
-class PerformanceTestTermination(unittest.TestCase):
-
-    def test_termination_@TEST_NAME@(self, nodes, proc_info):
-        for node in nodes:
-            proc_info.assertWaitForShutdown(
-                process=node,
-                timeout=(@PERF_TEST_RUNTIME@ * 2))
-
-
-@launch_testing.post_shutdown_test()
 class PerformanceTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(
-            self, performance_log_prefix, nodes, proc_info):
+            self, proc_info, nodes, performance_log_prefix):
         self.addCleanup(_cleanUpLogs, performance_log_prefix + '*')
 
-        for node in nodes:
-            launch_testing.asserts.assertExitCodes(
-                proc_info,
-                [launch_testing.asserts.EXIT_OK],
-                node,
-            )
+        timeout = @PERF_TEST_RUNTIME@ * 2
+        for process in nodes:
+            assert_wait_for_successful_exit(proc_info, process, timeout)
 
         results_base_path = os.environ.get('PERF_TEST_RESULTS_BASE_PATH')
         if results_base_path:

@@ -7,6 +7,7 @@ import sys
 import tempfile
 import unittest
 
+from buildfarm_perf_tests.launch import assert_wait_for_successful_exit
 from buildfarm_perf_tests.launch import SystemMetricCollector
 from buildfarm_perf_tests.test_results import read_performance_test_csv
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
@@ -19,7 +20,8 @@ from launch.event_handlers import OnProcessStart
 from launch.events import matches_action
 from launch.events.process import ShutdownProcess
 from launch_ros.actions import Node
-import launch_testing
+import launch_testing.markers
+
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
 import numpy as np  # noqa: F401
@@ -89,6 +91,7 @@ def _raw_to_png(dataframe, png_path):
     plt.savefig(png_base + '_resident_anonymous_memory' + png_ext)
 
 
+@launch_testing.markers.keep_alive
 def generate_test_description(ready_fn):
     performance_log_cpumem = tempfile.mkstemp(
         prefix='overhead_node_test_results_@TEST_NAME@_',
@@ -112,38 +115,26 @@ def generate_test_description(ready_fn):
         log_file=performance_log_cpumem,
         timeout=int(@PERF_TEST_RUNTIME@ / (1 / 1.5)))
 
-    return LaunchDescription([
+    nodes = [
         node_metrics_collector,
         node_spinning_test,
+    ]
+
+    return LaunchDescription(nodes + [
         node_spinning_timer,
-        launch_testing.util.KeepAliveProc(),
         OpaqueFunction(function=lambda context: ready_fn()),
     ]), locals()
 
 
-class NodeSpinningTestTermination(unittest.TestCase):
-
-    def test_termination_@TEST_NAME@(
-            self, node_spinning_test, node_metrics_collector, proc_info):
-        proc_info.assertWaitForShutdown(process=node_spinning_test,
-                                        timeout=(@PERF_TEST_RUNTIME@ * 2))
-        proc_info.assertWaitForShutdown(process=node_metrics_collector,
-                                        timeout=(@PERF_TEST_RUNTIME@ * 2))
-
-
-@launch_testing.post_shutdown_test()
 class NodeSpinningTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(
-            self, performance_log_cpumem,
-            node_metrics_collector, proc_info):
+            self, proc_info, nodes, performance_log_cpumem):
         self.addCleanup(_cleanUpLogs, performance_log_cpumem)
 
-        launch_testing.asserts.assertExitCodes(
-            proc_info,
-            [launch_testing.asserts.EXIT_OK],
-            node_metrics_collector,
-        )
+        timeout = @PERF_TEST_RUNTIME@ * 2
+        for process in nodes:
+            assert_wait_for_successful_exit(proc_info, process, timeout)
 
         results_base_path = os.environ.get('PERF_TEST_RESULTS_BASE_PATH')
         if results_base_path:
