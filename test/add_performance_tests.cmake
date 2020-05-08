@@ -32,11 +32,15 @@
 # :type RMW_IMPLEMENTATION: string
 # :param SYNC_MODE: One of ``async`` or ``sync``.
 # :type SYNC_MODE: string
+# :param RMW_IMPLMENETATIONS: The list of RMW implementations to test against
+#   in publisher/subscriber tests (only used when ``COMM`` is set to ``ROS2``).
+# :type RMW_IMPLEMENTATIONS: semicolon-separated string
 #
 # All of the behavior augmentations documented for
 # :cmake:macro:`add_performance_tests` also apply to this function.
 #
-function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
+function(add_performance_test
+  TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE RMW_IMPLEMENTATIONS)
 
   #
   # Setup for performance sub-tests
@@ -235,8 +239,7 @@ function(add_performance_test TEST_NAME COMM RMW_IMPLEMENTATION SYNC_MODE)
   #
 
   set(PERF_TEST_TOPIC ${PERF_TEST_TOPIC_PUB_SUB})
-  get_available_rmw_implementations(_rmw_implementations)
-  foreach(RMW_IMPLEMENTATION_SUB ${_rmw_implementations})
+  foreach(RMW_IMPLEMENTATION_SUB ${RMW_IMPLEMENTATIONS})
     # TODO: Why is ${COMM} on the end here? It's always ROS2.
     set(TEST_NAME_PUB_SUB "${TEST_NAME_SYNC}_${RMW_IMPLEMENTATION_SUB}_${COMM}")
     set(SKIP_TEST_PUB_SUB "${SKIP_TEST}")
@@ -302,6 +305,9 @@ endfunction()
 # DDS implmenetations associated with those RMWs by invoking
 # :cmake:macro:`add_performance_test` on each of them.
 #
+# :param RMW_IMPLEMENTATIONS: List of RMW implementations to test.
+# :type RMW_IMPLEMENTATIONS: semicolon-separated string
+#
 # The following values, when defined prior to invocation, will augment the
 # behavior of the tests:
 #
@@ -324,26 +330,30 @@ endfunction()
 #     Set the environment variable ``RMW_FASTRTPS_USE_QOS_FROM_XML`` to ``1``
 #     whenever synchronous tests are run for ``rmw_fastrtps_cpp``.
 #
-macro(add_performance_tests)
-  foreach(PERF_TEST_SYNC "async" "sync")
-    add_performance_test(
-      ${rmw_implementation}
-      "ROS2"
-      ${rmw_implementation}
-      ${PERF_TEST_SYNC}
-    )
-  endforeach()
-
-  if(PERF_TEST_COMM_TYPE_${rmw_implementation})
+function(add_performance_tests RMW_IMPLEMENTATIONS)
+  foreach(RMW_IMPLEMENTATION ${RMW_IMPLEMENTATIONS})
     foreach(PERF_TEST_SYNC "async" "sync")
       add_performance_test(
-        ${PERF_TEST_COMM_TYPE_${rmw_implementation}}
-        ${PERF_TEST_COMM_TYPE_${rmw_implementation}}
-        ${rmw_implementation}
+        ${RMW_IMPLEMENTATION}
+        "ROS2"
+        ${RMW_IMPLEMENTATION}
         ${PERF_TEST_SYNC}
+        "${RMW_IMPLEMENTATIONS}"
       )
     endforeach()
-  else()
-    message(STATUS "No standalone DDS support for RMW: ${rmw_implementation}")
-  endif()
-endmacro()
+
+    if(PERF_TEST_COMM_TYPE_${RMW_IMPLEMENTATION})
+      foreach(PERF_TEST_SYNC "async" "sync")
+        add_performance_test(
+          ${PERF_TEST_COMM_TYPE_${RMW_IMPLEMENTATION}}
+          ${PERF_TEST_COMM_TYPE_${RMW_IMPLEMENTATION}}
+          ${RMW_IMPLEMENTATION}
+          ${PERF_TEST_SYNC}
+          "${RMW_IMPLEMENTATIONS}"
+        )
+      endforeach()
+    else()
+      message(STATUS "No standalone DDS support for RMW: ${RMW_IMPLEMENTATION}")
+    endif()
+  endforeach()
+endfunction()
