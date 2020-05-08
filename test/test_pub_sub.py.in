@@ -161,13 +161,15 @@ def generate_test_description(ready_fn):
             '--rate', '5',
             '--roundtrip_mode', 'Main',
             '--ignore', '3',
-        ],
+        ] + ([
+            '--disable-async',
+        ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []),
     )
 
     system_metric_collector_pub = SystemMetricCollector(
         target_action=node_main_test,
         log_file=performance_log_cpumem_pub,
-        timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
+        timeout=int(@PERF_TEST_RUNTIME@ / (1 / 1.5)))
 
     node_relay_test = Node(
         package='performance_test', node_executable='perf_test', output='log',
@@ -179,14 +181,16 @@ def generate_test_description(ready_fn):
             '--rate', '5',
             '--roundtrip_mode', 'Relay',
             '--ignore', '3',
-        ],
+        ] + ([
+            '--disable-async',
+        ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []),
         additional_env={'RMW_IMPLEMENTATION': '@RMW_IMPLEMENTATION_SUB@'},
     )
 
     system_metric_collector_sub = SystemMetricCollector(
         target_action=node_relay_test,
         log_file=performance_log_cpumem_sub,
-        timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
+        timeout=int(@PERF_TEST_RUNTIME@ / (1 / 1.5)))
 
     return LaunchDescription([
         system_metric_collector_pub,

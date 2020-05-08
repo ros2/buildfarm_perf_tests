@@ -38,9 +38,9 @@ class SystemMetricCollector(Node):
         ----------
         target_action : ExecuteProcess
             ExecuteProcess (or Node) instance to collect metrics on
-        log_file : str
+        log_file : str or LaunchSubstitutionsType
             Path to where the collected metrics should be written to
-        timeout : int
+        timeout : int or LaunchSubstitutionsType
             Maximum time to run the metrics collector if the target process does
             not exit
 
@@ -60,7 +60,10 @@ class SystemMetricCollector(Node):
             '--log', log_file,
             '--process_pid', LocalSubstitution(self.__pid_var_name)]
         if timeout is not None:
-            kwargs['arguments'] += ['--timeout', str(timeout)]
+            kwargs['arguments'] += [
+                '--timeout',
+                str(timeout) if isinstance(timeout, int) else timeout
+            ]
 
         super().__init__(**kwargs)
 

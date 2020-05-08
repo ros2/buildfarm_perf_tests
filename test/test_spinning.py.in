@@ -110,7 +110,7 @@ def generate_test_description(ready_fn):
     node_metrics_collector = SystemMetricCollector(
         target_action=node_spinning_test,
         log_file=performance_log_cpumem,
-        timeout=(@PERF_TEST_RUNTIME@ // (1 / 1.5)))
+        timeout=int(@PERF_TEST_RUNTIME@ / (1 / 1.5)))
 
     return LaunchDescription([
         node_metrics_collector,
