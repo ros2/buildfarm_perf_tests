@@ -112,4 +112,9 @@ ament_flake8(TESTNAME "flake8_generated"
 )
 
 include(add_performance_tests.cmake)
-call_for_each_rmw_implementation(add_performance_tests)
+
+get_available_rmw_implementations(_RMW_IMPLEMENTATIONS)
+set(PERF_TEST_RMW_IMPLEMENTATIONS "${_RMW_IMPLEMENTATIONS}"
+  CACHE STRING "List of RMW implementations to test with")
+
+add_performance_tests("${PERF_TEST_RMW_IMPLEMENTATIONS}")
