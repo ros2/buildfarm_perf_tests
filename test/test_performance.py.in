@@ -143,7 +143,7 @@ def generate_test_description(ready_fn):
           node_executable='perf_test',
           output='log',
           arguments=arguments + [
-              '-s', '0'
+              '-s', '0',
           ],
         )
         nodes.append(node_pub)
