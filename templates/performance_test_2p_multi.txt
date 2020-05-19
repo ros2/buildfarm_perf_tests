@@ -64,7 +64,7 @@
       selection_value: 0
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%.png
   - title: Average Single-Trip Time (PointCloud512k)
-    description: "The figure shown above shows the average latency time in millisecond for different DDS vendors using a 512K array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 512K</li></ul>"
+    description: "The figure shown above shows the average latency time in milisecond for different DDS vendors using a 512K point cloud message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 512K</li></ul>"
     y_axis_label: Milliseconds
     master_csv_name: plot-${random_number}5.csv
     style: line
@@ -98,6 +98,45 @@
     exclZero: False
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array2m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 0
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%.png
+  - title: Average Single-Trip Time (Array4m)
+    description: "The figure shown above shows the average single-trip time in milisecond for different DDS vendors using a 4M array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 4M</li></ul>"
+    y_axis_label: Milliseconds
+    master_csv_name: plot-${random_number}24.csv
+    style: line
+    num_builds: 10
+    exclZero: False
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array4m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 0
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%.png
+  - title: Average Single-Trip Time (Array8m)
+    description: "The figure shown above shows the average single-trip time in milisecond for different DDS vendors using a 8M array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 8M</li></ul>"
+    y_axis_label: Milliseconds
+    master_csv_name: plot-${random_number}25.csv
+    style: line
+    num_builds: 10
+    exclZero: False
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array8m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 0
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%.png
+  - title: Average Single-Trip Time (PointCloud8m)
+    description: "The figure shown above shows the average single-trip time in milisecond for different DDS vendors using a 8M point cloud message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 8M</li></ul>"
+    y_axis_label: Milliseconds
+    master_csv_name: plot-${random_number}26.csv
+    style: line
+    num_builds: 10
+    exclZero: False
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_PointCloud8m.csv
       data_type: csv
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 0
@@ -168,7 +207,7 @@
       selection_value: 10
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_throughput.png
   - title: Throughput (PointCloud512k)
-    description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 512K array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512K</li></ul>"
+    description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 512K point cloud message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512K</li></ul>"
     y_axis_label: Mbits/s
     master_csv_name: plot-${random_number}13.csv
     style: line
@@ -202,6 +241,45 @@
     exclZero: False
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array2m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 10
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_throughput.png
+  - title: Throughput (Array4m)
+    description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 4M array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4M</li></ul>"
+    y_axis_label: Mbits/s
+    master_csv_name: plot-${random_number}27.csv
+    style: line
+    num_builds: 10
+    exclZero: False
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array4m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 10
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_throughput.png
+  - title: Throughput (Array8m)
+    description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 8M array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8M</li></ul>"
+    y_axis_label: Mbits/s
+    master_csv_name: plot-${random_number}28.csv
+    style: line
+    num_builds: 10
+    exclZero: False
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array8m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 10
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_throughput.png
+  - title: Throughput (PointCloud8m)
+    description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 8M point cloud message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8M</li></ul>"
+    y_axis_label: Mbits/s
+    master_csv_name: plot-${random_number}29.csv
+    style: line
+    num_builds: 10
+    exclZero: False
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_PointCloud8m.csv
       data_type: csv
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 10
@@ -298,7 +376,7 @@
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_histogram.png
   - title: Lost packets  (Array2m)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 1m array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2m</li></ul>"
+    description: "The figure shown above shows the lost packets for different DDS vendors using a 2m array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2m</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}23.csv
     style: line
@@ -306,6 +384,45 @@
     y_axis_exclude_zero: True
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array2m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 6
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_histogram.png
+  - title: Lost packets  (Array4m)
+    description: "The figure shown above shows the lost packets for different DDS vendors using a 4m array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4m</li></ul>"
+    y_axis_label: Number
+    master_csv_name: plot-${random_number}30.csv
+    style: line
+    num_builds: 10
+    y_axis_exclude_zero: True
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array4m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 6
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_histogram.png
+  - title: Lost packets  (Array8m)
+    description: "The figure shown above shows the lost packets for different DDS vendors using a 8m array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
+    y_axis_label: Number
+    master_csv_name: plot-${random_number}31.csv
+    style: line
+    num_builds: 10
+    y_axis_exclude_zero: True
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array8m.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 6
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_%name%_histogram.png
+  - title: Lost packets  (PointCloud8m)
+    description: "The figure shown above shows the lost packets for different DDS vendors using a 8m point cloud message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
+    y_axis_label: Number
+    master_csv_name: plot-${random_number}32.csv
+    style: line
+    num_builds: 10
+    y_axis_exclude_zero: True
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_PointCloud8m.csv
       data_type: csv
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
