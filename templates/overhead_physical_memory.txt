@@ -1,30 +1,30 @@
-- title: Simple Pub ${rmw_implementation} Physical Memory
-  description: "The figure shown above shows the physical memory in Mb used by the publisher. The publisher is set to <b>${rmw_implementation} </b> but the subscriber will vary between the avaiables. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 5</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
-  y_axis_label: Mb
-  master_csv_name: plot-${random_number}.csv
-  style: line
-  num_builds: 10
-  y_axis_exclude_zero: True
-  y_axis_minimum: 0
-  y_axis_maximum: 100
-  data_series:
-  - data_file: ws/test_results/buildfarm_perf_tests/overhead_test_results_${rmw_implementation}_*_pub.csv
-    data_type: csv
-    selection_flag: INCLUDE_BY_COLUMN
-    selection_value: 8
-    url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/overhead_test_results_%name%_publisher_physical_memory.png
-- title: Simple Sub ${rmw_implementation} Physical Memory
-  description: "The figure shown above shows the physical memory in Mb used by the subscriber. The publisher is set to <b>${rmw_implementation} </b> but the subscriber will vary between the avaiables. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 5</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
-  y_axis_label: Mb
-  master_csv_name: plot-${random_number}1.csv
-  style: line
-  num_builds: 10
-  y_axis_exclude_zero: True
-  y_axis_minimum: 0
-  y_axis_maximum: 100
-  data_series:
-  - data_file: ws/test_results/buildfarm_perf_tests/overhead_test_results_${rmw_implementation}_*_sub.csv
-    data_type: csv
-    selection_flag: INCLUDE_BY_COLUMN
-    selection_value: 8
-    url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/overhead_test_results_%name%_subscriber_physical_memory.png
+  - title: Simple Pub ${rmw_implementation} Physical Memory
+    description: "The figure shown above shows the physical memory in Mb used by the publisher. The publisher is set to <b>${rmw_implementation} </b> but the subscriber will vary between the avaiables. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 5</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
+    y_axis_label: Mb
+    master_csv_name: plot-${random_number}.csv
+    style: line
+    num_builds: 10
+    y_axis_exclude_zero: True
+    y_axis_minimum: 0
+    y_axis_maximum: 100
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/overhead_test_results_${rmw_implementation}_*_pub.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 8
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/overhead_test_results_%name%_publisher_physical_memory.png
+  - title: Simple Sub ${rmw_implementation} Physical Memory
+    description: "The figure shown above shows the physical memory in Mb used by the subscriber. The publisher is set to <b>${rmw_implementation} </b> but the subscriber will vary between the avaiables. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 5</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
+    y_axis_label: Mb
+    master_csv_name: plot-${random_number}1.csv
+    style: line
+    num_builds: 10
+    y_axis_exclude_zero: True
+    y_axis_minimum: 0
+    y_axis_maximum: 100
+    data_series:
+    - data_file: ws/test_results/buildfarm_perf_tests/overhead_test_results_${rmw_implementation}_*_sub.csv
+      data_type: csv
+      selection_flag: INCLUDE_BY_COLUMN
+      selection_value: 8
+      url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/overhead_test_results_%name%_subscriber_physical_memory.png
