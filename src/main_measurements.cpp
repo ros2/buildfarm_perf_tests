@@ -27,7 +27,11 @@ static void post_sentinel(int signum)
 {
   (void)signum;
   const char msg[] = "\nGot signal - shutting down\n";
-  write(STDERR_FILENO, msg, sizeof(msg));
+  ssize_t ret = write(STDERR_FILENO, msg, sizeof(msg));
+  if (ret == -1) {
+    std::cerr << "write() failed" << std::endl;
+    exit(1);
+  }
   sem_post(&sentinel);
 }
 
