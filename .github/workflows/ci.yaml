@@ -24,6 +24,7 @@ jobs:
         echo ::group::Update packages
         apt-get update
         apt-get upgrade -y
+        apt-get install python3-pip
         rosdep update
         echo ::endgroup::
         . /opt/ros/*/setup.sh
