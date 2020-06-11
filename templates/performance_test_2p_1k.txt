@@ -1,5 +1,5 @@
-  - title: Average Round-Trip Time
-    description: "The figure shown above shows the average round-trip time in milisecond for different DDS vendors using a 1K array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
+  - title: Latency
+    description: "The figure shown above shows the average latency time in millisecond for different DDS vendors using a 1K array message and two processes (one process to create the publisher and another process for the subscriber). All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Milliseconds
     master_csv_name: plot-${random_number}.csv
     style: line

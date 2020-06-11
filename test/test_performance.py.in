@@ -130,7 +130,6 @@ def generate_test_description(ready_fn):
         '-t', '@PERF_TEST_TOPIC@',
         '--max_runtime', '@PERF_TEST_RUNTIME@',
         '--ignore', '3',
-        '-l', performance_log_prefix,
     ] + ([
         '--disable-async',
     ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else [])
@@ -138,24 +137,33 @@ def generate_test_description(ready_fn):
     nodes = []
 
     if @NUMBER_PROCESS@ == 2:
-        arguments += ['--roundtrip_mode', 'Main']
-
-        node_relay = Node(
-          package='performance_test', node_executable='perf_test', output='log',
-          arguments=[
-              '-c', '@COMM@',
-              '-t', '@PERF_TEST_TOPIC@',
-              '--max_runtime', '@PERF_TEST_RUNTIME@',
-              '--roundtrip_mode', 'Relay',
-          ] + ([
-              '--disable-async',
-          ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []),
+        # Publisher node. It has 0 subscribers
+        node_pub = Node(
+          package='performance_test',
+          node_executable='perf_test',
+          output='log',
+          arguments=arguments + [
+              '-s', '0',
+          ],
         )
-        nodes.append(node_relay)
+        nodes.append(node_pub)
 
+        # Add 0-publishers flag to arguments for node_under_test, which in the
+        # case of 2 processes will be a subscriber.
+        arguments += ['-p', '0']
+
+    # node_under_test is the node in charge of logging the results, since the
+    # measurements are always taken in the subscriber. This node behaves
+    # differently depending on the number of processes involved:
+    #   - 1 process: The node has a publisher and a subscriber
+    #   - 2 processes: The node only has a subscriber
     node_under_test = Node(
-        package='performance_test', node_executable='perf_test', output='log',
-        arguments=arguments,
+        package='performance_test',
+        node_executable='perf_test',
+        output='log',
+        arguments=arguments + [
+            '-l', performance_log_prefix,
+        ],
     )
     nodes.append(node_under_test)
 
