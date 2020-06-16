@@ -82,7 +82,7 @@ function(add_performance_test
 
     set(KEEP_LAST FALSE)
     set(HISTORY_DEPTH "")
-    if("${PERF_TEST_TOPIC}" MATCHES "Array4m|Array8m|PointCloud8m")
+    if("${PERF_TEST_KEEP_LAST_${PERF_TEST_TOPIC}}")
       set(KEEP_LAST TRUE)
       set(HISTORY_DEPTH 10)
     endif()
