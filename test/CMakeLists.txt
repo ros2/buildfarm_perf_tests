@@ -12,9 +12,12 @@ set(PERF_TEST_TOPICS
   Array16k
   Array32k
   Array60k
-  PointCloud512k
   Array1m
   Array2m
+  Array4m
+  Array8m
+  PointCloud512k
+  PointCloud8m
   CACHE STRING "List of perf_test topics to run tests with"
 )
 
@@ -73,10 +76,15 @@ set(PERF_TEST_SKIP_rmw_opensplice_cpp_sync ON
 set(PERF_TEST_SKIP_rmw_connext_cpp_sync ON
   CACHE BOOL "Skip rmw_connext_cpp sync tests")
 
+foreach(large_data_topic Array4m Array8m PointCloud8m)
+  set(PERF_TEST_KEEP_LAST_${large_data_topic} ON
+    CACHE BOOL "Use keep last, depth 10 history in ${large_data_topic} tests")
+endforeach()
+
 # Fast-RTPS ros2-eloquent branch (1.9.3 + bugfixes) does not support synchronous
-# sending of fragments. This means that in that branch, topics PointCloud512k,
-# Array1m, and Array2m cannot be sent synchronously in ROS 2 Eloquent (either
-# from standalone Fast-RTPS, or from rmw_fastrtps_*)
+# sending of fragments. This means that in that branch, topics Array1m,
+# Array2m, Array4m, Array8m, PointCloud512k, PointCloud8m cannot be sent synchronously in
+# ROS 2 Eloquent (either from standalone Fast-RTPS, or from rmw_fastrtps_*)
 # https://github.com/ros2/buildfarm_perf_tests/pull/26#discussion_r393229707
 set(FASTRTPS_SYNC_SKIP_ROS_DISTROS
   "dashing"
@@ -84,7 +92,7 @@ set(FASTRTPS_SYNC_SKIP_ROS_DISTROS
 )
 if("$ENV{ROS_DISTRO}" IN_LIST FASTRTPS_SYNC_SKIP_ROS_DISTROS)
   foreach(skip_rmw rmw_fastrtps_cpp rmw_fastrtps_dynamic_cpp FastRTPS)
-    foreach(skip_topic Array1m Array2m PointCloud512k)
+    foreach(skip_topic Array1m Array2m Array4m Array8m PointCloud512k PointCloud8m)
       set(PERF_TEST_SKIP_${skip_rmw}_sync_${skip_topic} ON
         CACHE BOOL "Skip ${skip_rmw} sync ${skip_topic} tests")
     endforeach()

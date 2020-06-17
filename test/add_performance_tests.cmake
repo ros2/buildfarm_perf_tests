@@ -80,6 +80,13 @@ function(add_performance_test
     set(TEST_ENV_TOPIC ${TEST_ENV})
     list(APPEND TEST_ENV_TOPIC ${PERF_TEST_ENV_${TEST_NAME_SYNC_TOPIC}})
 
+    set(KEEP_LAST FALSE)
+    set(HISTORY_DEPTH "")
+    if("${PERF_TEST_KEEP_LAST_${PERF_TEST_TOPIC}}")
+      set(KEEP_LAST TRUE)
+      set(HISTORY_DEPTH 10)
+    endif()
+
     set(NUMBER_PROCESS "1")
 
     get_filename_component(

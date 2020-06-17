@@ -56,7 +56,7 @@ def performance_test(file_output, ci_name):
 
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_1p_1k.txt'),
-                           'Performance One Process Test Results (Array1k)',
+                           'Performance One Process Test Results (Array1k):',
                            ci_name)
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_1p_multi.txt'),
@@ -64,7 +64,7 @@ def performance_test(file_output, ci_name):
                            ci_name)
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_2p_1k.txt'),
-                           'Performance Two Processes Test Results (Array1k)',
+                           'Performance Two Processes Test Results (Array1k):',
                            ci_name)
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_2p_multi.txt'),
