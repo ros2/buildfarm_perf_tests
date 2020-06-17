@@ -133,9 +133,9 @@ def generate_test_description(ready_fn):
     ] + ([
         '--disable-async',
     ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []) + ([
-        '--keep_last'
+        '--keep_last',
     ] if '@KEEP_LAST@' == 'TRUE' else []) + ([
-        '--history_depth', '@HISTORY_DEPTH@'
+        '--history_depth', '@HISTORY_DEPTH@',
     ] if '@HISTORY_DEPTH@' != '' else [])
 
     nodes = []
