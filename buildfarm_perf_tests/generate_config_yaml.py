@@ -78,7 +78,7 @@ def node_spinnnig(file_output, ci_name):
     with open(os.path.join(templates_path, 'node_spinning.txt'), 'r') as content_file:
         content = Template(content_file.read())
 
-    file_output.write('  Node Spinnig Results:\n')
+    file_output.write('  Node Spinning Results:\n')
 
     random_number = _rand_x_digit_num(19)
     file_output.write(content.substitute(ci_name=ci_name,
