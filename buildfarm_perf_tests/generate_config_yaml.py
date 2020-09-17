@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import random
 from string import Template
 
 from ament_index_python import get_package_share_directory
