@@ -38,7 +38,7 @@ _unique_identifiers = set()
 
 def _check_unique_identifier(name):
     global _unique_identifiers
-    unique_identifier = name#str(len(_unique_identifiers))
+    unique_identifier = name
     assert unique_identifier not in _unique_identifiers, unique_identifier
     _unique_identifiers.add(unique_identifier)
     return unique_identifier
