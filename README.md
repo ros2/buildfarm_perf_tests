@@ -28,8 +28,8 @@ In this test we are measurement:
  - Max resident set size
 
 We are generating two plots per measurement
- - [One per-build](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/lastBuild/)
- - [Other over time](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/plot/)
+ - [One per-build](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/lastBuild/)
+ - [Other over time](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/plot/)
 
 **The test only measures the latency between the same RMW implementation**
 
@@ -56,8 +56,8 @@ We measure for both publisher and subscriber:
  - Virtual memory
 
 Again we plot measurement:
- - [One per-build](http://3.83.10.11/job/Dci__nightly-performance-overhead-multi_ubuntu_bionic_amd64/lastBuild/)
- - [Other over time](http://3.83.10.11/job/Dci__nightly-performance-overhead-multi_ubuntu_bionic_amd64/plot/)
+ - [One per-build](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/lastBuild/)
+ - [Other over time](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/plot/)
 
 | Publisher/Subscriber     | rmw_fastrtps_cpp   | rmw_opensplice_cpp | rmw_cyclonedds_cpp | rmw_fastrtps_dynamic_cpp | rmw_connext_cpp    |
 |--------------------------|--------------------|--------------------|--------------------|--------------------------|--------------------|
@@ -79,8 +79,8 @@ We measure:
  - Virtual memory
 
 Again we plot measurement:
- - [One per-build](http://3.83.10.11/job/Dci__nightly-performance-overhead_ubuntu_bionic_amd64/lastBuild/)
- - [Other over time](http://3.83.10.11/job/Dci__nightly-performance-overhead_ubuntu_bionic_amd64/plot/Node%20Spinnig%20Results/)
+ - [One per-build](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/lastBuild/)
+ - [Other over time](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/plot/Node%20Spinnig%20Results/)
 
 | DDS                      | Process 1 |
 |--------------------------|-----------|
