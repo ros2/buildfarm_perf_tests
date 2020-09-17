@@ -83,7 +83,7 @@ def _raw_to_png(dataframe, png_path):
 
     plot_name = 'One Process'
 
-    if '@NUMBER_PROCESS@' == 2:
+    if '@NUMBER_PROCESS@' == '2':
         plot_name = 'Two Processes'
 
     plt.title('Performance ' + plot_name +
