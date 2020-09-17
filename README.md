@@ -80,7 +80,7 @@ We measure:
 
 Again we plot measurement:
  - [One per-build](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/lastBuild/)
- - [Other over time](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/plot/Node%20Spinnig%20Results/)
+ - [Other over time](http://build.ros2.org/view/Rci/job/Rci__nightly-performance_ubuntu_focal_amd64/plot/Node%20Spinning%20Results/)
 
 | DDS                      | Process 1 |
 |--------------------------|-----------|
