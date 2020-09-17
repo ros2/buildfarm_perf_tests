@@ -16,7 +16,7 @@
   - title: Throughtput
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Mbits/s (mean)
-    master_csv_name: plot-${random_number}1.csv
+    master_csv_name: plot-${random_number}-1.csv
     style: line
     num_builds: 10
     y_axis_minimum: 0
@@ -31,7 +31,7 @@
   - title: Max Resident Set Size
     description: "The figure shown above shows the max resident size Megabytes for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Megabytes
-    master_csv_name: plot-${random_number}2.csv
+    master_csv_name: plot-${random_number}-2.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -44,7 +44,7 @@
   - title: Received packets
     description: "The figure shown above shows the received packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}3.csv
+    master_csv_name: plot-${random_number}-3.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -57,7 +57,7 @@
   - title: Sent packets
     description: "The figure shown above shows the sent packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}4.csv
+    master_csv_name: plot-${random_number}-4.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -70,7 +70,7 @@
   - title: Lost packets
     description: "The figure shown above shows the lost packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}5.csv
+    master_csv_name: plot-${random_number}-5.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -83,7 +83,7 @@
   - title: CPU usage (%)
     description: "The figure shown above shows the cpu usage in % for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}6.csv
+    master_csv_name: plot-${random_number}-6.csv
     style: line
     num_builds: 10
     y_axis_minimum: 0

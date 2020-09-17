@@ -16,7 +16,7 @@
   - title: Node Spinning CPU Usage
     description: "The figure shown above shows the CPU usage in % used by a single node spinning. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li></ul>"
     y_axis_label: Utilization (%)
-    master_csv_name: plot-${random_number}1.csv
+    master_csv_name: plot-${random_number}-1.csv
     style: line
     num_builds: 10
     y_axis_minimum: 0
@@ -31,7 +31,7 @@
   - title: Node Spinning Physical Memory
     description: "The figure shown above shows the physical memory in Mb used by a single node spinning. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li></ul>"
     y_axis_label: Mb
-    master_csv_name: plot-${random_number}2.csv
+    master_csv_name: plot-${random_number}-2.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -46,7 +46,7 @@
   - title: Node Spinning Resident Anonymous Memory
     description: "The figure shown above shows the resident anonymous memory in Mb used by a single node spinning. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li></ul>"
     y_axis_label: Mb
-    master_csv_name: plot-${random_number}3.csv
+    master_csv_name: plot-${random_number}-3.csv
     style: line
     num_builds: 10
     y_axis_minimum: 0

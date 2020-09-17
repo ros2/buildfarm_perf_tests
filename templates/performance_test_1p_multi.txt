@@ -14,7 +14,7 @@
   - title: Average Single-Trip Time (Array4k)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 4K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4K</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}1.csv
+    master_csv_name: plot-${random_number}-1.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -27,7 +27,7 @@
   - title: Average Single-Trip Time (Array16k)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 16K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 16K</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}2.csv
+    master_csv_name: plot-${random_number}-2.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -40,7 +40,7 @@
   - title: Average Single-Trip Time (Array32k)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 32K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 32K</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}3.csv
+    master_csv_name: plot-${random_number}-3.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -53,7 +53,7 @@
   - title: Average Single-Trip Time (Array60k)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 60K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 60K</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}4.csv
+    master_csv_name: plot-${random_number}-4.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -66,7 +66,7 @@
   - title: Average Single-Trip Time (PointCloud512k)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 512K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512K</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}5.csv
+    master_csv_name: plot-${random_number}-5.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -79,7 +79,7 @@
   - title: Average Single-Trip Time (Array1m)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 1M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1M</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}6.csv
+    master_csv_name: plot-${random_number}-6.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -92,7 +92,7 @@
   - title: Average Single-Trip Time (Array2m)
     description: "The figure shown above shows the average single-trip time in millisecond for different DDS vendors using a 2M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2M</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}7.csv
+    master_csv_name: plot-${random_number}-7.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -105,7 +105,7 @@
   - title: Average Single-Trip Time (Array4m)
     description: "The figure shown above shows the average single-trip time in milisecond for different DDS vendors using a 4M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4M</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}24.csv
+    master_csv_name: plot-${random_number}-24.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -118,7 +118,7 @@
   - title: Average Single-Trip Time (Array8m)
     description: "The figure shown above shows the average single-trip time in milisecond for different DDS vendors using a 8M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8M</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}25.csv
+    master_csv_name: plot-${random_number}-25.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -131,7 +131,7 @@
   - title: Average Single-Trip Time (PointCloud8m)
     description: "The figure shown above shows the average single-trip time in milisecond for different DDS vendors using a 8M point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8M</li></ul>"
     y_axis_label: Milliseconds
-    master_csv_name: plot-${random_number}26.csv
+    master_csv_name: plot-${random_number}-26.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -144,7 +144,7 @@
   - title: Throughput (Array1k)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}8.csv
+    master_csv_name: plot-${random_number}-8.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -157,7 +157,7 @@
   - title: Throughput (Array4k)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 4K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4K</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}9.csv
+    master_csv_name: plot-${random_number}-9.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -170,7 +170,7 @@
   - title: Throughput (Array16k)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 16K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 16K</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}10.csv
+    master_csv_name: plot-${random_number}-10.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -183,7 +183,7 @@
   - title: Throughput (Array32k)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 32K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 32K</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}11.csv
+    master_csv_name: plot-${random_number}-11.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -196,7 +196,7 @@
   - title: Throughput (Array60k)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 60K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 60K</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}12.csv
+    master_csv_name: plot-${random_number}-12.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -209,7 +209,7 @@
   - title: Throughput (PointCloud512k)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 512K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512K</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}13.csv
+    master_csv_name: plot-${random_number}-13.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -222,7 +222,7 @@
   - title: Throughput (Array1m)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 1M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1M</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}14.csv
+    master_csv_name: plot-${random_number}-14.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -235,7 +235,7 @@
   - title: Throughput (Array2m)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 2M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2M</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}15.csv
+    master_csv_name: plot-${random_number}-15.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -248,7 +248,7 @@
   - title: Throughput (Array4m)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 4M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4M</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}27.csv
+    master_csv_name: plot-${random_number}-27.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -261,7 +261,7 @@
   - title: Throughput (Array8m)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 8M array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8M</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}28.csv
+    master_csv_name: plot-${random_number}-28.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -274,7 +274,7 @@
   - title: Throughput (PointCloud8m)
     description: "The figure shown above shows the throughput in Mbits/s for different DDS vendors using a 8M point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8M</li></ul>"
     y_axis_label: Mbits/s
-    master_csv_name: plot-${random_number}29.csv
+    master_csv_name: plot-${random_number}-29.csv
     style: line
     num_builds: 10
     exclZero: False
@@ -287,7 +287,7 @@
   - title: Lost packets  (Array1k)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}16.csv
+    master_csv_name: plot-${random_number}-16.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -300,7 +300,7 @@
   - title: Lost packets  (Array4k)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 4K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}17.csv
+    master_csv_name: plot-${random_number}-17.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -313,7 +313,7 @@
   - title: Lost packets  (Array16k)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 16K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 16K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}18.csv
+    master_csv_name: plot-${random_number}-18.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -326,7 +326,7 @@
   - title: Lost packets  (Array32k)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 32K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 32K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}19.csv
+    master_csv_name: plot-${random_number}-19.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -339,7 +339,7 @@
   - title: Lost packets  (Array60k)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 64K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 60K</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}20.csv
+    master_csv_name: plot-${random_number}-20.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -352,7 +352,7 @@
   - title: Lost packets  (PointCloud512k)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 512K point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512k</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}21.csv
+    master_csv_name: plot-${random_number}-21.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -365,7 +365,7 @@
   - title: Lost packets  (Array1m)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 1m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1m</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}22.csv
+    master_csv_name: plot-${random_number}-22.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -378,7 +378,7 @@
   - title: Lost packets  (Array2m)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 2m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2m</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}23.csv
+    master_csv_name: plot-${random_number}-23.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -391,7 +391,7 @@
   - title: Lost packets  (Array4m)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 4m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4m</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}30.csv
+    master_csv_name: plot-${random_number}-30.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -404,7 +404,7 @@
   - title: Lost packets  (Array8m)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 8m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}31.csv
+    master_csv_name: plot-${random_number}-31.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
@@ -417,7 +417,7 @@
   - title: Lost packets  (PointCloud8m)
     description: "The figure shown above shows the lost packets for different DDS vendors using a 8m point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
     y_axis_label: Number
-    master_csv_name: plot-${random_number}32.csv
+    master_csv_name: plot-${random_number}-32.csv
     style: line
     num_builds: 10
     y_axis_exclude_zero: True
