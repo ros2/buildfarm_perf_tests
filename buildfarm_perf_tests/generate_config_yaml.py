@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import random
 from string import Template
 
 from ament_index_python import get_package_share_directory
@@ -26,16 +25,23 @@ def _add_line_plot_overhead(file_output, template_name, label, rmw_implementatio
 
     file_output.write('  ' + label + '\n')
 
+    name = os.path.splitext(os.path.basename(template_name))[0]
     for rmw_implementation in rmw_implementations:
-        random_number = _rand_x_digit_num(19)
+        random_number = _check_unique_identifier(name + '_' + rmw_implementation)
         file_output.write(content.substitute(rmw_implementation=rmw_implementation,
                                              ci_name=ci_name,
                                              random_number=random_number))
 
 
-def _rand_x_digit_num(x):
-    """Return an X digit number, leading_zeroes returns a string, otherwise int."""
-    return '{0:0{x}d}'.format(random.randint(0, 10**x-1), x=x)
+_unique_identifiers = set()
+
+
+def _check_unique_identifier(name):
+    global _unique_identifiers
+    unique_identifier = name
+    assert unique_identifier not in _unique_identifiers, unique_identifier
+    _unique_identifiers.add(unique_identifier)
+    return unique_identifier
 
 
 def _fill_performance_test(file_output, template_name, label, ci_name):
@@ -45,7 +51,8 @@ def _fill_performance_test(file_output, template_name, label, ci_name):
 
     file_output.write('  ' + label + '\n')
 
-    random_number = _rand_x_digit_num(19)
+    name = os.path.splitext(os.path.basename(template_name))[0]
+    random_number = _check_unique_identifier(name)
     file_output.write(content.substitute(ci_name=ci_name,
                                          random_number=random_number))
 
@@ -80,7 +87,7 @@ def node_spinnnig(file_output, ci_name):
 
     file_output.write('  Node Spinning Results:\n')
 
-    random_number = _rand_x_digit_num(19)
+    random_number = _check_unique_identifier('node_spinning')
     file_output.write(content.substitute(ci_name=ci_name,
                                          random_number=random_number))
 
