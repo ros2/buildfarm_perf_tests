@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Copyright 2020 Open Source Robotics Foundation, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,6 +15,7 @@
 # limitations under the License.
 
 import argparse
+import sys
 
 from buildfarm_perf_tests.generate_config_yaml import node_spinnnig
 from buildfarm_perf_tests.generate_config_yaml import overhead_simple_publisher_and_subscriber
@@ -36,4 +39,5 @@ def main():
         performance_test(f, args.ci_name)
 
 
-main()
+if __name__ == '__main__':
+    sys.exit(main())
