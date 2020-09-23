@@ -20,7 +20,7 @@
     style: line
     num_builds: 10
     y_axis_minimum: 0
-    y_axis_maximum: 1000
+    y_axis_maximum: 1.05
     y_axis_exclude_zero: False
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
