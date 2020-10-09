@@ -76,11 +76,6 @@ set(PERF_TEST_SKIP_rmw_opensplice_cpp_sync ON
 set(PERF_TEST_SKIP_rmw_connext_cpp_sync ON
   CACHE BOOL "Skip rmw_connext_cpp sync tests")
 
-foreach(large_data_topic Array4m Array8m PointCloud8m)
-  set(PERF_TEST_KEEP_LAST_${large_data_topic} ON
-    CACHE BOOL "Use keep last, depth 10 history in ${large_data_topic} tests")
-endforeach()
-
 # Fast-RTPS ros2-eloquent branch (1.9.3 + bugfixes) does not support synchronous
 # sending of fragments. This means that in that branch, topics Array1m,
 # Array2m, Array4m, Array8m, PointCloud512k, PointCloud8m cannot be sent synchronously in

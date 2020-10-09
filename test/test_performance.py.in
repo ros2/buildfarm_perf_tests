@@ -137,13 +137,11 @@ def generate_test_description(ready_fn):
         '-t', '@PERF_TEST_TOPIC@',
         '--max_runtime', '@PERF_TEST_RUNTIME@',
         '--ignore', '3',
+        '--keep_last',
+        '--history_depth', '10',
     ] + ([
         '--disable-async',
-    ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else []) + ([
-        '--keep_last',
-    ] if '@KEEP_LAST@' == 'TRUE' else []) + ([
-        '--history_depth', '@HISTORY_DEPTH@',
-    ] if '@HISTORY_DEPTH@' != '' else [])
+    ] if '@SYNC_MODE@' == 'sync' and '@COMM@' != 'ROS2' else [])
 
     nodes = []
 
