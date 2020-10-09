@@ -109,7 +109,7 @@ def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):
     dataframe = dataframe_perf.copy()
     pd.options.display.float_format = '{:.4f}'.format
     dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
-    plt.title('Simple Pub/Sub Received/Sent/Lost packets\n' + mode + ': ' + rmw_impl)
+    plt.title('Simple Pub/Sub Received/Sent/Lost messages\n' + mode + ': ' + rmw_impl)
     plt.savefig(png_path + '_'
                 + 'Publisher-@RMW_IMPLEMENTATION@_Subscriber-@RMW_IMPLEMENTATION_SUB@_'
                 + mode + '_histogram.png')

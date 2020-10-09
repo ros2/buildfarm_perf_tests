@@ -284,8 +284,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 10
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_throughput.png
-  - title: Lost packets  (Array1k)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
+  - title: Lost messages  (Array1k)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-16.csv
     style: line
@@ -297,8 +297,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array4k)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 4K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4K</li></ul>"
+  - title: Lost messages  (Array4k)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 4K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-17.csv
     style: line
@@ -310,8 +310,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array16k)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 16K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 16K</li></ul>"
+  - title: Lost messages  (Array16k)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 16K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 16K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-18.csv
     style: line
@@ -323,8 +323,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array32k)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 32K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 32K</li></ul>"
+  - title: Lost messages  (Array32k)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 32K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 32K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-19.csv
     style: line
@@ -336,8 +336,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array60k)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 64K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 60K</li></ul>"
+  - title: Lost messages  (Array60k)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 64K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 60K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-20.csv
     style: line
@@ -349,8 +349,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (PointCloud512k)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 512K point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512k</li></ul>"
+  - title: Lost messages  (PointCloud512k)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 512K point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 512k</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-21.csv
     style: line
@@ -362,8 +362,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array1m)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 1m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1m</li></ul>"
+  - title: Lost messages  (Array1m)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 1m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1m</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-22.csv
     style: line
@@ -375,8 +375,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array2m)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 2m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2m</li></ul>"
+  - title: Lost messages  (Array2m)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 2m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 2m</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-23.csv
     style: line
@@ -388,8 +388,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array4m)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 4m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4m</li></ul>"
+  - title: Lost messages  (Array4m)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 4m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 4m</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-30.csv
     style: line
@@ -401,8 +401,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (Array8m)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 8m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
+  - title: Lost messages  (Array8m)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 8m array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-31.csv
     style: line
@@ -414,8 +414,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 6
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets  (PointCloud8m)
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 8m point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
+  - title: Lost messages  (PointCloud8m)
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 8m point cloud message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 8m</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-32.csv
     style: line
