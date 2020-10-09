@@ -89,7 +89,7 @@ def _raw_to_png(dataframe, png_path):
         plot_name = 'Two Processes'
 
     plt.title('Performance ' + plot_name +
-              ' tests latency\n@TEST_NAME@ @PERF_TEST_TOPIC@')
+              ' tests latency\n@TEST_NAME@ @SYNC_MODE@ @PERF_TEST_TOPIC@')
     ax.set_ylabel('ms')
     plt.savefig(png_path)
 
@@ -100,20 +100,20 @@ def _raw_to_png(dataframe, png_path):
                     'data_received Mbits/s',
                     'data_received Mbits/s (P95)']].plot(x='T_experiment')
     plt.title('Performance ' + plot_name
-              + ' Throughput (Mbits/s) Tests\n@TEST_NAME@ @PERF_TEST_TOPIC@')
+              + ' Throughput (Mbits/s) Tests\n@TEST_NAME@ @SYNC_MODE@ @PERF_TEST_TOPIC@')
     ax.set_ylabel('Mbits/s')
     plt.savefig(png_path[:-4] + '_throughput.png')
 
     ax = dataframe[['T_experiment', 'cpu_usage (%)']].plot(x='T_experiment')
     plt.title('Performance ' + plot_name
-              + ' tests CPU usage (%)\n@TEST_NAME@ @PERF_TEST_TOPIC@')
+              + ' tests CPU usage (%)\n@TEST_NAME@ @SYNC_MODE@ @PERF_TEST_TOPIC@')
     ax.set_ylabel('%')
     plt.savefig(png_path[:-4] + '_cpu_usage.png')
 
     ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
     plt.title(plot_name
               + ' Received/Sent packets per second and Lost packets\n'
-              + '@TEST_NAME@ @PERF_TEST_TOPIC@')
+              + '@TEST_NAME@ @SYNC_MODE@ @PERF_TEST_TOPIC@')
     ax.set_ylabel('Number of packets')
     plt.savefig(png_path[:-4] + '_histogram.png')
 
