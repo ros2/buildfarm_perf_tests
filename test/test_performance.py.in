@@ -112,9 +112,9 @@ def _raw_to_png(dataframe, png_path):
 
     ax = dataframe.plot(kind='bar', y=['received', 'sent', 'lost'])
     plt.title(plot_name
-              + ' Received/Sent packets per second and Lost packets\n'
+              + ' Received/Sent messages per second and Lost messages\n'
               + '@TEST_NAME@ @SYNC_MODE@ @PERF_TEST_TOPIC@')
-    ax.set_ylabel('Number of packets')
+    ax.set_ylabel('Number of messages')
     plt.savefig(png_path[:-4] + '_histogram.png')
 
 

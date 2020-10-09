@@ -23,8 +23,8 @@ In this test we are running the Performance Test provided by Apex.AI. Right now 
 In this test we are measurement:
  - Average latency
  - CPU usage (provided by Apex.AI tool)
- - Sent/Received packets per second
- - Total lost packets
+ - Sent/Received messages per second
+ - Total lost messages
  - Max resident set size
 
 We are generating two plots per measurement
@@ -49,8 +49,8 @@ We measure for both publisher and subscriber:
 
  - Average round trip
  - CPU usage ( readed from the filesystem )
- - Total lost packets
- - Received/Sent packets per second
+ - Total lost messages
+ - Received/Sent messages per second
  - Physical memory
  - Resident anonymous memory
  - Virtual memory

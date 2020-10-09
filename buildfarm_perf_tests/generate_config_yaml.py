@@ -67,7 +67,7 @@ def performance_test(file_output, ci_name):
                            ci_name)
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_1p_multi.txt'),
-                           'Performance One Process Test Results (multisize packets):',
+                           'Performance One Process Test Results (multisize messages):',
                            ci_name)
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_2p_1k.txt'),
@@ -75,7 +75,7 @@ def performance_test(file_output, ci_name):
                            ci_name)
     _fill_performance_test(file_output,
                            os.path.join(templates_path, 'performance_test_2p_multi.txt'),
-                           'Performance Two Processes Test Results (multisize packets):',
+                           'Performance Two Processes Test Results (multisize messages):',
                            ci_name)
 
 
@@ -101,17 +101,17 @@ def overhead_simple_publisher_and_subscriber(file_output, rmw_implementations, c
                             rmw_implementations, ci_name)
     _add_line_plot_overhead(
         file_output,
-        os.path.join(templates_path, 'overhead_received_packets.txt'),
-        'Overhead simple publisher and subscriber - Received packets per second:',
+        os.path.join(templates_path, 'overhead_received_messages.txt'),
+        'Overhead simple publisher and subscriber - Received messages per second:',
         rmw_implementations,
         ci_name)
     _add_line_plot_overhead(file_output,
-                            os.path.join(templates_path, 'overhead_sent_packets.txt'),
-                            'Overhead simple publisher and subscriber - Sent packets per second:',
+                            os.path.join(templates_path, 'overhead_sent_messages.txt'),
+                            'Overhead simple publisher and subscriber - Sent messages per second:',
                             rmw_implementations, ci_name)
     _add_line_plot_overhead(file_output,
-                            os.path.join(templates_path, 'overhead_lost_packets.txt'),
-                            'Overhead simple publisher and subscriber - Lost packets per second:',
+                            os.path.join(templates_path, 'overhead_lost_messages.txt'),
+                            'Overhead simple publisher and subscriber - Lost messages per second:',
                             rmw_implementations, ci_name)
     _add_line_plot_overhead(file_output,
                             os.path.join(templates_path, 'overhead_virtual_memory.txt'),

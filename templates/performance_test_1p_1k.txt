@@ -41,8 +41,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 3
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%.png
-  - title: Received packets
-    description: "The figure shown above shows the received packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
+  - title: Received messages
+    description: "The figure shown above shows the received messages for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-3.csv
     style: line
@@ -54,8 +54,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 4
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Sent packets
-    description: "The figure shown above shows the sent packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
+  - title: Sent messages
+    description: "The figure shown above shows the sent messages for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-4.csv
     style: line
@@ -67,8 +67,8 @@
       selection_flag: INCLUDE_BY_COLUMN
       selection_value: 5
       url: /job/${ci_name}/%build%/artifact/ws/test_results/buildfarm_perf_tests/performance_test_results_%name%_histogram.png
-  - title: Lost packets
-    description: "The figure shown above shows the lost packets for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
+  - title: Lost messages
+    description: "The figure shown above shows the lost messages for different DDS vendors using a 1K array message. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode.<br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 1000</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 1</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Number
     master_csv_name: plot-${random_number}-5.csv
     style: line
