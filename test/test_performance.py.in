@@ -122,7 +122,8 @@ def _raw_to_png(dataframe, png_path):
 def generate_test_description(ready_fn):
     expected_rmw_implementation = '@RMW_IMPLEMENTATION@'
     rmw_implementation_identifier = get_rmw_implementation_identifier()
-    assert '@COMM@' != 'ROS2' or rmw_implementation_identifier == expected_rmw_implementation, \
+    assert '@COMM@' != 'ROS2' or \
+        rmw_implementation_identifier == expected_rmw_implementation, \
         f'{rmw_implementation_identifier} != {expected_rmw_implementation}'
 
     performance_log_prefix = tempfile.mkstemp(
