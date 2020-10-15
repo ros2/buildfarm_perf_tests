@@ -120,10 +120,11 @@ def _raw_to_png(dataframe, png_path):
 
 @launch_testing.markers.keep_alive
 def generate_test_description(ready_fn):
-    expected_rmw_implementation = '@RMW_IMPLEMENTATION@'
-    rmw_implementation_identifier = get_rmw_implementation_identifier()
-    assert rmw_implementation_identifier == expected_rmw_implementation, \
-        f'{rmw_implementation_identifier} != {expected_rmw_implementation}'
+    if '@COMM@' == 'ROS2':
+        expected_rmw_implementation = '@RMW_IMPLEMENTATION@'
+        rmw_implementation_identifier = get_rmw_implementation_identifier()
+        assert rmw_implementation_identifier == expected_rmw_implementation, \
+            f'{rmw_implementation_identifier} != {expected_rmw_implementation}'
 
     performance_log_prefix = tempfile.mkstemp(
         prefix='performance_test_@TEST_NAME@_', text=True)[1]
