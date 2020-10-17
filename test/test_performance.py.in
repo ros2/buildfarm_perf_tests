@@ -9,6 +9,7 @@ import unittest
 
 from buildfarm_perf_tests.launch import assert_wait_for_successful_exit
 from buildfarm_perf_tests.test_results import read_performance_test_csv
+from buildfarm_perf_tests.test_results import write_jenkins_benchmark_json
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
 from launch.actions import OpaqueFunction
@@ -33,13 +34,13 @@ def _cleanUpLogs(log_pattern):
         os.remove(log)
 
 
-def _raw_to_csv(dataframe, csv_path):
+def _raw_to_jenkins(dataframe, csv_path):
     """
-    Convert from the raw csv data to the csv for the Jenkins plot plugin.
+    Convert from the raw csv data to formats consumble by Jenkins plugins.
 
-    Do not change the order of the columns. The plot plugin indexes into the
-    csv using the column number instead of the column name, because we're
-    using the columns to identify which test produced the data.
+    Do not change the order of the columns in the csv file. The plot plugin
+    indexes into the csv using the column number instead of the column name,
+    because we're using the columns to identify which test produced the data.
 
     Changing the column names here will change the name of the line that
     appears on the plot.
@@ -63,6 +64,56 @@ def _raw_to_csv(dataframe, csv_path):
     ]
 
     write_jenkins_plot_csv(csv_path, '@TEST_NAME@_@PERF_TEST_TOPIC@', values)
+
+    json_path = os.path.splitext(csv_path)[0] + '.benchmark.json'
+    json_values = {
+        'parameters': {
+            'runtime': {
+                'value': @PERF_TEST_RUNTIME@,
+                'unit': 's',
+            },
+            'process_count': {
+                'value': @NUMBER_PROCESS@,
+            },
+            'message_type': {
+                'value': '@PERF_TEST_TOPIC@',
+            },
+        },
+        'average_single_trip_time': {
+            'dblValue': values[0],
+            'unit': 'ms',
+        },
+        'throughput': {
+            'dblValue': values[10],
+            'unit': 'Mbit/s',
+        },
+        'max_resident_set_size': {
+            'dblValue': values[3],
+            'unit': 'MB',
+        },
+        'received_messages': {
+            'value': values[4],
+        },
+        'sent_messages': {
+            'value': values[5],
+        },
+        'lost_messages': {
+            'value': values[6],
+        },
+        'cpu_usage': {
+            'dblValue': values[8],
+            'unit': 'percent',
+        },
+    }
+
+    group_name = 'performance'
+    if '@NUMBER_PROCESS@' == '2':
+        group_name += '_two_process'
+
+    write_jenkins_benchmark_json(
+        json_path,
+        group_name + '.@TEST_NAME@_@PERF_TEST_TOPIC@',
+        json_values)
 
 
 def _raw_to_png(dataframe, png_path):
@@ -197,7 +248,7 @@ class PerformanceTestResults(unittest.TestCase):
             performance_logs = glob(performance_log_prefix + '*')
             assert len(performance_logs) == 1
             performance_data = read_performance_test_csv(performance_logs[0])
-            _raw_to_csv(performance_data, results_base_path + '.csv')
+            _raw_to_jenkins(performance_data, results_base_path + '.csv')
             _raw_to_png(performance_data, results_base_path + '.png')
         else:
             print(
