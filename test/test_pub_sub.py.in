@@ -77,11 +77,11 @@ def _raw_to_jenkins(dataframe, dataframe_perf, csv_path, mode):
     json_values = {
         'parameters': {
             'runtime': {
-                'value': @PERF_TEST_RUNTIME@,
+                'value': '@PERF_TEST_RUNTIME@',
                 'unit': 's',
             },
             'process_count': {
-                'value': 2,
+                'value': '2',
             },
             'message_type': {
                 'value': '@PERF_TEST_TOPIC@',
@@ -108,26 +108,26 @@ def _raw_to_jenkins(dataframe, dataframe_perf, csv_path, mode):
     if mode == 'pub':
         json_values.update({
             'lost_messages': {
-                'value': values[18],
+                'dblValue': values[18],
             },
             'received_messages': {
-                'value': values[16],
+                'dblValue': values[16],
                 'unit': 'msg/s',
             },
             'sent_messages': {
-                'value': values[17],
+                'intValue': values[17],
                 'unit': 'msg/s',
             },
             'average_round_trip_time': {
-                'value': values[14],
+                'dblValue': values[14],
                 'unit': 'ms',
             },
         })
 
     write_jenkins_benchmark_json(
         json_path,
-        'pub_sub.Publisher-@TEST_NAME@_Subscriber-@RMW_IMPLEMENTATION_SUB@',
-        json_values)
+        'buildfarm_perf_tests.pub_sub',
+        {'Publisher-@TEST_NAME@_Subscriber-@RMW_IMPLEMENTATION_SUB@': json_values})
 
 
 def _raw_to_png(dataframe, dataframe_perf, png_path, mode, rmw_impl):

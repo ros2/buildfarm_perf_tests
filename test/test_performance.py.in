@@ -69,11 +69,11 @@ def _raw_to_jenkins(dataframe, csv_path):
     json_values = {
         'parameters': {
             'runtime': {
-                'value': @PERF_TEST_RUNTIME@,
+                'value': '@PERF_TEST_RUNTIME@',
                 'unit': 's',
             },
             'process_count': {
-                'value': @NUMBER_PROCESS@,
+                'value': '@NUMBER_PROCESS@',
             },
             'message_type': {
                 'value': '@PERF_TEST_TOPIC@',
@@ -92,13 +92,13 @@ def _raw_to_jenkins(dataframe, csv_path):
             'unit': 'MB',
         },
         'received_messages': {
-            'value': values[4],
+            'dblValue': values[4],
         },
         'sent_messages': {
-            'value': values[5],
+            'dblValue': values[5],
         },
         'lost_messages': {
-            'value': values[6],
+            'intValue': values[6],
         },
         'cpu_usage': {
             'dblValue': values[8],
@@ -106,14 +106,14 @@ def _raw_to_jenkins(dataframe, csv_path):
         },
     }
 
-    group_name = 'performance'
+    group_name = 'buildfarm_perf_tests.performance'
     if '@NUMBER_PROCESS@' == '2':
         group_name += '_two_process'
 
     write_jenkins_benchmark_json(
         json_path,
-        group_name + '.@TEST_NAME@_@PERF_TEST_TOPIC@',
-        json_values)
+        group_name,
+        {'@TEST_NAME@_@PERF_TEST_TOPIC@': json_values})
 
 
 def _raw_to_png(dataframe, png_path):

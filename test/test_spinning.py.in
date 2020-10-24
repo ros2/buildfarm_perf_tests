@@ -70,11 +70,11 @@ def _raw_to_jenkins(dataframe, csv_path):
     json_values = {
         'parameters': {
             'runtime': {
-                'value': @PERF_TEST_RUNTIME@,
+                'value': '@PERF_TEST_RUNTIME@',
                 'unit': 's',
             },
             'process_count': {
-                'value': 1,
+                'value': '1',
             },
         },
         'virtual_memory': {
@@ -97,8 +97,8 @@ def _raw_to_jenkins(dataframe, csv_path):
 
     write_jenkins_benchmark_json(
         json_path,
-        'spinning.@TEST_NAME@',
-        json_values)
+        'buildfarm_perf_tests.spinning',
+        {'@TEST_NAME@': json_values})
 
 
 def _raw_to_png(dataframe, png_path):
