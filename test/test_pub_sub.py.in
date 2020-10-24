@@ -108,14 +108,14 @@ def _raw_to_jenkins(dataframe, dataframe_perf, csv_path, mode):
     if mode == 'pub':
         json_values.update({
             'lost_messages': {
-                'dblValue': values[18],
+                'intValue': values[18],
             },
             'received_messages': {
                 'dblValue': values[16],
                 'unit': 'msg/s',
             },
             'sent_messages': {
-                'intValue': values[17],
+                'dblValue': values[17],
                 'unit': 'msg/s',
             },
             'average_round_trip_time': {
