@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
+
 from pandas import read_csv
 
 
@@ -51,3 +53,25 @@ def write_jenkins_plot_csv(csv_path, column_name, values):
     with open(csv_path, 'w') as csv:
         csv.write(','.join([column_name] * len(values)) + '\n')
         csv.write(','.join([str(v) for v in values]) + '\n')
+
+
+def write_jenkins_benchmark_json(json_path, sub_group, values):
+    """
+    Write some values to a JSON file for the Jenkins benchmark plugin to use.
+
+    Parameters
+    ----------
+    json_path : str
+        Path to where the *.json file should be written to.
+    sub_group : str
+        Optional supplementary identifier for the test group name.
+    values : dict
+        Mapping from measurement name to benchmark result to be written to the file.
+
+    """
+    group_name = 'buildfarm_perf_tests.' + sub_group
+    out_data = {
+        group_name: values,
+    }
+    with open(json_path, 'w') as json_file:
+        json.dump(out_data, json_file)
