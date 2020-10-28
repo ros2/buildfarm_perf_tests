@@ -201,7 +201,7 @@ def generate_test_description(ready_fn):
         # Publisher node. It has 0 subscribers
         node_pub = Node(
           package='performance_test',
-          node_executable='perf_test',
+          executable='perf_test',
           output='log',
           arguments=arguments + [
               '-s', '0',
@@ -220,7 +220,7 @@ def generate_test_description(ready_fn):
     #   - 2 processes: The node only has a subscriber
     node_under_test = Node(
         package='performance_test',
-        node_executable='perf_test',
+        executable='perf_test',
         output='log',
         arguments=arguments + [
             '-l', performance_log_prefix,

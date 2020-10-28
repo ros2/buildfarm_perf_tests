@@ -134,7 +134,7 @@ def generate_test_description(ready_fn):
 
     node_spinning_test = Node(
         package='buildfarm_perf_tests',
-        node_executable='node_spinning',
+        executable='node_spinning',
         output='log',
     )
     node_spinning_timer = RegisterEventHandler(OnProcessStart(
