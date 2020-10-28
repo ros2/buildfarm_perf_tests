@@ -2,7 +2,7 @@ repositories:
   buildfarm_perf_tests:
     type: git
     url: https://github.com/ros2/buildfarm_perf_tests.git
-    version: master
+    version: eloquent
   performance_test:
     type: git
     url: https://github.com/ros2/performance_test.git
