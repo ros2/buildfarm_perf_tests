@@ -60,13 +60,13 @@ class SystemMetricCollector(Node):
         # because we implicitly set them right here.
         assert 'arguments' not in kwargs
         assert 'package' not in kwargs
-        assert 'node_executable' not in kwargs
+        assert 'executable' not in kwargs
         assert 'executable' not in kwargs
 
         self.__pid_var_name = '__PROCESS_ID_%d' % id(self)
 
         kwargs['package'] = 'buildfarm_perf_tests'
-        kwargs['node_executable'] = 'system_metric_collector'
+        kwargs['executable'] = 'system_metric_collector'
         kwargs['arguments'] = [
             '--log', log_file,
             '--process_pid', LocalSubstitution(self.__pid_var_name)]
