@@ -66,7 +66,7 @@ class SystemMetricCollector(Node):
         self.__pid_var_name = '__PROCESS_ID_%d' % id(self)
 
         kwargs['package'] = 'buildfarm_perf_tests'
-        kwargs['node_executable'] = 'system_metric_collector'
+        kwargs['executable'] = 'system_metric_collector'
         kwargs['arguments'] = [
             '--log', log_file,
             '--process_pid', LocalSubstitution(self.__pid_var_name)]
