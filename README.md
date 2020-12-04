@@ -100,6 +100,9 @@ Again we plot measurement:
     1.  `cd ~/performance_ws`
     1.  `wget https://github.com/ros2/buildfarm_perf_tests/raw/master/tools/ros2_dependencies.repos`
     1.  `vcs import src < ros2_dependencies.repos`
+1.  Install required packages:
+    1. `sudo pip3 install pandas matplotlib`
+    1. `sudo apt-get install libboost-all-dev`
 1.  Build the local workspace:
     1.  `colcon build`
 1.  Source the local workspace:
