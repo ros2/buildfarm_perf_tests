@@ -5,7 +5,7 @@
 set(PERF_TEST_RUNTIME 30
   CACHE STRING "Duration for each performance test run")
 set(PERF_TEST_TOPIC_PUB_SUB Array60k
-  CACHE STRING "perf_test topic used by pub/stub tests")
+  CACHE STRING "perf_test topic used by pub/sub tests")
 set(PERF_TEST_TOPICS
   Array1k
   Array4k
