@@ -100,6 +100,7 @@ Again we plot measurement:
     1.  `cd ~/performance_ws`
     1.  `wget https://github.com/ros2/buildfarm_perf_tests/raw/master/tools/ros2_dependencies.repos`
     1.  `vcs import src < ros2_dependencies.repos`
+    1. `rosdep install --from-path src --ignore-src`
 1.  Build the local workspace:
     1.  `colcon build`
 1.  Source the local workspace:
@@ -108,7 +109,7 @@ Again we plot measurement:
 ### Run
 
 ```bash
-colcon test --packages-select buildfarm_perf_tests -DPERF_TEST_MAX_RUNTIME="30" -DPERF_TEST_TOPIC="Array1k" --event-handlers console_direct+
+colcon test --packages-select buildfarm_perf_tests --event-handlers console_direct+
 ```
 
 Add at the end the flags `--event-handlers console_direct+` if you want to visualize all the output.
@@ -118,13 +119,13 @@ Add at the end the flags `--event-handlers console_direct+` if you want to visua
   ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 * Each test runs for **30** seconds with a **1k payload**, but this can be changed using CMake variables.
- - `PERF_TEST_MAX_RUNTIME`: Maximum number of seconds to run before  exiting. Zero runs forever.
- - `PERF_TEST_TOPIC`: Topic to use. These are all available topics: `Array1k`, `Array4k`, `Array16k`, `Array32k`, `Array60k`, `Array1m`, `Array2m`, `Struct16`, `Struct256`, `Struct4k`, `Struct32k`, `PointCloud512k`, `PointCloud1m`, `PointCloud2m`, `PointCloud4m`, `Range`, `NavSatFix`, `RadarDetection` and `RadarTrack`.
+ - `PERF_TEST_RUNTIME`: Maximum number of seconds to run before  exiting. Zero runs forever.
+ - `PERF_TEST_TOPICS`: Topic to use. These are all available topics: `Array1k`, `Array4k`, `Array16k`, `Array32k`, `Array60k`, `Array1m`, `Array2m`, `Struct16`, `Struct256`, `Struct4k`, `Struct32k`, `PointCloud512k`, `PointCloud1m`, `PointCloud2m`, `PointCloud4m`, `Range`, `NavSatFix`, `RadarDetection` and `RadarTrack`.
 
 For example, If we want to run the test during `30` seconds using the topic `Array1k`:
 
 ```bash
-colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_MAX_RUNTIME="30" -DPERF_TEST_TOPIC="Array1k"
+colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_RUNTIME="30" -DPERF_TEST_TOPICS="Array1k"
 ```
 
 * Each test produces a PNG plot of [various measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/) across time, displayed in Jenkins using the image gallery plugin.
