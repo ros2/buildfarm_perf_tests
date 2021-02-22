@@ -12,7 +12,7 @@ jobs:
     container: ${{matrix.container_image}}
     strategy:
       matrix:
-        container_image: ['ros:eloquent', 'osrf/ros2:nightly-rmw-nonfree']
+        container_image: ['ros:foxy', 'osrf/ros2:nightly-rmw-nonfree']
 
     steps:
     - name: Clone buildfarm_perf_tests
