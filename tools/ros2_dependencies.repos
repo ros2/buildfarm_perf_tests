@@ -6,4 +6,4 @@ repositories:
   performance_test:
     type: git
     url: https://github.com/ros2/performance_test.git
-    version: run_on_buildfarm
+    version: foxy-run_on_buildfarm
