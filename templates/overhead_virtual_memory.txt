@@ -1,7 +1,6 @@
   - title: Simple Pub ${rmw_implementation} Virtual Memory
     description: "The figure shown above shows the virtual memory in Mb used by the publisher. The publisher is set to <b>${rmw_implementation}</b> but the subscriber will vary between the avaiables. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 5</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Mb
-    num_builds: 50
     master_csv_name: plot-${random_number}.csv
     style: line
     num_builds: 10
@@ -17,7 +16,6 @@
   - title: Simple Sub ${rmw_implementation} Virtual Memory
     description: "The figure shown above shows the virtual memory in Mb used by the subscriber. The publisher is set to <b>${rmw_implementation}</b> but the subscriber will vary between the avaiables. All DDS vendors are configured in asynchronous mode except cycloneDDS which is configured in syncronous mode. <br></br><ul><li><b>QoS</b> Best effort</li><li><b>Rate</b> 5</li><li><b>Runtime</b> 30 seconds</li><li><b>N process</b> 2</li><li><b>Message size</b> 1K</li></ul>"
     y_axis_label: Mb
-    num_builds: 50
     master_csv_name: plot-${random_number}-1.csv
     style: line
     num_builds: 10
