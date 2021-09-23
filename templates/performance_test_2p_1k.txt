@@ -6,7 +6,7 @@
     num_builds: 10
     y_axis_minimum: 0
     y_axis_maximum: 0.2
-    y_axis_exclude_zero: False
+    y_axis_exclude_zero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv
@@ -21,7 +21,7 @@
     num_builds: 10
     y_axis_minimum: 0
     y_axis_maximum: 1.05
-    y_axis_exclude_zero: False
+    y_axis_exclude_zero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv
@@ -34,7 +34,7 @@
     master_csv_name: plot-${random_number}-2.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv
@@ -47,7 +47,7 @@
     master_csv_name: plot-${random_number}-3.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv
@@ -60,7 +60,7 @@
     master_csv_name: plot-${random_number}-4.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv
@@ -73,7 +73,7 @@
     master_csv_name: plot-${random_number}-5.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv
@@ -88,7 +88,7 @@
     num_builds: 10
     y_axis_minimum: 0
     y_axis_maximum: 100
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_two_process_results_*_Array1k.csv
       data_type: csv

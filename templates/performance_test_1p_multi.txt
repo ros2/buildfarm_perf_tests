@@ -4,7 +4,7 @@
     master_csv_name: plot-${random_number}.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array1k.csv
       data_type: csv
@@ -17,7 +17,7 @@
     master_csv_name: plot-${random_number}-1.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array4k.csv
       data_type: csv
@@ -30,7 +30,7 @@
     master_csv_name: plot-${random_number}-2.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array16k.csv
       data_type: csv
@@ -43,7 +43,7 @@
     master_csv_name: plot-${random_number}-3.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array32k.csv
       data_type: csv
@@ -56,7 +56,7 @@
     master_csv_name: plot-${random_number}-4.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array60k.csv
       data_type: csv
@@ -69,7 +69,7 @@
     master_csv_name: plot-${random_number}-5.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_PointCloud512k.csv
       data_type: csv
@@ -82,7 +82,7 @@
     master_csv_name: plot-${random_number}-6.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array1m.csv
       data_type: csv
@@ -95,7 +95,7 @@
     master_csv_name: plot-${random_number}-7.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array2m.csv
       data_type: csv
@@ -108,7 +108,7 @@
     master_csv_name: plot-${random_number}-24.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array4m.csv
       data_type: csv
@@ -121,7 +121,7 @@
     master_csv_name: plot-${random_number}-25.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array8m.csv
       data_type: csv
@@ -134,7 +134,7 @@
     master_csv_name: plot-${random_number}-26.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_PointCloud8m.csv
       data_type: csv
@@ -147,7 +147,7 @@
     master_csv_name: plot-${random_number}-8.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array1k.csv
       data_type: csv
@@ -160,7 +160,7 @@
     master_csv_name: plot-${random_number}-9.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array4k.csv
       data_type: csv
@@ -173,7 +173,7 @@
     master_csv_name: plot-${random_number}-10.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array16k.csv
       data_type: csv
@@ -186,7 +186,7 @@
     master_csv_name: plot-${random_number}-11.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array32k.csv
       data_type: csv
@@ -199,7 +199,7 @@
     master_csv_name: plot-${random_number}-12.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array60k.csv
       data_type: csv
@@ -212,7 +212,7 @@
     master_csv_name: plot-${random_number}-13.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_PointCloud512k.csv
       data_type: csv
@@ -225,7 +225,7 @@
     master_csv_name: plot-${random_number}-14.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array1m.csv
       data_type: csv
@@ -238,7 +238,7 @@
     master_csv_name: plot-${random_number}-15.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array2m.csv
       data_type: csv
@@ -251,7 +251,7 @@
     master_csv_name: plot-${random_number}-27.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array4m.csv
       data_type: csv
@@ -264,7 +264,7 @@
     master_csv_name: plot-${random_number}-28.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array8m.csv
       data_type: csv
@@ -277,7 +277,7 @@
     master_csv_name: plot-${random_number}-29.csv
     style: line
     num_builds: 10
-    exclZero: False
+    exclZero: false
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_PointCloud8m.csv
       data_type: csv
@@ -290,7 +290,7 @@
     master_csv_name: plot-${random_number}-16.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array1k.csv
       data_type: csv
@@ -303,7 +303,7 @@
     master_csv_name: plot-${random_number}-17.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array4k.csv
       data_type: csv
@@ -316,7 +316,7 @@
     master_csv_name: plot-${random_number}-18.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array16k.csv
       data_type: csv
@@ -329,7 +329,7 @@
     master_csv_name: plot-${random_number}-19.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array32k.csv
       data_type: csv
@@ -342,7 +342,7 @@
     master_csv_name: plot-${random_number}-20.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array60k.csv
       data_type: csv
@@ -355,7 +355,7 @@
     master_csv_name: plot-${random_number}-21.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_PointCloud512k.csv
       data_type: csv
@@ -368,7 +368,7 @@
     master_csv_name: plot-${random_number}-22.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array1m.csv
       data_type: csv
@@ -381,7 +381,7 @@
     master_csv_name: plot-${random_number}-23.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array2m.csv
       data_type: csv
@@ -394,7 +394,7 @@
     master_csv_name: plot-${random_number}-30.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array4m.csv
       data_type: csv
@@ -407,7 +407,7 @@
     master_csv_name: plot-${random_number}-31.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_Array8m.csv
       data_type: csv
@@ -420,7 +420,7 @@
     master_csv_name: plot-${random_number}-32.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/performance_test_results_*_PointCloud8m.csv
       data_type: csv

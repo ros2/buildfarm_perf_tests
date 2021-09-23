@@ -4,7 +4,7 @@
     master_csv_name: plot-${random_number}.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     y_axis_minimum: 0
     y_axis_maximum: 1024
     data_series:
@@ -21,7 +21,7 @@
     num_builds: 10
     y_axis_minimum: 0
     y_axis_maximum: 100
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/overhead_node_test_results_*.csv
       data_type: csv
@@ -34,7 +34,7 @@
     master_csv_name: plot-${random_number}-2.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     y_axis_minimum: 0
     y_axis_maximum: 100
     data_series:
@@ -51,7 +51,7 @@
     num_builds: 10
     y_axis_minimum: 0
     y_axis_maximum: 100
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/overhead_node_test_results_*.csv
       data_type: csv
