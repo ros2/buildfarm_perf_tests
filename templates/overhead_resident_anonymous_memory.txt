@@ -4,7 +4,7 @@
     master_csv_name: plot-${random_number}.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/overhead_test_results_${rmw_implementation}_*_pub.csv
       data_type: csv
@@ -17,7 +17,7 @@
     master_csv_name: plot-${random_number}-1.csv
     style: line
     num_builds: 10
-    y_axis_exclude_zero: True
+    y_axis_exclude_zero: true
     data_series:
     - data_file: ws/test_results/buildfarm_perf_tests/overhead_test_results_${rmw_implementation}_*_sub.csv
       data_type: csv
