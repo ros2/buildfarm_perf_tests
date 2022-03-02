@@ -106,6 +106,7 @@ set(PERF_TEST_SKIP_two_process_CycloneDDS_sync ON
 # Add performance tests
 #
 
+find_package(ament_cmake_test REQUIRED)
 find_package(ament_cmake_flake8 REQUIRED)
 find_package(launch_testing_ament_cmake REQUIRED)
 find_package(rmw_implementation_cmake REQUIRED)
@@ -121,3 +122,10 @@ set(PERF_TEST_RMW_IMPLEMENTATIONS "${_RMW_IMPLEMENTATIONS}"
   CACHE STRING "List of RMW implementations to test with")
 
 add_performance_tests("${PERF_TEST_RMW_IMPLEMENTATIONS}")
+
+set(GENERATE_CONFIG_YAML_CMD
+  ${PROJECT_SOURCE_DIR}/scripts/generate_config_yaml.py -rmw foo -c bar -f config_generator_smoke_test.yaml)
+ament_add_test("config_generator_smoke_test"
+  COMMAND ${GENERATE_CONFIG_YAML_CMD}
+  GENERATE_RESULT_FOR_RETURN_CODE_ZERO
+)
