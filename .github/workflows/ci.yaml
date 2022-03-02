@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-    - master
+    - foxy
 
 jobs:
   build_and_test:
@@ -12,7 +12,7 @@ jobs:
     container: ${{matrix.container_image}}
     strategy:
       matrix:
-        container_image: ['ros:foxy', 'osrf/ros2:nightly-rmw-nonfree']
+        container_image: ['ros:foxy']
 
     steps:
     - name: Clone buildfarm_perf_tests
