@@ -14,7 +14,6 @@ from buildfarm_perf_tests.test_results import write_jenkins_benchmark_json
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
 from launch.actions import EmitEvent
-from launch.actions import OpaqueFunction
 from launch.actions import RegisterEventHandler
 from launch.actions import TimerAction
 from launch.event_handlers import OnProcessStart
@@ -127,7 +126,7 @@ def _raw_to_png(dataframe, png_path):
 
 
 @launch_testing.markers.keep_alive
-def generate_test_description(ready_fn):
+def generate_test_description():
     performance_log_cpumem = tempfile.mkstemp(
         prefix='overhead_node_test_results_@TEST_NAME@_',
         suffix='.csv', text=True)[1]
@@ -157,15 +156,16 @@ def generate_test_description(ready_fn):
 
     return LaunchDescription(nodes + [
         node_spinning_timer,
-        OpaqueFunction(function=lambda context: ready_fn()),
-    ]), locals()
+        launch_testing.actions.ReadyToTest()]), locals()
 
 
 class NodeSpinningTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(
-            self, proc_info, nodes, performance_log_cpumem):
+            self, nodes, performance_log_cpumem):
         self.addCleanup(_cleanUpLogs, performance_log_cpumem)
+
+        proc_info = self.proc_info
 
         timeout = @PERF_TEST_RUNTIME@ * 2
         for process in nodes:
