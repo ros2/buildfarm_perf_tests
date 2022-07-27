@@ -162,10 +162,8 @@ def generate_test_description():
 class NodeSpinningTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME@(
-            self, nodes, performance_log_cpumem):
+            self, proc_info, nodes, performance_log_cpumem):
         self.addCleanup(_cleanUpLogs, performance_log_cpumem)
-
-        proc_info = self.proc_info
 
         timeout = @PERF_TEST_RUNTIME@ * 2
         for process in nodes:

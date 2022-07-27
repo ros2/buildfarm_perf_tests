@@ -267,15 +267,13 @@ def generate_test_description():
 class PerformanceTestResults(unittest.TestCase):
 
     def test_results_@TEST_NAME_PUB_SUB@(
-            self, nodes,
+            self, proc_info, nodes,
             performance_log_cpumem_pub, performance_log_cpumem_sub,
             performance_log_prefix_pub, performance_log_prefix_sub):
         self.addCleanup(_cleanUpLogs, performance_log_prefix_pub + '*')
         self.addCleanup(_cleanUpLogs, performance_log_prefix_sub + '*')
         self.addCleanup(_cleanUpLogs, performance_log_cpumem_pub)
         self.addCleanup(_cleanUpLogs, performance_log_cpumem_sub)
-
-        proc_info = self.proc_info
 
         timeout = @PERF_TEST_RUNTIME@ * 2
         for process in nodes:
