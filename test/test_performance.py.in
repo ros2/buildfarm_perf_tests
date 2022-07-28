@@ -12,7 +12,6 @@ from buildfarm_perf_tests.test_results import read_performance_test_csv
 from buildfarm_perf_tests.test_results import write_jenkins_benchmark_json
 from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
-from launch.actions import OpaqueFunction
 from launch_ros.actions import Node
 import launch_testing.markers
 
@@ -170,7 +169,7 @@ def _raw_to_png(dataframe, png_path):
 
 
 @launch_testing.markers.keep_alive
-def generate_test_description(ready_fn):
+def generate_test_description():
     if '@COMM@' == 'ROS2':
         expected_rmw_implementation = '@RMW_IMPLEMENTATION@'
         rmw_implementation_identifier = get_rmw_implementation_identifier()
@@ -228,9 +227,9 @@ def generate_test_description(ready_fn):
     )
     nodes.append(node_under_test)
 
-    return LaunchDescription(nodes + [
-        OpaqueFunction(function=lambda context: ready_fn()),
-    ]), locals()
+    return (
+        LaunchDescription(nodes + [launch_testing.actions.ReadyToTest()]),
+        locals())
 
 
 class PerformanceTestResults(unittest.TestCase):
