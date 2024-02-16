@@ -4,7 +4,10 @@
 
 ## Purpose
 
-This package defines some tests. On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations. On the other hand we are evaluating the additional overhead caused by a single pub/sub topic or one process spinning and detect potential leaks related to theses activities.
+This package defines some tests.
+On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package.
+This allows you to test performance and latency of several ROS 2 RMW implementations.
+On the other hand we are evaluating the additional overhead caused by a single pub/sub topic or one process spinning and detect potential leaks related to theses activities.
 
 * There is a test for each RMW:
 
@@ -18,7 +21,8 @@ This package defines some tests. On one hand it invokes `perf_test` from Apex.AI
 
 ### Test 1 - Performance Test  (Apex.AI)
 
-In this test we are running the Performance Test provided by Apex.AI. Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
+In this test we are running the Performance Test provided by Apex.AI.
+Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
 
 In this test we are measurement:
  - Average latency
@@ -43,7 +47,8 @@ We are generating two plots per measurement
 
 ## Test 2 - Simple pub/sub
 
-In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz. This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
+In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz.
+This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
 
 We measure for both publisher and subscriber:
 
@@ -112,8 +117,6 @@ Again we plot measurement:
 colcon test --packages-select buildfarm_perf_tests --event-handlers console_direct+
 ```
 
-Add at the end the flags `--event-handlers console_direct+` if you want to visualize all the output.
-
 ## Details
 
   ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
@@ -125,7 +128,7 @@ Add at the end the flags `--event-handlers console_direct+` if you want to visua
 For example, If we want to run the test during `30` seconds using the topic `Array1k`:
 
 ```bash
-colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_RUNTIME="30" -DPERF_TEST_TOPICS="Array1k"
+colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_RUNTIME="30" -DPERF_TEST_TOPICS="Array1k;Array4k" --no-warn-unused-cli
 ```
 
 * Each test produces a PNG plot of [various measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/) across time, displayed in Jenkins using the image gallery plugin.
