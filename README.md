@@ -4,7 +4,10 @@
 
 ## Purpose
 
-This package defines some tests. On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package. This allows you to test performance and latency of several ROS 2 RMW implementations. On the other hand we are evaluating the additional overhead caused by a single pub/sub topic or one process spinning and detect potential leaks related to theses activities.
+This package defines some tests.
+On one hand it invokes `perf_test` from Apex.AI's [performance_test](https://gitlab.com/ApexAI/performance_test) package.
+This allows you to test performance and latency of several ROS 2 RMW implementations.
+On the other hand we are evaluating the additional overhead caused by a single pub/sub topic or one process spinning and detect potential leaks related to theses activities.
 
 * There is a test for each RMW:
 
@@ -18,7 +21,8 @@ This package defines some tests. On one hand it invokes `perf_test` from Apex.AI
 
 ### Test 1 - Performance Test  (Apex.AI)
 
-In this test we are running the Performance Test provided by Apex.AI. Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
+In this test we are running the Performance Test provided by Apex.AI.
+Right now we have [our own fork](https://github.com/ros2/performance_test) because there are some pending pull requests in the official gitlab repository.
 
 In this test we are measurement:
  - Average latency
@@ -43,7 +47,8 @@ We are generating two plots per measurement
 
 ## Test 2 - Simple pub/sub
 
-In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz. This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
+In this case we are testing one publisher and one subscriber **in different processes** sending a 1kArray at 5Hz.
+This will allow us to evaluate additional overhead caused by a single pub/sub topic and detect leaks related to this activity.
 
 We measure for both publisher and subscriber:
 
@@ -100,6 +105,7 @@ Again we plot measurement:
     1.  `cd ~/performance_ws`
     1.  `wget https://github.com/ros2/buildfarm_perf_tests/raw/master/tools/ros2_dependencies.repos`
     1.  `vcs import src < ros2_dependencies.repos`
+    1. `rosdep install --from-path src --ignore-src`
 1.  Build the local workspace:
     1.  `colcon build`
 1.  Source the local workspace:
@@ -111,20 +117,18 @@ Again we plot measurement:
 colcon test --packages-select buildfarm_perf_tests --event-handlers console_direct+
 ```
 
-Add at the end the flags `--event-handlers console_direct+` if you want to visualize all the output.
-
 ## Details
 
   ***Note: the graphs presented here are for demonstration purposes only. The data in the graphs are not meant to be accurate or current.***
 
 * Each test runs for **30** seconds with a **1k payload**, but this can be changed using CMake variables.
  - `PERF_TEST_RUNTIME`: Maximum number of seconds to run before  exiting. Zero runs forever.
- - `PERF_TEST_TOPIC`: Topic to use. These are all available topics: `Array1k`, `Array4k`, `Array16k`, `Array32k`, `Array60k`, `Array1m`, `Array2m`, `Struct16`, `Struct256`, `Struct4k`, `Struct32k`, `PointCloud512k`, `PointCloud1m`, `PointCloud2m`, `PointCloud4m`, `Range`, `NavSatFix`, `RadarDetection` and `RadarTrack`.
+ - `PERF_TEST_TOPICS`: Topics to use. These are all available topics: `Array1k`, `Array4k`, `Array16k`, `Array32k`, `Array60k`, `Array1m`, `Array2m`, `Struct16`, `Struct256`, `Struct4k`, `Struct32k`, `PointCloud512k`, `PointCloud1m`, `PointCloud2m`, `PointCloud4m`, `Range`, `NavSatFix`, `RadarDetection` and `RadarTrack`.
 
 For example, If we want to run the test during `30` seconds using the topic `Array1k`:
 
 ```bash
-colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_RUNTIME="30" -DPERF_TEST_TOPIC="Array1k"
+colcon build --packages-select buildfarm_perf_tests --cmake-args -DPERF_TEST_RUNTIME="30" -DPERF_TEST_TOPICS="Array1k;Array4k" --no-warn-unused-cli
 ```
 
 * Each test produces a PNG plot of [various measures](http://build.ros2.org/view/Eci/job/Eci__nightly-performance_ubuntu_bionic_amd64/) across time, displayed in Jenkins using the image gallery plugin.
