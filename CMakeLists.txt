@@ -18,7 +18,7 @@ find_package(rclcpp REQUIRED)
 add_executable(node_spinning src/node_spinning.cpp)
 target_link_libraries(
   node_spinning
-  "rclcpp"
+  rclcpp::rclcpp
 )
 
 install(TARGETS node_spinning
