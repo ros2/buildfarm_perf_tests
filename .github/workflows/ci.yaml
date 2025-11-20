@@ -24,13 +24,11 @@ jobs:
         echo ::group::Update packages
         apt-get update
         apt-get upgrade -y
-        apt-get install -y python3-pip
         rosdep update
         echo ::endgroup::
         . /opt/ros/*/setup.sh
         echo ::group::Install dependencies
         rosdep install -y --from-path src --ignore-src --skip-keys 'performance_test'
-        pip3 install flake8_builtins flake8_quotes
         echo ::endgroup::
         echo ::group::Build package
         colcon build --event-handler console_direct+ --cmake-args -DCMAKE_CXX_FLAGS=-Werror -Werror=dev -Werror=deprecated
