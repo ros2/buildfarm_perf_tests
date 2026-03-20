@@ -178,5 +178,5 @@ A general overview of what a typical run might do, for example:
 ros2 run performance_test perf_test -c ROS2 -t Array1k &
 ps -e | grep perf_test
   8621 pts/5    00:00:01 perf_test
-ros2 run buildfarm_perf_tests system_metric_collector -process_pid 8621
+ros2 run buildfarm_perf_tests system_metric_collector --process_pid 8621
 ```
