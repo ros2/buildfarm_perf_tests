@@ -22,6 +22,13 @@ import pandas as pd
 
 from rclpy import get_rmw_implementation_identifier
 
+from rmw_test_fixture_implementation import RMWTestIsolator
+import atexit
+
+_isolator = RMWTestIsolator()
+_isolator.__enter__()
+atexit.register(_isolator.__exit__, None, None, None)
+
 plt.switch_backend('agg')
 
 BYTE_TO_MBYTE = 1 / (1024*1024)

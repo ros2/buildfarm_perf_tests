@@ -21,6 +21,13 @@ import matplotlib.pyplot as plt
 import numpy as np  # noqa: F401
 import pandas as pd
 
+from rmw_test_fixture_implementation import RMWTestIsolator
+import atexit
+
+_isolator = RMWTestIsolator()
+_isolator.__enter__()
+atexit.register(_isolator.__exit__, None, None, None)
+
 plt.switch_backend('agg')
 
 
