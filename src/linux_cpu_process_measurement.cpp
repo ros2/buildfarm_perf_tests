@@ -125,7 +125,12 @@ double LinuxCPUProcessMeasurement::getCPUCurrentlyUsedByCurrentProcess()
     return 0;
   }
 
-  inputFile >> pid >> tcomm_string >> state >> ppid >> pgid >> sid >> tty_nr >>
+  // /proc/pid/stat format: "pid (name) state ..."
+  // The process name may contain spaces, so use getline to skip past it.
+  inputFile >> pid;
+  std::getline(inputFile, tcomm_string, ')');  // reads "(name", stops at ')'
+
+  inputFile >> state >> ppid >> pgid >> sid >> tty_nr >>
   tty_pgrp >> flags >> min_flt >> cmin_flt >> maj_flt >> cmaj_flt >>
   utime >> stimev >> cutime >> cstime >> priority >> nicev >> num_threads >>
   it_real_value >> start_time >> vsize >> rss >> rsslim >> start_code >>
