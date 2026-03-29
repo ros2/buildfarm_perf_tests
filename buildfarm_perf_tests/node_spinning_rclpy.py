@@ -6,7 +6,7 @@ from rclpy.node import Node
 
 class MinimalNode(Node):
     def __init__(self):
-        super().__init__('minimal_node_rclpy')
+        super().__init__('minimal_node')
 
 
 def main(args=None):
@@ -19,8 +19,7 @@ def main(args=None):
         pass
     finally:
         node.destroy_node()
-        if rclpy.ok():
-            rclpy.shutdown()
+        rclpy.try_shutdown()
 
 
 if __name__ == '__main__':
