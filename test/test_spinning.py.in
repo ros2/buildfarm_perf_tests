@@ -75,6 +75,12 @@ def _raw_to_jenkins(dataframe, csv_path):
             'process_count': {
                 'value': '1',
             },
+            'client_library': {
+                'value': '@SPINNING_CLIENT_LIBRARY@',
+            },
+            'executable': {
+                'value': '@SPINNING_EXECUTABLE@',
+            },
         },
         'virtual_memory': {
             'dblValue': values[2],
@@ -133,7 +139,7 @@ def generate_test_description():
 
     node_spinning_test = Node(
         package='buildfarm_perf_tests',
-        executable='node_spinning',
+        executable='@SPINNING_EXECUTABLE@',
         output='log',
     )
     node_spinning_timer = RegisterEventHandler(OnProcessStart(

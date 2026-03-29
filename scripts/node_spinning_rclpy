@@ -1,0 +1,7 @@
+#!/usr/bin/env python3
+
+from buildfarm_perf_tests.node_spinning_rclpy import main
+
+
+if __name__ == '__main__':
+    main()
