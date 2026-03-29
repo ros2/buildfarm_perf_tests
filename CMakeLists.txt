@@ -14,6 +14,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(rclpy REQUIRED)
 
 add_executable(node_spinning src/node_spinning.cpp)
 target_link_libraries(
@@ -56,7 +57,9 @@ ament_python_install_package(${PROJECT_NAME})
 install(DIRECTORY templates
   DESTINATION share/${PROJECT_NAME})
 
-install(PROGRAMS scripts/generate_config_yaml.py
+install(PROGRAMS
+  scripts/generate_config_yaml.py
+  scripts/node_spinning_rclpy
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)

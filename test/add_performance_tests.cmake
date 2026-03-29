@@ -210,6 +210,9 @@ function(add_performance_test
     "PERF_TEST_RESULTS_BASE_PATH=${PERF_TEST_RESULTS_BASE_PATH}"
   )
 
+  set(SPINNING_EXECUTABLE "node_spinning")
+  set(SPINNING_CLIENT_LIBRARY "rclcpp")
+
   configure_file(
     "test_spinning.py.in"
     ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_${TEST_NAME_SYNC}.py.configure
@@ -230,6 +233,53 @@ function(add_performance_test
     ${SKIP_TEST_SPINNING}
   )
   set_tests_properties(test_spinning_${TEST_NAME_SYNC} PROPERTIES
+    RUN_SERIAL TRUE
+    LABELS "performance"
+  )
+
+  set(SKIP_TEST_SPINNING_RCLPY "${SKIP_TEST}")
+  if(NOT SKIP_TEST_SPINNING_RCLPY)
+    if(PERF_TEST_SKIP_spinning_rclpy_${TEST_NAME_SYNC} OR
+        PERF_TEST_SKIP_spinning_rclpy OR NOT ENABLE_SYSTEM_METRIC_COLLECTOR)
+      message(STATUS "Skipping performance tests: spinning_rclpy_${TEST_NAME_SYNC}")
+      set(SKIP_TEST_SPINNING_RCLPY "SKIP_TEST")
+    endif()
+  endif()
+  set(TEST_ENV_SPINNING_RCLPY ${TEST_ENV})
+  list(APPEND TEST_ENV_SPINNING_RCLPY ${PERF_TEST_ENV_spinning_rclpy_${TEST_NAME_SYNC}})
+
+  get_filename_component(
+    PERF_TEST_RESULTS_BASE_PATH
+    "${AMENT_TEST_RESULTS_DIR}/${PROJECT_NAME}/overhead_node_test_results_spinning_rclpy_${TEST_NAME_SYNC}"
+    ABSOLUTE
+  )
+  list(APPEND TEST_ENV_SPINNING_RCLPY
+    "PERF_TEST_RESULTS_BASE_PATH=${PERF_TEST_RESULTS_BASE_PATH}"
+  )
+
+  set(SPINNING_EXECUTABLE "node_spinning_rclpy")
+  set(SPINNING_CLIENT_LIBRARY "rclpy")
+
+  configure_file(
+    "test_spinning.py.in"
+    ${CMAKE_CURRENT_BINARY_DIR}/test_spinning_rclpy_${TEST_NAME_SYNC}.py.configure
+    @ONLY
+  )
+  file(GENERATE
+    OUTPUT
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_rclpy_${TEST_NAME_SYNC}.py"
+    INPUT
+    "${CMAKE_CURRENT_BINARY_DIR}/test_spinning_rclpy_${TEST_NAME_SYNC}.py.configure"
+  )
+
+  add_launch_test(
+    "${CMAKE_CURRENT_BINARY_DIR}/test/test_spinning_rclpy_${TEST_NAME_SYNC}.py"
+    TARGET test_spinning_rclpy_${TEST_NAME_SYNC}
+    ENV ${TEST_ENV_SPINNING_RCLPY}
+    TIMEOUT ${PERF_TEST_TIMEOUT}
+    ${SKIP_TEST_SPINNING_RCLPY}
+  )
+  set_tests_properties(test_spinning_rclpy_${TEST_NAME_SYNC} PROPERTIES
     RUN_SERIAL TRUE
     LABELS "performance"
   )
