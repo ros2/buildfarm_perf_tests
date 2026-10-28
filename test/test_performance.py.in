@@ -14,6 +14,7 @@ from buildfarm_perf_tests.test_results import write_jenkins_plot_csv
 from launch import LaunchDescription
 from launch_ros.actions import Node
 import launch_testing.markers
+from launch_testing_ros.actions import EnableRmwIsolation
 
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
@@ -228,7 +229,7 @@ def generate_test_description():
     nodes.append(node_under_test)
 
     return (
-        LaunchDescription(nodes + [launch_testing.actions.ReadyToTest()]),
+        LaunchDescription([EnableRmwIsolation()] + nodes + [launch_testing.actions.ReadyToTest()]),
         locals())
 
 

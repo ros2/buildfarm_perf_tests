@@ -21,6 +21,7 @@ from launch.events import matches_action
 from launch.events.process import ShutdownProcess
 from launch_ros.actions import Node
 import launch_testing.markers
+from launch_testing_ros.actions import EnableRmwIsolation
 
 import matplotlib  # noqa: F401
 import matplotlib.pyplot as plt
@@ -154,7 +155,7 @@ def generate_test_description():
         node_spinning_test,
     ]
 
-    return LaunchDescription(nodes + [
+    return LaunchDescription([EnableRmwIsolation()] + nodes + [
         node_spinning_timer,
         launch_testing.actions.ReadyToTest()]), locals()
 
