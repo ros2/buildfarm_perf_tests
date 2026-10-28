@@ -239,7 +239,23 @@ function(add_performance_test
   #
 
   set(PERF_TEST_TOPIC ${PERF_TEST_TOPIC_PUB_SUB})
+  # rmw_zenoh_cpp cannot interoperate with DDS-based RMWs, so exclude those pairs
+  set(PUB_SUB_RMW_IMPLEMENTATIONS "")
   foreach(RMW_IMPLEMENTATION_SUB ${RMW_IMPLEMENTATIONS})
+    set(IS_ZENOH_PUB OFF)
+    set(IS_ZENOH_SUB OFF)
+    if("${RMW_IMPLEMENTATION}" STREQUAL "rmw_zenoh_cpp")
+      set(IS_ZENOH_PUB ON)
+    endif()
+    if("${RMW_IMPLEMENTATION_SUB}" STREQUAL "rmw_zenoh_cpp")
+      set(IS_ZENOH_SUB ON)
+    endif()
+    if(IS_ZENOH_PUB STREQUAL IS_ZENOH_SUB)
+      list(APPEND PUB_SUB_RMW_IMPLEMENTATIONS ${RMW_IMPLEMENTATION_SUB})
+    endif()
+  endforeach()
+
+  foreach(RMW_IMPLEMENTATION_SUB ${PUB_SUB_RMW_IMPLEMENTATIONS})
     # TODO: Why is ${COMM} on the end here? It's always ROS2.
     set(TEST_NAME_PUB_SUB "${TEST_NAME_SYNC}_${RMW_IMPLEMENTATION_SUB}_${COMM}")
     set(SKIP_TEST_PUB_SUB "${SKIP_TEST}")
